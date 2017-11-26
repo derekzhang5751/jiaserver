@@ -6,3 +6,8 @@ temp/caches/*
 temp/compiled/*
 temp/static_caches/*
 nbproject/private/*
+.idea/*
+log/admin/*
+log/goods/*
+log/home/*
+log/user/*

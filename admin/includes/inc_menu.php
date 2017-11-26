@@ -36,6 +36,29 @@ $modules['02_cat_and_goods']['51_virtual_card_add']    = 'goods.php?act=add&exte
 $modules['02_cat_and_goods']['52_virtual_card_change'] = 'virtual_card.php?act=change';
 $modules['02_cat_and_goods']['goods_auto']             = 'goods_auto.php?act=list';
 
+$modules['10_priv_admin']['admin_logs']             = 'admin_logs.php?act=list';
+$modules['10_priv_admin']['admin_list']             = 'privilege.php?act=list';
+$modules['10_priv_admin']['admin_role']             = 'role.php?act=list';
+$modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';
+$modules['10_priv_admin']['suppliers_list']         = 'suppliers.php?act=list'; // 供货商
+
+$modules['08_members']['03_users_list']             = 'users.php?act=list';
+$modules['08_members']['04_users_add']              = 'users.php?act=add';
+$modules['08_members']['05_user_rank_list']         = 'user_rank.php?act=list';
+$modules['08_members']['06_list_integrate']         = 'integrate.php?act=list';
+$modules['08_members']['08_unreply_msg']            = 'user_msg.php?act=list_all';
+$modules['08_members']['09_user_account']           = 'user_account.php?act=list';
+$modules['08_members']['10_user_account_manage']    = 'user_account_manage.php?act=list';
+
+$modules['04_order']['02_order_list']               = 'order.php?act=list';
+$modules['04_order']['03_order_query']              = 'order.php?act=order_query';
+$modules['04_order']['04_merge_order']              = 'order.php?act=merge';
+$modules['04_order']['05_edit_order_print']         = 'order.php?act=templates';
+$modules['04_order']['06_undispose_booking']        = 'goods_booking.php?act=list_all';
+//$modules['04_order']['07_repay_application']        = 'repay.php?act=list_all';
+$modules['04_order']['08_add_order']                = 'order.php?act=add';
+$modules['04_order']['09_delivery_order']           = 'order.php?act=delivery_list';
+$modules['04_order']['10_back_order']               = 'order.php?act=back_list';
 
 $modules['03_promotion']['02_snatch_list']          = 'snatch.php?act=list';
 $modules['03_promotion']['04_bonustype_list']       = 'bonus.php?act=list';
@@ -50,16 +73,6 @@ $modules['03_promotion']['14_package_list']         = 'package.php?act=list';
 //$modules['03_promotion']['ebao_commend']            = 'ebao_commend.php?act=list';
 $modules['03_promotion']['15_exchange_goods']       = 'exchange_goods.php?act=list';
 
-
-$modules['04_order']['02_order_list']               = 'order.php?act=list';
-$modules['04_order']['03_order_query']              = 'order.php?act=order_query';
-$modules['04_order']['04_merge_order']              = 'order.php?act=merge';
-$modules['04_order']['05_edit_order_print']         = 'order.php?act=templates';
-$modules['04_order']['06_undispose_booking']        = 'goods_booking.php?act=list_all';
-//$modules['04_order']['07_repay_application']        = 'repay.php?act=list_all';
-$modules['04_order']['08_add_order']                = 'order.php?act=add';
-$modules['04_order']['09_delivery_order']           = 'order.php?act=delivery_list';
-$modules['04_order']['10_back_order']               = 'order.php?act=back_list';
 
 $modules['05_banner']['ad_position']                = 'ad_position.php?act=list';
 $modules['05_banner']['ad_list']                    = 'ads.php?act=list';
@@ -82,20 +95,6 @@ $modules['07_content']['article_auto']              = 'article_auto.php?act=list
 //$modules['07_content']['shop_help']                 = 'shophelp.php?act=list_cat';
 //$modules['07_content']['shop_info']                 = 'shopinfo.php?act=list';
 
-
-$modules['08_members']['03_users_list']             = 'users.php?act=list';
-$modules['08_members']['04_users_add']              = 'users.php?act=add';
-$modules['08_members']['05_user_rank_list']         = 'user_rank.php?act=list';
-$modules['08_members']['06_list_integrate']         = 'integrate.php?act=list';
-$modules['08_members']['08_unreply_msg']            = 'user_msg.php?act=list_all';
-$modules['08_members']['09_user_account']           = 'user_account.php?act=list';
-$modules['08_members']['10_user_account_manage']    = 'user_account_manage.php?act=list';
-
-$modules['10_priv_admin']['admin_logs']             = 'admin_logs.php?act=list';
-$modules['10_priv_admin']['admin_list']             = 'privilege.php?act=list';
-$modules['10_priv_admin']['admin_role']             = 'role.php?act=list';
-$modules['10_priv_admin']['agency_list']            = 'agency.php?act=list';
-$modules['10_priv_admin']['suppliers_list']         = 'suppliers.php?act=list'; // 供货商
 
 $modules['11_system']['01_shop_config']             = 'shop_config.php?act=list_edit';
 $modules['11_system']['shop_authorized']             = 'license.php?act=list_edit';

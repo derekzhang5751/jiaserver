@@ -85,7 +85,7 @@ class captcha
      * @param   integer $height     图片高度
      * @return  bool
      */
-    function captcha($folder = '', $width = 145, $height = 20)
+    function captchaA($folder = '', $width = 145, $height = 20)
     {
         if (!empty($folder))
         {
@@ -118,7 +118,7 @@ class captcha
      */
     function __construct($folder = '', $width = 145, $height = 20)
     {
-        $this->captcha($folder, $width, $height);
+        $this->captchaA($folder, $width, $height);
     }
 
 

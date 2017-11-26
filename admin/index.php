@@ -80,7 +80,7 @@ elseif ($_REQUEST['act'] == 'menu')
     {
         ksort($modules[$key]);
     }
-    ksort($modules);
+    //ksort($modules);
 
     foreach ($modules AS $key => $val)
     {

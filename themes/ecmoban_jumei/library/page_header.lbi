@@ -1,6 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="themes/ecmoban_jumei/qq/images/qq.css" rel="stylesheet" type="text/css" />
- 
+<!--link href="themes/ecmoban_jumei/qq/images/qq.css" rel="stylesheet" type="text/css" /-->
+<link href="/ecmoban_qq/images/qq.css" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript">
 var process_request = "{$lang.process_request}";
 </script>

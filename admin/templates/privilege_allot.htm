@@ -12,7 +12,7 @@
     {foreach from=$priv.priv key=priv_list item=list}
     <div style="width:200px;float:left;">
     <label for="{$priv_list}"><input type="checkbox" name="action_code[]" value="{$priv_list}" id="{$priv_list}" class="checkbox" {if $list.cando eq 1} checked="true" {/if} onclick="checkrelevance('{$list.relevance}', '{$priv_list}')" title="{$list.relevance}"/>
-    {$lang[$list.action_code]}</label>
+    {$lang.$list.action_code}</label>
     </div>
     {/foreach}
 </td></tr>
