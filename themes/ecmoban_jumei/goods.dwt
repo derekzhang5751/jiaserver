@@ -144,7 +144,7 @@ function reg(str){
        <strong>{$lang.shop_price}</strong><font class="shop" id="ECS_SHOPPRICE">{$goods.shop_price_formated}</font> 
    
 	   
-	   <!-- {if $cfg.show_marketprice} 市场价格-->
+	   <!-- {if $cfg.show_marketprice and false } 市场价格-->
        <font class="market">{$goods.market_price}</font> 
        <!-- {/if} -->
        </dd>
@@ -237,7 +237,7 @@ function reg(str){
       <!--{if $goods.is_promote and $goods.gmt_end_time } 促销-->
       {insert_scripts files='lefttime.js'}
       <li class="padd loop" style="margin-bottom:5px; border-bottom:1px dashed #ccc;">
-      <strong>{$lang.promote_price}</strong><font class="shop">{$goods.promote_price}</font><br />
+      <strong>{$lang.promote_price}</strong><font class="shopRed">{$goods.promote_price}</font><br />
       <strong>{$lang.residual_time}</strong>
       <font class="f4" id="leftTime">{$lang.please_waiting}</font><br />
       </li>
@@ -251,10 +251,10 @@ function reg(str){
        {$rank_price.rank_name}：<font class="f1" id="ECS_RANKPRICE_{$key}" style=" padding-right:10px;">{$rank_price.price}</font> 
        <!--{/foreach}-->
        
-        <a href="javascript:collect({$goods.goods_id})">收藏</a> |  
-        <!-- {if $affiliate.on} -->
-      <a href="user.php?act=affiliate&goodsid={$goods.goods_id}" >推荐</a>
-      <!-- {/if} -->
+       <a href="javascript:collect({$goods.goods_id})">收藏</a>
+       <!-- {if $affiliate.on and false } -->
+           |<a href="user.php?act=affiliate&goodsid={$goods.goods_id}" >推荐</a>
+       <!-- {/if} -->
    </dd>
       </li>
   

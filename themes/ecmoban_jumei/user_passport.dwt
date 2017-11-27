@@ -82,7 +82,7 @@
     <!-- {else} -->
     {insert_scripts files='utils.js'}
 <div class="usBox">
-   <div class="usBox_1 f_l">
+  <div class="usBox_1 f_l">
     <div class="login_tab">
     <ul>
         <li  ><a href="user.php">用户登录</a></li>
@@ -112,6 +112,13 @@
             <span style="color:#FF0000" id="password_notice"> *</span>
           </td>
         </tr>
+          <tr>
+              <td align="right">{$lang.label_confirm_password}</td>
+              <td>
+                  <input name="confirm_password" type="password" id="conform_password" onblur="check_conform_password(this.value);"  class="inputBg" style="width:179px;"/>
+                  <span style="color:#FF0000" id="conform_password_notice"> *</span>
+              </td>
+          </tr>
         <tr>
           <td align="right">{$lang.label_password_intensity}</td>
           <td>
@@ -122,13 +129,6 @@
                 <td width="33%" id="pwd_high">{$lang.pwd_high}</td>
               </tr>
             </table>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">{$lang.label_confirm_password}</td>
-          <td>
-          <input name="confirm_password" type="password" id="conform_password" onblur="check_conform_password(this.value);"  class="inputBg" style="width:179px;"/>
-            <span style="color:#FF0000" id="conform_password_notice"> *</span>
           </td>
         </tr>
         <!-- {foreach from=$extend_info_list item=field} -->
