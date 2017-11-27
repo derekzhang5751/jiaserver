@@ -394,19 +394,12 @@ function get_settings($groups=null, $excludes=null)
             /* 变量 */
             if (isset($group_list[$pid]))
             {
-                if ( $item['code'] == 'shop_closed' ) {
-                    echo $pid . ' - shop_closed: ' . $item['store_range'];
-                }
                 if ($item['store_range'])
                 {
                     $item['store_options'] = explode(',', $item['store_range']);
 
                     foreach ($item['store_options'] AS $k => $v)
                     {
-                        if ( $item['code'] == 'shop_closed' ) {
-                            echo ', ' . $k . ' = ' . $v;
-                        }
-                        
                         if (isset($_LANG['cfg_range'][$item['code']][$v])) {
                             $item['display_options'][$k] = $_LANG['cfg_range'][$item['code']][$v];
                         } else {

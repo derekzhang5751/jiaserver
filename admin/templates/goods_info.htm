@@ -29,9 +29,9 @@
     <!-- tab body -->
     <div id="tabbody-div">
       <form enctype="multipart/form-data" action="" method="post" name="theForm" >
-        <!-- 鏈€澶ф枃浠堕檺鍒 -->
+        <!-- 最大文件尺寸 -->
         <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
-        <!-- 閫氱敤淇℃伅 -->
+        <!-- 通用信息 -->
         <table width="90%" id="general-table" align="center">
           <tr>
             <td class="label">{$lang.lab_goods_name}</td>
@@ -199,14 +199,14 @@
           </tr>
         </table>
 
-        <!-- 璇︾粏鎻忚堪 -->
+        <!-- 详细描述 -->
         <table width="90%" id="detail-table" style="display:none">
           <tr>
             <td>{$FCKeditor}</td>
           </tr>
         </table>
 
-        <!-- 鍏朵粬淇℃伅 -->
+        <!-- 其他信息 -->
         <table width="90%" id="mix-table" style="display:none" align="center">
           {if $code eq ''}
           <tr>
@@ -258,7 +258,7 @@
           </tr>
         </table>
 
-        <!-- 灞炴€т笌瑙勬牸 -->
+        <!-- 商品属性 -->
         {if $goods_type_list}
         <table width="90%" id="properties-table" style="display:none" align="center">
           <tr>
@@ -276,9 +276,9 @@
         </table>
         {/if}
 
-        <!-- 鍟嗗搧鐩稿唽 -->
+        <!-- 商品相册 -->
         <table width="90%" id="gallery-table" style="display:none" align="center">
-          <!-- 鍥剧墖鍒楄〃 -->
+          <!-- 图片列表 -->
           <tr>
             <td>
               {foreach from=$img_list item=img key=i}
@@ -293,7 +293,7 @@
             </td>
           </tr>
           <tr><td>&nbsp;</td></tr>
-          <!-- 涓婁紶鍥剧墖 -->
+          <!-- 上传文件 -->
           <tr>
             <td>
               <a href="javascript:;" onclick="addImg(this)">[+]</a>
@@ -304,7 +304,7 @@
           </tr>
         </table>
 
-        <!-- 鍏宠仈鍟嗗搧 -->
+        <!-- 相关商品 -->
         <table width="90%" id="linkgoods-table" style="display:none" align="center">
           <!-- 鍟嗗搧鎼滅储 -->
           <tr>
@@ -345,7 +345,7 @@
           </tr>
         </table>
 
-        <!-- 閰嶄欢 -->
+        <!-- 配件 -->
         <table width="90%" id="groupgoods-table" style="display:none" align="center">
           <!-- 鍟嗗搧鎼滅储 -->
           <tr>
@@ -384,7 +384,7 @@
           </tr>
         </table>
 
-        <!-- 鍏宠仈鏂囩珷 -->
+        <!-- 关联文章 -->
         <table width="90%" id="article-table" style="display:none" align="center">
           <!-- 鏂囩珷鎼滅储 -->
           <tr>

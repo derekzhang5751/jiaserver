@@ -8,7 +8,7 @@
   <!--{foreach from=$best_goods item=goods}-->
   <div class="goodsItem">
        
-           <a href="{$goods.url}"><img src="{$goods.thumb}" alt="{$goods.name|escape:html}" class="goodsimg" /></a><br />
+           <a href="{$goods.url}"><img src="{$goods.goods_img}" alt="{$goods.name|escape:html}" class="goodsimg" /></a><br />
            <p class="f1"><a href="{$goods.url}" title="{$goods.name|escape:html}">{$goods.short_style_name}</a></p>
            
            

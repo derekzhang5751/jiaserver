@@ -98,7 +98,7 @@ catch (e) {
         </div>
         <div class="clear_f"></div>
         <div class="header_top logo_wrap clearfix">
-            <a class="logo_new" href="index.php"><img src="images/logo.gif" /></a>
+            <a class="logo_new" href="index.php"><img src="images/logo.gif" height="85px" width="300px" /></a>
             <div class="ser_n">
                 <form id="searchForm" class="searchBox clearfix" name="searchForm" method="get" action="search.php" onSubmit="return checkSearchForm()">
                     <span class="ipt1"><input name="keywords" type="text" id="keyword" value="{$search_keywords|escape}" class="searchKey" /></span>
