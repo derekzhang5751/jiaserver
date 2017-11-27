@@ -6,7 +6,7 @@
 {foreach from=$priv_arr item=priv}
  <tr>
   <td width="18%" valign="top" class="first-cell">
-    <input name="chkGroup" type="checkbox" value="checkbox" onclick="check('{$priv.priv_list}',this);" class="checkbox">{$lang[$priv.action_code]}
+    <input name="chkGroup" type="checkbox" value="checkbox" onclick="check('{$priv.priv_list}',this);" class="checkbox">{$lang.$priv.action_code}
   </td>
   <td>
     {foreach from=$priv.priv key=priv_list item=list}
