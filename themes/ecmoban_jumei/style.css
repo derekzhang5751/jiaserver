@@ -1178,11 +1178,48 @@ opacity: 0.7;
 .advantages .advantages_2 dl.dl_9 dt{background-position:-181px -448px;}
 
 
-
-
-
- 
-
-
-
-
+.change-goods-num {
+    width: 150px;
+    margin-left: 6px;
+}
+.num-reduce {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: 700;
+    color: #a1a1a1;
+    text-align: center;
+    text-decoration: inherit;
+    border: 1px solid #dadada;
+    border-radius: 3px 0 0 3px;
+    float: left;
+}
+.input-num {
+    border-top: 1px solid #dadada;
+    border-right: 0;
+    border-bottom: 1px solid #dadada;
+    border-left: 0;
+    outline: 0;
+    width: 45px;
+    height: 28px;
+    line-height: 30px;
+    text-align: center;
+    float: left;
+    font-size: 1.1em;
+}
+.num-add {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-weight: 700;
+    color: #a1a1a1;
+    text-align: center;
+    text-decoration: inherit;
+    border: 1px solid #dadada;
+    border-radius: 0 3px 3px 0;
+    float: left;
+}
+.num-reduce i, .num-add i {
+    font-weight: bold;
+    font-size: 1.4em;
+}

@@ -212,16 +212,16 @@ elseif ($_REQUEST['act'] == 'edit')
     /* 检查权限 */
     admin_priv('users_manage');
 
-    $sql = "SELECT u.user_name, u.sex, u.birthday, u.pay_points, u.rank_points, u.user_rank , u.user_money, u.frozen_money, u.credit_line, u.parent_id, u2.user_name as parent_username, u.qq, u.msn, u.office_phone, u.home_phone, u.mobile_phone".
+    $sql = "SELECT u.user_name, u.sex, u.birthday, u.pay_points, u.rank_points, u.user_rank , u.user_money, u.frozen_money, u.credit_line, u.parent_id, u2.user_name as parent_username, u.qq, u.msn, u.office_phone, u.home_phone, u.mobile_phone, u.is_validated".
         " FROM " .$ecs->table('users'). " u LEFT JOIN " . $ecs->table('users') . " u2 ON u.parent_id = u2.user_id WHERE u.user_id='$_GET[id]'";
 
     $row = $db->GetRow($sql);
     $row['user_name'] = addslashes($row['user_name']);
-    $users  =& init_users();
+    $users  = init_users();
     $user   = $users->get_user_info($row['user_name']);
 
     $sql = "SELECT u.user_id, u.sex, u.birthday, u.pay_points, u.rank_points, u.user_rank , u.user_money, u.frozen_money, u.credit_line, u.parent_id, u2.user_name as parent_username, u.qq, u.msn,
-    u.office_phone, u.home_phone, u.mobile_phone".
+    u.office_phone, u.home_phone, u.mobile_phone, u.is_validated".
         " FROM " .$ecs->table('users'). " u LEFT JOIN " . $ecs->table('users') . " u2 ON u.parent_id = u2.user_id WHERE u.user_id='$_GET[id]'";
 
     $row = $db->GetRow($sql);
@@ -246,6 +246,7 @@ elseif ($_REQUEST['act'] == 'edit')
         $user['office_phone']   = $row['office_phone'];
         $user['home_phone']     = $row['home_phone'];
         $user['mobile_phone']   = $row['mobile_phone'];
+        $user['is_validated']   = $row['is_validated'];
     }
     else
     {
@@ -332,6 +333,8 @@ elseif ($_REQUEST['act'] == 'edit')
     $smarty->assign('user',             $user);
     $smarty->assign('form_action',      'update');
     $smarty->assign('special_ranks',    get_rank_list(true));
+    $smarty->assign('isValidatedOptions', array(0 => '未验证', 1 => '已验证'));
+    $smarty->assign('isValidatedSelect', $user['is_validated']);
     $smarty->display('user_info.htm');
 }
 
@@ -352,9 +355,9 @@ elseif ($_REQUEST['act'] == 'update')
     $rank = empty($_POST['user_rank']) ? 0 : intval($_POST['user_rank']);
     $credit_line = empty($_POST['credit_line']) ? 0 : floatval($_POST['credit_line']);
 
-    $users  =& init_users();
+    $users  = init_users();
 
-    if (!$users->edit_user(array('username'=>$username, 'password'=>$password, 'email'=>$email, 'gender'=>$sex, 'bday'=>$birthday ), 1))
+    if (!$users->edit_user(array('username'=>$username, 'password'=>$password, 'email'=>$email, 'gender'=>$sex, 'bday'=>$birthday), 1))
     {
         if ($users->error == ERR_EMAIL_EXISTS)
         {
@@ -366,10 +369,10 @@ elseif ($_REQUEST['act'] == 'update')
         }
         sys_msg($msg, 1);
     }
-    if(!empty($password))
+    if (!empty($password))
     {
-			$sql="UPDATE ".$ecs->table('users'). "SET `ec_salt`='0' WHERE user_name= '".$username."'";
-			$db->query($sql);
+		$sql = "UPDATE ".$ecs->table('users'). " SET `ec_salt`='0' WHERE user_name= '".$username."'";
+		$db->query($sql);
 	}
     /* 更新用户扩展字段的数据 */
     $sql = 'SELECT id FROM ' . $ecs->table('reg_fields') . ' WHERE type = 0 AND display = 1 ORDER BY dis_order, id';   //读出所有扩展字段的id
@@ -408,6 +411,7 @@ elseif ($_REQUEST['act'] == 'update')
     $other['office_phone'] = isset($_POST['extend_field3']) ? htmlspecialchars(trim($_POST['extend_field3'])) : '';
     $other['home_phone'] = isset($_POST['extend_field4']) ? htmlspecialchars(trim($_POST['extend_field4'])) : '';
     $other['mobile_phone'] = isset($_POST['extend_field5']) ? htmlspecialchars(trim($_POST['extend_field5'])) : '';
+    $other['is_validated'] = isset($_POST['is_validated']) ? htmlspecialchars(trim($_POST['is_validated'])) : '0';
 
     $db->autoExecute($ecs->table('users'), $other, 'UPDATE', "user_name = '$username'");
 

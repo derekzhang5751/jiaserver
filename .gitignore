@@ -5,6 +5,7 @@ temp/backup/*
 temp/caches/*
 temp/compiled/*
 temp/static_caches/*
+temp/query_caches/*
 nbproject/private/*
 .idea/*
 log/admin/*

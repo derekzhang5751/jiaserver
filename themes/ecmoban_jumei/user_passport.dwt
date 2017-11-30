@@ -58,7 +58,16 @@
             <input type="hidden" name="back_act" value="{$back_act}" />
             <input type="submit" name="submit" value="" class="us_Submit" />            </td>
           </tr>
-	  <tr><td></td><td><a href="user.php?act=qpassword_name" class="f3">{$lang.get_password_by_question}</a>&nbsp;&nbsp;&nbsp;<a href="user.php?act=get_password" class="f3">{$lang.get_password_by_mail}</a></td></tr>
+            <tr>
+                <td colspan="2"></td>
+            </tr>
+	  <tr>
+          <td></td>
+          <td>
+              <!--a href="user.php?act=qpassword_name" class="f3">{$lang.get_password_by_question}</a>&nbsp;&nbsp;&nbsp; -->
+              <a href="user.php?act=get_password" class="f6">{$lang.get_password_by_mail}</a>
+          </td>
+      </tr>
       </table>
     </form>
     <div class="blank"></div>
@@ -180,11 +189,15 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2">&nbsp;</td>
+          <td colspan="2"></td>
         </tr>
-                 <tr>
-                    <td bgcolor="#ffffff" colspan="2" align="center"><a href="user.php?act=qpassword_name" class="f6">{$lang.get_password_by_question}</a>   <a href="user.php?act=get_password" class="f6">{$lang.get_password_by_mail}</a></td>
-                  </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td bgcolor="#ffffff" colspan="2" align="left">
+              <!--a href="user.php?act=qpassword_name" class="f6">{$lang.get_password_by_question}</a-->
+              <a href="user.php?act=get_password" class="f6">{$lang.get_password_by_mail}</a>
+          </td>
+        </tr>
 
       </table>
     </form>

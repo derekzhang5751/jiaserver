@@ -110,7 +110,8 @@ function register($username, $password, $email, $other = array())
     }
     else
     {
-        //注册成功
+        //注册成功，修改流程，注册后等待邮件激活，不进行登录操作。
+        return true;
 
         /* 设置成登录状态 */
         $GLOBALS['user']->set_session($username);
