@@ -176,9 +176,10 @@ if ($_REQUEST['act'] == 'edit')
             $filter_attr_list[$k]['filter_attr'] = $v;
             $attr_option = array();
 
-            foreach ($attr_list[$attr_cat_id] as $val)
-            {
-                $attr_option[key($val)] = current ($val);
+            if (is_array($attr_list[$attr_cat_id]) || is_object($attr_list[$attr_cat_id])) {
+                foreach ($attr_list[$attr_cat_id] as $val) {
+                    $attr_option[key($val)] = current($val);
+                }
             }
 
             $filter_attr_list[$k]['option'] = $attr_option;

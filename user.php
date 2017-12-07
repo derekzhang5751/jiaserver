@@ -354,7 +354,7 @@ elseif ($action == 'act_login')
         }
     }
 
-    if ($user->login($username, $password,isset($_POST['remember'])))
+    if ($user->login($username, $password, isset($_POST['remember'])))
     {
         update_user_info();
         recalculate_price();

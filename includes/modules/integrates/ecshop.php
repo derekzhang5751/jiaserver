@@ -107,7 +107,7 @@ class ecshop extends integrate
         {
             $sql = "SELECT user_id, password, salt,ec_salt " .
                    " FROM " . $this->table($this->user_table).
-                   " WHERE user_name='$post_username'";
+                   " WHERE user_name='$post_username' AND is_validated=1";
             $row = $this->db->getRow($sql);
 			$ec_salt=$row['ec_salt'];
             if (empty($row))

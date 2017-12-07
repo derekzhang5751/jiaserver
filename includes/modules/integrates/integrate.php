@@ -493,7 +493,6 @@ class integrate
      */
     function check_user($username, $password = null)
     {
-
         $post_username = $username;
 
         /* 如果没有定义密码则只检查用户名 */
@@ -509,7 +508,9 @@ class integrate
         {
             $sql = "SELECT " . $this->field_id .
                    " FROM " . $this->table($this->user_table).
-                   " WHERE " . $this->field_name . "='" . $post_username . "' AND " . $this->field_pass . " ='" . $this->compile_password(array('password'=>$password)) . "'";
+                   " WHERE " . $this->field_name . "='" . $post_username .
+                "' AND " . $this->field_pass . " ='" . $this->compile_password(array('password'=>$password)) .
+                "' AND is_validated=1";
 
             return  $this->db->getOne($sql);
         }
