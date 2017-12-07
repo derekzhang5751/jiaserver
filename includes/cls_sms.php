@@ -32,9 +32,9 @@ class sms
      * @var     array       $api_urls
      */
     var $api_urls   = array(
-                            'info'              =>      'http://api.sms.shopex.cn',
-                            'send'              =>      'http://api.sms.shopex.cn',
-                            'servertime'        =>      'http://webapi.sms.shopex.cn'
+                            'info'              =>      'http://api.sms.jia.cn',
+                            'send'              =>      'http://api.sms.jia.cn',
+                            'servertime'        =>      'http://webapi.sms.jia.cn'
     
     );
     /**
