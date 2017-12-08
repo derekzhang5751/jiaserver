@@ -185,7 +185,7 @@ window.onload=function(){
 	})
 	
 	////////////////////////test2
-	
+	/*
 	var objs2 = $("idNum2").getElementsByTagName("li");
 	
 	var tv2 = new TransformView("idTransformView2", "idSlider2",1200, 3, {
@@ -209,7 +209,7 @@ window.onload=function(){
 		}
 	})
 	
-	$("idStop").onclick = function(){ tv2.Auto = false; tv2.Stop(); }
+	//$("idStop").onclick = function(){ tv2.Auto = false; tv2.Stop(); }
 	$("idStart").onclick = function(){ tv2.Auto = true; tv2.Start(); }
 	$("idNext").onclick = function(){ tv2.Index++; tv2.Start(); }
 	$("idPre").onclick = function(){ tv2.Index--;tv2.Start(); }
@@ -224,6 +224,6 @@ window.onload=function(){
 		tv2.Auto = !!tv2.options.Auto;
 		tv2.Pause = Math.abs(tv2.options.Pause);
 	}
-	
+	*/
 }
 </script>

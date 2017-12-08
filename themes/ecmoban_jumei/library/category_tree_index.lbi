@@ -1,34 +1,49 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script type="text/javascript">
-          //初始化主菜单
-            function sw_nav2(obj,tag)
-            {
-            var DisSub2 = document.getElementById("DisSub2_"+obj);
-            var HandleLI2= document.getElementById("HandleLI2_"+obj);
-                if(tag==1)
-                {
-                    DisSub2.style.display = "block";
-					HandleLI2.className="current";
-                }
-                else
-                {
-                    DisSub2.style.display = "none";
-					HandleLI2.className="";
-                }
-            }
+//初始化主菜单
+function sw_nav2(obj,tag)
+{
+    var DisSub2 = document.getElementById("DisSub2_"+obj);
+    var HandleLI2 = document.getElementById("HandleLI2_"+obj);
+    if (DisSub2 == null){
+        return;
+    }
+    if(tag==1)
+    {
+        DisSub2.style.display = "block";
+        HandleLI2.className = "current";
+    }
+    else
+    {
+        DisSub2.style.display = "none";
+        HandleLI2.className = "";
+    }
+}
+function sw_all_nav(tag)
+{
+    var DisSub2 = document.getElementById("MainSub");
+    if(tag==1)
+    {
+        DisSub2.style.display = "block";
+    }
+    else
+    {
+        DisSub2.style.display = "none";
+    }
+}
 </script>
- 
-    
-    
+
 <div id="category_tree">
 <dl class="clearfix">
-	<div class="mainCategory">
-    	<h2><a href="search.php" target="_blank">所有商品分类</a></h2>
+	<div class="mainCategory" id="MainMenu" onMouseOver="sw_all_nav(1);" onMouseOut="sw_all_nav(0);" >
+    	<h2><a href="#">所有商品分类</a></h2>
     </div>
+    <div id="MainSub" style="display:none; left:0px; top:38px; width:240px;" onMouseOver="sw_all_nav(1);" onMouseOut="sw_all_nav(0);" >
     <!--{foreach from=$categories item=cat name=no}-->
-    	<div  class="dt"  {if $smarty.foreach.no.iteration eq 9}style="border-bottom:none;"{/if} onMouseOver="sw_nav2({$smarty.foreach.no.iteration},1);" onMouseOut="sw_nav2({$smarty.foreach.no.iteration},0);" >
+    	<div  class="dt" style="border-bottom:none; height:45px;" onMouseOver="sw_nav2({$smarty.foreach.no.iteration},1);" onMouseOut="sw_nav2({$smarty.foreach.no.iteration},0);" >
         	<div id="HandleLI2_{$smarty.foreach.no.iteration}"><a class="a {if $smarty.foreach.no.index mod 2 eq 0}{else}t{/if}" href="{$cat.url}">{$cat.name|escape:html}<i></i></a></div>
-            <dd id=DisSub2_{$smarty.foreach.no.iteration} style="display:none">
+    	<!--{ if count($cat.cat_id) gt 0 }-->
+            <dd id=DisSub2_{$smarty.foreach.no.iteration} style="display:none; position:relative; top:-45px; width:240px;">
                 <!--{foreach from=$cat.cat_id item=child}-->
                 <a class="over_2" href="{$child.url}">{$child.name|escape:html}</a>
                 <div class="clearfix">
@@ -37,9 +52,10 @@
                     <!--{/foreach}-->
                 </div>
                 <!--{/foreach}-->
-            </dd> 
+            </dd>
+        <!--{/if}-->
         </div>
-    <!--{/foreach}--> 
+    <!--{/foreach}-->
+    </div>
 </dl>
 </div>
-

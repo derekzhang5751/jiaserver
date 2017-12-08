@@ -84,9 +84,11 @@
               <td align="center" bgcolor="#ffffff">{$goods.market_price}</td>
               <!-- {/if} -->
               <td align="center" bgcolor="#ffffff">{$goods.goods_price}</td>
-              <td align="center" bgcolor="#ffffff">
+              <td align="center" bgcolor="#ffffff" width="120px">
                 <!-- {if $goods.goods_id gt 0 && $goods.is_gift eq 0 && $goods.parent_id eq 0} 普通商品可修改数量 -->
-                <input type="text" name="goods_number[{$goods.rec_id}]" id="goods_number_{$goods.rec_id}" value="{$goods.goods_number}" size="4" class="inputBg" style="text-align:center " onkeydown="showdiv(this)"/>
+                  <a href="javascript:void(0);" id="num-reduce" class="num-reduce" style="text-decoration: none; margin-left: 12px;" onclick="onReduceBtnClick('goods_number_{$goods.rec_id}')"><i>-</i></a>
+                  <input type="text" name="goods_number[{$goods.rec_id}]" id="goods_number_{$goods.rec_id}" value="{$goods.goods_number}" size="4" class="num-reduce" style="text-align:center; height:28px;" onkeydown="showdiv(this)"/>
+                  <a href="javascript:void(0);" id="num-add" class="num-add" style="text-decoration: none;" onclick="onAddBtnClick('goods_number_{$goods.rec_id}')"><i>+</i></a>
                 <!-- {else} -->
                 {$goods.goods_number}
                 <!-- {/if} -->
@@ -861,9 +863,6 @@
         <!-- 结束用户登录注册界面 -->
         <!-- {/if} -->
 
-
-
-
 </div>
 
 <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
@@ -878,5 +877,22 @@ var compare_no_goods = "{$lang.compare_no_goods}";
 var btn_buy = "{$lang.btn_buy}";
 var is_cancel = "{$lang.is_cancel}";
 var select_spe = "{$lang.select_spe}";
+
+function onAddBtnClick(id) {
+    var inputNum = document.getElementById(id);
+    var numChange = parseInt(inputNum.value);
+    inputNum.value = numChange + 1;
+    showdiv(inputNum);
+    return false;
+}
+function onReduceBtnClick(id) {
+    var inputNum = document.getElementById(id);
+    var numChange = parseInt(inputNum.value);
+    if (numChange > 1) {
+        inputNum.value = numChange - 1;
+        showdiv(inputNum);
+    }
+    return false;
+}
 </script>
 </html>
