@@ -494,20 +494,21 @@
           validator.isInt('warn_number', warn_number_not_int, false);
       }
 
-      var callback = function(res)
-     {
+    var callback = function(res)
+    {
       if (res.error > 0)
       {
         alert("{$lang.goods_sn_exists}");
       }
       else
       {
-         if(validator.passed())
-         {
-         document.forms['theForm'].submit();
-         }
+        if(validator.passed())
+        {
+          editor.sync();
+          document.forms['theForm'].submit();
+        }
       }
-  }
+    }
     Ajax.call('goods.php?is_ajax=1&act=check_goods_sn', "goods_sn=" + goods_sn + "&goods_id=" + goods_id, callback, "GET", "JSON");
 }
 
