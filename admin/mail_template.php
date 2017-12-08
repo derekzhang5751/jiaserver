@@ -12,8 +12,6 @@ admin_priv('mail_template');
 /*------------------------------------------------------ */
 if ($_REQUEST['act'] == 'list')
 {
-    include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
-
     /* 包含插件语言项 */
     $sql = "SELECT code FROM ".$ecs->table('plugins');
     $rs = $db->query($sql);
@@ -72,8 +70,6 @@ if ($_REQUEST['act'] == 'list')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'loat_template')
 {
-    include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
-
     $tpl = intval($_GET['tpl']);
     $mail_type = isset($_GET['mail_type']) ? $_GET['mail_type'] : -1;
 

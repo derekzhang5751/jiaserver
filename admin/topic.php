@@ -60,8 +60,6 @@ if ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit')
     $smarty->assign('isadd', $isadd);
     $topic_id  = empty($_REQUEST['topic_id']) ? 0 : intval($_REQUEST['topic_id']);
 
-    include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
-
     $smarty->assign('ur_here',     $_LANG['09_topic']);
     $smarty->assign('action_link', list_link($isadd));
 

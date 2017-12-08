@@ -3,7 +3,6 @@
 define('IN_ECS', true);
 
 require(dirname(__FILE__) . '/includes/init.php');
-require_once(ROOT_PATH . "includes/fckeditor/fckeditor.php");
 require_once(ROOT_PATH . 'includes/cls_image.php');
 
 /*初始化数据交换对象 */
