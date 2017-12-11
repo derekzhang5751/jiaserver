@@ -83,7 +83,7 @@ function checkForm(frm)
 
         {/literal}
       </script>
-<form action="myship.php" method="post" name="theForm" id="theForm" onsubmit="return checkForm(this)">
+    <form action="myship.php" method="post" name="theForm" id="theForm" onsubmit="return checkForm(this)">
     <!-- #BeginLibraryItem "/Library/myship.lbi" --><!-- #EndLibraryItem -->
     </form>
 </div>

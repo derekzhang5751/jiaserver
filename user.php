@@ -984,7 +984,7 @@ elseif ($action == 'act_edit_address')
         'best_time'  => isset($_POST['best_time']) ? trim($_POST['best_time'])  : '',
         'sign_building' => isset($_POST['sign_building']) ? trim($_POST['sign_building']) : '',
         'zipcode'       => isset($_POST['zipcode'])       ? make_semiangle(trim($_POST['zipcode'])) : '',
-        );
+    );
 
     if (update_address($address))
     {
