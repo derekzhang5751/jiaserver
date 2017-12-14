@@ -1484,7 +1484,7 @@ elseif ($_REQUEST['step'] == 'done')
         $order[$key] = addslashes($value);
     }
 
-   /* 判断是不是实体商品 */
+    /* 判断是不是实体商品 */
     foreach ($cart_goods AS $val)
     {
         /* 统计实体商品的个数 */
@@ -1493,7 +1493,7 @@ elseif ($_REQUEST['step'] == 'done')
             $is_real_good=1;
         }
     }
-    if(isset($is_real_good))
+    if (isset($is_real_good))
     {
         $sql="SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=".$order['shipping_id'] ." AND enabled =1"; 
         if(!$db->getOne($sql))
@@ -1777,7 +1777,7 @@ elseif ($_REQUEST['step'] == 'done')
 
         $smarty->assign('pay_online', $pay_online);
     }
-    if(!empty($order['shipping_name']))
+    if (!empty($order['shipping_name']))
     {
         $order['shipping_name']=trim(stripcslashes($order['shipping_name']));
     }

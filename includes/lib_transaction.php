@@ -536,7 +536,51 @@ function save_consignee($consignee, $default=false)
         $res = $GLOBALS['db']->query($sql);
     }
 
-    return $res !== false;
+    // get user name
+    $sql = "SELECT user_name".
+        " FROM " . $GLOBALS['ecs']->table('users') .
+        " WHERE user_id = " . $consignee['user_id'];
+    $userName = $GLOBALS['db']->getOne($sql);
+
+    // create directory
+    $pathName = 'images/upload/idcard/' . date("Ym");
+    $realPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $pathName;
+    if (!is_dir($realPath)) {
+        if (@!mkdir($realPath, 0777)) {
+            exit("上传图像失败，目录不可写！");
+        }
+    }
+
+    // 更新身份证照片,正面
+    if ($_FILES['idcard_img_a']['tmp_name'] != '' && $_FILES['idcard_img_a']['tmp_name'] != 'none') {
+        // build image path
+        $ext = get_img_type($_FILES['idcard_img_a']['type']);
+        if (empty($ext)) {
+            exit("上传文件类型不支持，请选择身份证图像文件！");
+        }
+        $fileName = $pathName . '/' . $userName . '_a.' . $ext;
+        $readFileName = $realPath . '/' . $userName . '_a.' . $ext;
+        // copy file
+        move_upload_file($_FILES['idcard_img_a']['tmp_name'], $readFileName);
+        // save image url to db
+        $idcardImage = array('idcard_a' => $fileName);
+        $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_address'), $idcardImage, 'UPDATE', 'address_id = ' .$consignee['address_id'] . ' AND user_id = ' . $consignee['user_id']);
+    }
+    // 更新身份证照片,背面
+    if ($_FILES['idcard_img_b']['tmp_name'] != '' && $_FILES['idcard_img_b']['tmp_name'] != 'none') {
+        // build image path
+        $ext = get_img_type($_FILES['idcard_img_b']['type']);
+        if (empty($ext)) {
+            exit("上传文件类型不支持，请选择身份证图像文件！");
+        }
+        $fileName = $pathName . '/' . $userName . '_b.' . $ext;
+        $readFileName = $realPath . '/' . $userName . '_b.' . $ext;
+        // copy file
+        move_upload_file($_FILES['idcard_img_b']['tmp_name'], $readFileName);
+        // save image url to db
+        $idcardImage = array('idcard_b' => $fileName);
+        $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_address'), $idcardImage, 'UPDATE', 'address_id = ' .$consignee['address_id'] . ' AND user_id = ' . $consignee['user_id']);
+    }
 }
 
 /**

@@ -259,6 +259,7 @@ $_LANG['shop_authorized'] = '授權證書';
 $_LANG['shp_webcollect'] = '網羅天下';
 $_LANG['02_payment_list'] = '支付方式';
 $_LANG['03_shipping_list'] = '配送方式';
+$_LANG['031_shipping_fee'] = '运费设置';
 $_LANG['04_mail_settings'] = '郵件服務器設置';
 $_LANG['05_area_list'] = '地區列表';
 $_LANG['07_cron_schcron'] = '計劃任務';

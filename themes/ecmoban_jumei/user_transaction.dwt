@@ -842,7 +842,7 @@
                   <td align="left" bgcolor="#ffffff"><input name="best_time" type="text"  class="inputBg" id="best_time_{$sn}" value="{$consignee.best_time|escape}" /></td>
                 </tr>
                 <tr>
-                  <td align="right" bgcolor="#ffffff">身份证：</td>
+                  <td align="right" bgcolor="#ffffff">身份证：<br>（必需，否则不能发货）</td>
                   <td colspan="3" align="center" bgcolor="#ffffff">
                     <table width="100%" border="0px">
                       <tr>

@@ -36,7 +36,7 @@
 
           {elseif $var.type eq "options"}
           <select name="value[{$var.id}]" id="value_{$var.id}_{$key}">
-            {html_options options=$lang.cfg_range[$var.code] selected=$var.value}
+            {html_options options=$lang.cfg_range.$var.code selected=$var.value}
           </select>
 
           {elseif $var.type eq "file"}

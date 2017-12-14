@@ -1,0 +1,52 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+<form method="post" action="" name="listForm">
+<!-- start reg_fiedls list -->
+<div class="list-div" id="listDiv">
+{/if}
+
+<table cellspacing='1' id="list-table">
+  <tr>
+    <th>计费名称</th>
+    <th>基础重量</th>
+    <th>基础计费</th>
+    <th>超出增加重量(每N磅)</th>
+    <th>超出增加计费(每N磅多少钱)</th>
+    <th>税率</th>
+    <th>操作</th>
+  </tr>
+  {foreach from=$fee_list item=fee}
+  <tr>
+    <td class="first-cell" ><span>{$fee.fee_name}</span></td>
+    <td align="center"><span>{$fee.base_weight}</span></td>
+    <td align="center"><span>{$fee.base_fee}</span></td>
+    <td align="center"><span>{$fee.increase_weitht}</span></td>
+    <td align="center"><span>{$fee.increase_fee}</span></td>
+    <td align="center"><span>{$fee.tax}</span></td>
+    <td align="right">
+      <a href="?act=toEditShippingFee&id={$fee.fee_id}">{$lang.edit}</a>
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+{if $full_page}
+</div>
+<!-- end reg_fiedls list -->
+</form>
+
+<script type="Text/Javascript" language="JavaScript">
+<!--
+{literal}
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}
