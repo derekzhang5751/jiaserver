@@ -11,6 +11,11 @@
 <link rel="shortcut icon" href="favicon.ico" />
 <link rel="icon" href="animated_favicon.gif" type="image/gif" />
 <link href="style.css" rel="stylesheet" type="text/css" />
+
+<script src="js/jquery-1.7.2.js" type="text/javascript"></script>
+<script src="js/jquery.qrcodeIE.js" type="text/javascript"></script>
+<script src="js/qrcode.js" type="text/javascript"></script>
+
 {* 包含脚本文件 *}
 {insert_scripts files='common.js,shopping_flow.js'}
 </head>
@@ -431,7 +436,7 @@
       <div class="blank"></div>
 
       <!-- 配送方式，deprecated -->
-      <!--{if $total.real_goods_count neq 0}-->
+      <!--{if $total.real_goods_count neq 0 and false}-->
       <div class="flowBox" style="display: block;">
         <h6><span>{$lang.shipping_method}</span></h6>
         <table width="99%" align="center" border="0" cellpadding="5" cellspacing="1" bgcolor="#dddddd" id="shippingTable">
@@ -873,31 +878,76 @@
 <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
 </body>
 <script type="text/javascript">
-var process_request = "{$lang.process_request}";
-{foreach from=$lang.passport_js item=item key=key}
-var {$key} = "{$item}";
-{/foreach}
-var username_exist = "{$lang.username_exist}";
-var compare_no_goods = "{$lang.compare_no_goods}";
-var btn_buy = "{$lang.btn_buy}";
-var is_cancel = "{$lang.is_cancel}";
-var select_spe = "{$lang.select_spe}";
+    var process_request = "{$lang.process_request}";
+    {foreach from=$lang.passport_js item=item key=key}
+    var {$key} = "{$item}";
+    {/foreach}
+    var username_exist = "{$lang.username_exist}";
+    var compare_no_goods = "{$lang.compare_no_goods}";
+    var btn_buy = "{$lang.btn_buy}";
+    var is_cancel = "{$lang.is_cancel}";
+    var select_spe = "{$lang.select_spe}";
 
-function onAddBtnClick(id) {
-    var inputNum = document.getElementById(id);
-    var numChange = parseInt(inputNum.value);
-    inputNum.value = numChange + 1;
-    showdiv(inputNum);
-    return false;
-}
-function onReduceBtnClick(id) {
-    var inputNum = document.getElementById(id);
-    var numChange = parseInt(inputNum.value);
-    if (numChange > 1) {
-        inputNum.value = numChange - 1;
+    function onAddBtnClick(id) {
+        var inputNum = document.getElementById(id);
+        var numChange = parseInt(inputNum.value);
+        inputNum.value = numChange + 1;
         showdiv(inputNum);
+        return false;
     }
-    return false;
-}
+    function onReduceBtnClick(id) {
+        var inputNum = document.getElementById(id);
+        var numChange = parseInt(inputNum.value);
+        if (numChange > 1) {
+            inputNum.value = numChange - 1;
+            showdiv(inputNum);
+        }
+        return false;
+    }
+
+    function utf16to8(str) {
+        var out, i, len, c;
+        out = "";
+        len = str.length;
+        for (i = 0; i < len; i++) {
+            c = str.charCodeAt(i);
+            if ((c >= 0x0001) && (c <= 0x007F)) {
+                out += str.charAt(i);
+            } else if (c > 0x07FF) {
+                out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+                out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+            } else {
+                out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+                out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+            }
+        }
+        return out;
+    }
+
+    var qrPicture = "{$qrUrl}";
+    content = utf16to8(qrPicture);
+
+    //生成canvas
+    function doconvas() {
+        jQuery("#output").qrcode(
+            {
+                render : (jQuery.browser.msie
+                && jQuery.browser.version < 9 ? "table"
+                    : "canvas"),
+                width : 200,
+                height : 200,
+                background : "#ffffff", //背景颜色
+                foreground : "#000000", //前景色
+                text : content, //内容
+                typeNumber : -1
+                //计算模式
+            }
+        );
+    }
+    //直接显示
+    {if $qrUrl}
+    doconvas();
+    {/if}
 </script>
 </html>

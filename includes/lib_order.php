@@ -846,9 +846,21 @@ function update_order($order_id, $order)
 function get_order_sn()
 {
     /* 选择一个随机的方案 */
-    mt_srand((double) microtime() * 1000000);
+    //mt_srand((double) microtime() * 1000000);
+    //return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+    return generateOrderId();
+}
 
-    return date('Ymd') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+function generateOrderId() {
+    $KEY = "abcdefghijklmnopqrstuvwxyz0123456789";
+    $max = strlen($KEY)-1;
+    $randLen = 4;
+    $orderId = date("ymdHis");
+    for ($i=0; $i<$randLen; $i++) {
+        $p = rand(0, $max);
+        $orderId = $orderId . $KEY[$p];
+    }
+    return $orderId;
 }
 
 /**

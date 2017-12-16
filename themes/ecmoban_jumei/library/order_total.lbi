@@ -11,8 +11,9 @@
       <!-- {if $config.use_integral and $config.use_bonus} 是否同时使用积分红包-->，{$lang.with_price}  <!-- {/if} -->
       <!-- {if $config.use_bonus} 是否使用红包-->
        <font class="f4_b">{$total.will_get_bonus}</font>{$lang.de}{$lang.bonus}。
-      <!-- {/if} -->    </td>
-</tr>
+      <!-- {/if} -->
+    </td>
+  </tr>
   <!-- {/if} -->
   <tr>
     <td align="right" bgcolor="#ffffff">
@@ -37,7 +38,8 @@
       <!-- {/if} -->
       <!-- {if $total.card_fee > 0} 贺卡费用-->
       + {$lang.card_fee}: <font class="f4_b">{$total.card_fee_formated}</font>
-      <!-- {/if} -->    </td>
+      <!-- {/if} -->
+    </td>
   </tr>
   <!-- {if $total.surplus > 0 or $total.integral > 0 or $total.bonus > 0} 使用余额或积分或红包 -->
   <tr>
@@ -50,7 +52,8 @@
       <!-- {/if} -->
       <!-- {if $total.bonus > 0} 使用红包 -->
       - {$lang.use_bonus}: <font class="f4_b">{$total.bonus_formated}</font>
-      <!-- {/if} -->    </td>
+      <!-- {/if} -->
+    </td>
   </tr>
   <!-- {/if} 使用余额或积分或红包 -->
   <tr>

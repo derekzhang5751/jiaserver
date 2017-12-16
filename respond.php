@@ -21,22 +21,11 @@ require(ROOT_PATH . 'includes/lib_order.php');
 /* 支付方式代码 */
 $pay_code = !empty($_REQUEST['code']) ? trim($_REQUEST['code']) : '';
 
-//获取首信支付方式
-if (empty($pay_code) && !empty($_REQUEST['v_pmode']) && !empty($_REQUEST['v_pstring']))
-{
-    $pay_code = 'cappay';
-}
-
-//获取快钱神州行支付方式
-if (empty($pay_code) && ($_REQUEST['ext1'] == 'shenzhou') && ($_REQUEST['ext2'] == 'ecshop'))
-{
-    $pay_code = 'shenzhou';
-}
-
 /* 参数是否为空 */
 if (empty($pay_code))
 {
     $msg = $_LANG['pay_not_exist'];
+    exit($msg);
 }
 else
 {
@@ -58,6 +47,7 @@ else
     if ($db->getOne($sql) == 0)
     {
         $msg = $_LANG['pay_disabled'];
+        exit($msg);
     }
     else
     {
@@ -70,11 +60,18 @@ else
             include_once($plugin_file);
 
             $payment = new $pay_code();
-            $msg     = ($payment->respond()) ? $_LANG['pay_success'] : $_LANG['pay_fail'];
+            if ($payment->respond()) {
+                $msg = $_LANG['pay_success'];
+                exit('success');
+            } else {
+                $msg = $_LANG['pay_fail'];
+                exit('fail');
+            }
         }
         else
         {
             $msg = $_LANG['pay_not_exist'];
+            exit($msg);
         }
     }
 }

@@ -1493,14 +1493,14 @@ elseif ($_REQUEST['step'] == 'done')
             $is_real_good=1;
         }
     }
-    if (isset($is_real_good))
+    /*if (isset($is_real_good))
     {
         $sql="SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=".$order['shipping_id'] ." AND enabled =1"; 
         if(!$db->getOne($sql))
         {
            show_message($_LANG['flow_no_shipping']);
         }
-    }
+    }*/
     /* 订单中的总额 */
     $total = order_fee($order, $cart_goods, $consignee);
     $order['bonus']        = $total['bonus'];

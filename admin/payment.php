@@ -48,10 +48,10 @@ if ($_REQUEST['act'] == 'list')
             $modules[$i]['desc'] = $_LANG[$modules[$i]['desc']];
             $modules[$i]['install'] = '0';
         }
-       if ($modules[$i]['pay_code'] == 'tenpayc2c')
-       {
+        if ($modules[$i]['pay_code'] == 'tenpayc2c')
+        {
             $tenpayc2c = $modules[$i];
-       }
+        }
     }
 
     include_once(ROOT_PATH.'includes/lib_compositor.php');
