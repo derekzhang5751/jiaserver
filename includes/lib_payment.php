@@ -59,22 +59,20 @@ function get_order_id_by_sn($order_sn, $voucher = 'false')
 {
     if ($voucher == 'true')
     {
-        if(is_numeric($order_sn))
-        {
+        //if(is_numeric($order_sn))
+        //{
               return $GLOBALS['db']->getOne("SELECT log_id FROM " . $GLOBALS['ecs']->table('pay_log') . " WHERE order_id=" . $order_sn . ' AND order_type=1');
-        }
-        else
-        {
-            return "";
-        }
+        //}
+        //else
+        //{
+        //    return "";
+        //}
     }
     else
     {
-        if(is_numeric($order_sn))
-        {
-            $sql = 'SELECT order_id FROM ' . $GLOBALS['ecs']->table('order_info'). " WHERE order_sn = '$order_sn'";
-            $order_id = $GLOBALS['db']->getOne($sql);
-        }
+        $sql = 'SELECT order_id FROM ' . $GLOBALS['ecs']->table('order_info'). " WHERE order_sn = '$order_sn'";
+        $order_id = $GLOBALS['db']->getOne($sql);
+
         if (!empty($order_id))
         {
             $pay_log_id = $GLOBALS['db']->getOne("SELECT log_id FROM " . $GLOBALS['ecs']->table('pay_log') . " WHERE order_id='" . $order_id . "'");
@@ -112,7 +110,7 @@ function check_money($log_id, $money)
               " WHERE log_id = '$log_id'";
     $amount = $GLOBALS['db']->getOne($sql);
 
-    if ($money == $amount)
+    if ( floatval($money) == floatval($amount) )
     {
         return true;
     }

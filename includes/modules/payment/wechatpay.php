@@ -49,9 +49,6 @@ if (isset($set_modules) && $set_modules == TRUE)
         array('name' => 'wechatpay_account',           'type' => 'text',   'value' => ''),
         array('name' => 'wechatpay_key',               'type' => 'text',   'value' => ''),
         array('name' => 'wechatpay_partner',           'type' => 'text',   'value' => ''),
-//        array('name' => 'wechatpay_real_method',       'type' => 'select', 'value' => '0'),
-//        array('name' => 'wechatpay_virtual_method',    'type' => 'select', 'value' => '0'),
-//        array('name' => 'is_instant',               'type' => 'select', 'value' => '0')
         array('name' => 'wechatpay_pay_method',        'type' => 'select', 'value' => '')
     );
 
@@ -63,7 +60,8 @@ if (isset($set_modules) && $set_modules == TRUE)
  */
 class wechatpay
 {
-
+    //private $logPath = '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log';
+    private $logPath = '/usr/local/apache2/htdocs/log/home/error.log';
     /**
      * 构造函数
      *
@@ -119,7 +117,7 @@ class wechatpay
         $headers = array(
             'Content-Type: application/json',
         );
-        //error_log("\n[WECHATPAY]PostData: ".$postData, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
+        //error_log("\n[WECHATPAY]PostData: ".$postData, 3, $this->logPath);
 
         $ch = curl_init ();
         curl_setopt ( $ch, CURLOPT_URL, $dstUrl );
@@ -127,10 +125,10 @@ class wechatpay
         curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
         curl_setopt ( $ch, CURLOPT_POST, true );
         curl_setopt ( $ch, CURLOPT_POSTFIELDS, $postData );
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+        curl_setopt ( $ch, CURLOPT_SSL_VERIFYHOST, 2 );
         $output = curl_exec ( $ch );
-        //error_log("\n[WECHATPAY]Response: ".$output, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
+        //error_log("\n[WECHATPAY]Response: ".$output, 3, $this->logPath);
         if (curl_errno($ch) || $output === false) {
             curl_close($ch);
             return false;
@@ -147,13 +145,13 @@ class wechatpay
         if ($respCode == 'SUCCESS') {
             $respAesKey = strtoupper(substr(md5($respMd5 . $payment['wechatpay_key']), 8, 16));
             $dataResp = $this->aesDecrypt($respData, $respAesKey);
-            //error_log("\n[WECHATPAY]Resp Decrypt Data: ".$dataResp, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
+            //error_log("\n[WECHATPAY]Resp Decrypt Data: ".$dataResp, 3, $this->logPath);
 
             $dataFields = json_decode($dataResp, true);
             $qrUrl = $dataFields['code_url'];
             $orderId = $dataFields['order_id'];
-            error_log("\n[WECHATPAY]Resp Code Url: " . $qrUrl, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
-            error_log("\n[WECHATPAY]Resp Order Id: " . $orderId, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
+            error_log("\n[WECHATPAY]Resp Code Url: " . $qrUrl, 3, $this->logPath);
+            error_log("\n[WECHATPAY]Resp Order Id: " . $orderId, 3, $this->logPath);
 
             if ($orderId == $order['order_sn']) {
                 $smarty->assign('qrUrl', $qrUrl);
@@ -184,58 +182,56 @@ class wechatpay
      */
     function respond()
     {
-        if (!empty($_POST)) {
-            foreach($_POST as $key => $data) {
-                $_GET[$key] = $data;
-                error_log("\n[WECHATPAY]CALL_BACK: ".$key."=".$data, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
-            }
-        }
+        $postData = file_get_contents('php://input', 'r');
+        //error_log("\n[WECHATPAY]POST BODY: ".$postData, 3, $this->logPath);
+
+        $postFields = json_decode($postData, true);
+        $md5 = $postFields['md5'];
+        $data = $postFields['data'];
+        $rsp_code = $postFields['rsp_code'];
+        $merchant_id = $postFields['merchant_id'];
+        $rsp_msg = $postFields['rsp_msg'];
+
         $payment  = get_payment($_GET['code']);
-        //$seller_email = rawurldecode($_GET['seller_email']);
-        $order_sn = $_GET['order_id'];
-        $order_sn = trim($order_sn);
+        $aesKey = strtoupper( substr( md5($md5 . $payment['wechatpay_key']), 8, 16 ) );
+        $dataResp = $this->aesDecrypt($data, $aesKey);
+
+        //echo $dataResp . "\n";
+        $dataFields = json_decode($dataResp, true);
+        $amount = $dataFields['amount'];
+        $finish_time = $dataFields['finish_time'];
+        $order_id = $dataFields['order_id'];
+        $tip = $dataFields['tip'];
+
+        $order_sn = trim($order_id);
+        $logId = get_order_id_by_sn($order_sn);
 
         /* 检查支付的金额是否相符 */
-        $amount = $this->unFormatAmount( $_GET['amount'] );
-        if (!check_money($order_sn, $amount)) {
-            error_log("\n[WECHATPAY]Amount is not match: " . $amount, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
+        $amount = $this->unFormatAmount( $amount );
+        if (!check_money($logId, $amount)) {
+            error_log("\n[WECHATPAY]Amount is not match: " . $amount, 3, $this->logPath);
             return false;
         }
 
         /* 检查数字签名是否正确 */
-        ksort($_GET);
-        reset($_GET);
+        ksort($dataFields);
+        reset($dataFields);
 
         $sign = '';
-        foreach ($_GET AS $key => $val) {
+        foreach ($dataFields AS $key => $val) {
             if ($key != 'md5' && $key != 'code') {
                 $sign = $sign . $val;
             }
         }
-        $sign = $sign . $payment['wechatpay_key'];
         $sign = strtoupper( md5($sign) );
-        if ($sign != $_GET['md5']) {
-            error_log("\n[WECHATPAY]Sign is error: " . $_GET['md5'], 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log');
-            //return false;
+        if ($sign != $md5) {
+            error_log("\n[WECHATPAY]Sign is error: " . $sign, 3, $this->logPath);
+            return false;
         }
 
-        if ($_GET['trade_status'] == 'WAIT_SELLER_SEND_GOODS') {
+        if ($rsp_code == 'SUCCESS') {
             /* 改变订单状态 */
-            order_paid($order_sn, 2);
-
-            return true;
-        }
-        elseif ($_GET['trade_status'] == 'TRADE_FINISHED')
-        {
-            /* 改变订单状态 */
-            order_paid($order_sn);
-
-            return true;
-        }
-        elseif ($_GET['trade_status'] == 'TRADE_SUCCESS')
-        {
-            /* 改变订单状态 */
-            order_paid($order_sn, 2);
+            order_paid($logId, PS_PAYED);
 
             return true;
         }
@@ -287,7 +283,7 @@ class wechatpay
         return strval($i);
     }
     private function unFormatAmount($amount) {
-        $f = floatval($amount);
+        $f = floatval($amount) / 100;
         $amt = number_format($f, 2, '.', '');
         return $amt;
     }

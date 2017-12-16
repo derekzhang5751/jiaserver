@@ -49,9 +49,6 @@ if (isset($set_modules) && $set_modules == TRUE)
         array('name' => 'alipay_account',           'type' => 'text',   'value' => ''),
         array('name' => 'alipay_key',               'type' => 'text',   'value' => ''),
         array('name' => 'alipay_partner',           'type' => 'text',   'value' => ''),
-//        array('name' => 'alipay_real_method',       'type' => 'select', 'value' => '0'),
-//        array('name' => 'alipay_virtual_method',    'type' => 'select', 'value' => '0'),
-//        array('name' => 'is_instant',               'type' => 'select', 'value' => '0')
         array('name' => 'alipay_pay_method',        'type' => 'select', 'value' => '')
     );
 
@@ -63,7 +60,8 @@ if (isset($set_modules) && $set_modules == TRUE)
  */
 class alipay
 {
-
+    //private $logPath = '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log';
+    private $logPath = '/usr/local/apache2/htdocs/log/home/error.log';
     /**
      * 构造函数
      *
@@ -72,7 +70,7 @@ class alipay
      *
      * @return void
      */
-    
+
     function __construct()
     {
     }
@@ -84,103 +82,97 @@ class alipay
      */
     function get_code($order, $payment)
     {
-        if (!defined('EC_CHARSET'))
-        {
-            $charset = 'utf-8';
-        }
-        else
-        {
-            $charset = EC_CHARSET;
-        }
-//        if (empty($payment['is_instant']))
-//        {
-//            /* 未开通即时到帐 */
-//            $service = 'trade_create_by_buyer';
-//        }
-//        else
-//        {
-//            if (!empty($order['order_id']))
-//            {
-//                /* 检查订单是否全部为虚拟商品 */
-//                $sql = "SELECT COUNT(*) FROM " .$GLOBALS['ecs']->table('order_goods').
-//                        " WHERE is_real=1 AND order_id='$order[order_id]'";
-//
-//                if ($GLOBALS['db']->getOne($sql) > 0)
-//                {
-//                    /* 订单中存在实体商品 */
-//                    $service =  (!empty($payment['alipay_real_method']) && $payment['alipay_real_method'] == 1) ?
-//                        'create_direct_pay_by_user' : 'trade_create_by_buyer';
-//                }
-//                else
-//                {
-//                    /* 订单中全部为虚拟商品 */
-//                    $service = (!empty($payment['alipay_virtual_method']) && $payment['alipay_virtual_method'] == 1) ?
-//                        'create_direct_pay_by_user' : 'create_digital_goods_trade_p';
-//                }
-//            }
-//            else
-//            {
-//                /* 非订单方式，按照虚拟商品处理 */
-//                $service = (!empty($payment['alipay_virtual_method']) && $payment['alipay_virtual_method'] == 1) ?
-//                    'create_direct_pay_by_user' : 'create_digital_goods_trade_p';
-//            }
-//        }
-
-        $real_method = $payment['alipay_pay_method'];
-
-        switch ($real_method){
-            case '0':
-                $service = 'trade_create_by_buyer';
-                break;
-            case '1':
-                $service = 'create_partner_trade_by_buyer';
-                break;
-            case '2':
-                $service = 'create_direct_pay_by_user';
-                break;
-        }
-
-        $extend_param = 'isv^sh22';
-
-        $parameter = array(
-            'extend_param'      => $extend_param,
-            'service'           => $service,
-            'partner'           => $payment['alipay_partner'],
-            //'partner'           => ALIPAY_ID,
-            '_input_charset'    => $charset,
-            'notify_url'        => return_url(basename(__FILE__, '.php')),
-            'return_url'        => return_url(basename(__FILE__, '.php')),
-            /* 业务参数 */
-            'subject'           => $order['order_sn'],
-            'out_trade_no'      => $order['order_sn'] . $order['log_id'],
-            'price'             => $order['order_amount'],
-            'quantity'          => 1,
-            'payment_type'      => 1,
-            /* 物流参数 */
-            'logistics_type'    => 'EXPRESS',
-            'logistics_fee'     => 0,
-            'logistics_payment' => 'BUYER_PAY_AFTER_RECEIVE',
-            /* 买卖双方信息 */
-            'seller_email'      => $payment['alipay_account']
+        $amount = $this->formatAmount( $order['order_amount'] );
+        $data = array(
+            'order_id'      => $order['order_sn'],
+            'amount'        => $amount,
+            'biz_type'      => 'ALIPAY',
+            'call_back_url' => return_url(basename(__FILE__, '.php')),
         );
 
-        ksort($parameter);
-        reset($parameter);
+        ksort($data);
+        reset($data);
 
         $param = '';
-        $sign  = '';
-
-        foreach ($parameter AS $key => $val)
-        {
-            $param .= "$key=" .urlencode($val). "&";
-            $sign  .= "$key=$val&";
+        foreach ($data AS $key => $val) {
+            $param = $param . $val;
         }
+        $sign = strtoupper( md5($param) );
 
-        $param = substr($param, 0, -1);
-        $sign  = substr($sign, 0, -1). $payment['alipay_key'];
-        //$sign  = substr($sign, 0, -1). ALIPAY_AUTH;
+        $aesKey = strtoupper( substr( md5($sign . $payment['wechatpay_key']), 8, 16 ) );
+        reset($data);
+        $jsonStr = json_encode($data);
+        $dataEncrypted = $this->aesEncrypt($jsonStr, $aesKey);
 
-        $button = '<div style="text-align:center"><input type="button" onclick="window.open(\'https://www.alipay.com/cooperate/gateway.do?'.$param. '&sign='.md5($sign).'&sign_type=MD5\')" value="' .$GLOBALS['_LANG']['pay_button']. '" /></div>';
+        $parameter = array(
+            'action'        => 'ACTIVEPAY',
+            'version'       => '1.0',
+            'merchant_id'   => $payment['wechatpay_partner'],
+            'data'          => $dataEncrypted,
+            'md5'           => $sign
+        );
+
+        $dstUrl = 'https://frontapi.ottpay.com:443/process';
+        $postData = json_encode($parameter);
+        $headers = array(
+            'Content-Type: application/json',
+        );
+        //error_log("\n[WECHATPAY]PostData: ".$postData, 3, $this->logPath);
+
+        $ch = curl_init ();
+        curl_setopt ( $ch, CURLOPT_URL, $dstUrl );
+        curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
+        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt ( $ch, CURLOPT_POST, true );
+        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $postData );
+        curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
+        curl_setopt ( $ch, CURLOPT_SSL_VERIFYHOST, 2 );
+        $output = curl_exec ( $ch );
+        //error_log("\n[WECHATPAY]Response: ".$output, 3, $this->logPath);
+        if (curl_errno($ch) || $output === false) {
+            curl_close($ch);
+            return false;
+        }
+        curl_close($ch);
+
+        $fields = json_decode($output, true);
+        $respCode = $fields['rsp_code'];
+        $respMsg = $fields['rsp_msg'];
+        $respData = $fields['data'];
+        $respMd5 = $fields['md5'];
+
+        global $smarty;
+        if ($respCode == 'SUCCESS') {
+            $respAesKey = strtoupper(substr(md5($respMd5 . $payment['wechatpay_key']), 8, 16));
+            $dataResp = $this->aesDecrypt($respData, $respAesKey);
+            //error_log("\n[WECHATPAY]Resp Decrypt Data: ".$dataResp, 3, $this->logPath);
+
+            $dataFields = json_decode($dataResp, true);
+            $qrUrl = $dataFields['code_url'];
+            $orderId = $dataFields['order_id'];
+            error_log("\n[WECHATPAY]Resp Code Url: " . $qrUrl, 3, $this->logPath);
+            error_log("\n[WECHATPAY]Resp Order Id: " . $orderId, 3, $this->logPath);
+
+            if ($orderId == $order['order_sn']) {
+                $smarty->assign('qrUrl', $qrUrl);
+                $button = '<div style="text-align:center">' .
+                    '<div id="output"></div>' .
+                    '<br><h2>请扫描二维码进行支付</h2>' .
+                    '</div>';
+            } else {
+                $smarty->assign('qrUrl', '');
+                $button = '<div style="text-align:center">' .
+                    '<div id="output"></div>' .
+                    '<br><h2>获取二维码失败：订单号不匹配!</h2>' .
+                    '</div>';
+            }
+        } else {
+            $smarty->assign('qrUrl', '');
+            $button = '<div style="text-align:center">' .
+                '<div id="output"></div>' .
+                '<br><h2>获取二维码失败：'.$respMsg.'</h2>' .
+                '</div>';
+        }
 
         return $button;
     }
@@ -190,62 +182,56 @@ class alipay
      */
     function respond()
     {
-        if (!empty($_POST))
-        {
-            foreach($_POST as $key => $data)
-            {
-                $_GET[$key] = $data;
-            }
-        }
+        $postData = file_get_contents('php://input', 'r');
+        //error_log("\n[WECHATPAY]POST BODY: ".$postData, 3, $this->logPath);
+
+        $postFields = json_decode($postData, true);
+        $md5 = $postFields['md5'];
+        $data = $postFields['data'];
+        $rsp_code = $postFields['rsp_code'];
+        $merchant_id = $postFields['merchant_id'];
+        $rsp_msg = $postFields['rsp_msg'];
+
         $payment  = get_payment($_GET['code']);
-        $seller_email = rawurldecode($_GET['seller_email']);
-        $order_sn = str_replace($_GET['subject'], '', $_GET['out_trade_no']);
-        $order_sn = trim($order_sn);
+        $aesKey = strtoupper( substr( md5($md5 . $payment['wechatpay_key']), 8, 16 ) );
+        $dataResp = $this->aesDecrypt($data, $aesKey);
+
+        //echo $dataResp . "\n";
+        $dataFields = json_decode($dataResp, true);
+        $amount = $dataFields['amount'];
+        $finish_time = $dataFields['finish_time'];
+        $order_id = $dataFields['order_id'];
+        $tip = $dataFields['tip'];
+
+        $order_sn = trim($order_id);
+        $logId = get_order_id_by_sn($order_sn);
 
         /* 检查支付的金额是否相符 */
-        if (!check_money($order_sn, $_GET['total_fee']))
-        {
+        $amount = $this->unFormatAmount( $amount );
+        if (!check_money($logId, $amount)) {
+            error_log("\n[WECHATPAY]Amount is not match: " . $amount, 3, $this->logPath);
             return false;
         }
 
         /* 检查数字签名是否正确 */
-        ksort($_GET);
-        reset($_GET);
+        ksort($dataFields);
+        reset($dataFields);
 
         $sign = '';
-        foreach ($_GET AS $key=>$val)
-        {
-            if ($key != 'sign' && $key != 'sign_type' && $key != 'code')
-            {
-                $sign .= "$key=$val&";
+        foreach ($dataFields AS $key => $val) {
+            if ($key != 'md5' && $key != 'code') {
+                $sign = $sign . $val;
             }
         }
-
-        $sign = substr($sign, 0, -1) . $payment['alipay_key'];
-        //$sign = substr($sign, 0, -1) . ALIPAY_AUTH;
-        if (md5($sign) != $_GET['sign'])
-        {
+        $sign = strtoupper( md5($sign) );
+        if ($sign != $md5) {
+            error_log("\n[WECHATPAY]Sign is error: " . $sign, 3, $this->logPath);
             return false;
         }
 
-        if ($_GET['trade_status'] == 'WAIT_SELLER_SEND_GOODS')
-        {
+        if ($rsp_code == 'SUCCESS') {
             /* 改变订单状态 */
-            order_paid($order_sn, 2);
-
-            return true;
-        }
-        elseif ($_GET['trade_status'] == 'TRADE_FINISHED')
-        {
-            /* 改变订单状态 */
-            order_paid($order_sn);
-
-            return true;
-        }
-        elseif ($_GET['trade_status'] == 'TRADE_SUCCESS')
-        {
-            /* 改变订单状态 */
-            order_paid($order_sn, 2);
+            order_paid($logId, PS_PAYED);
 
             return true;
         }
@@ -253,6 +239,53 @@ class alipay
         {
             return false;
         }
+    }
+
+    /**
+     * AES 加密方法
+     * @param string $str
+     * @return string
+     */
+    private function aesEncrypt($str, $aesKey) {
+        $screct_key = $aesKey;
+
+        $str = trim($str);
+        $str = $this->addPKCS7Padding($str);
+        $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128,MCRYPT_MODE_ECB),MCRYPT_RAND);
+        $encrypt_str = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $screct_key, $str, MCRYPT_MODE_ECB, $iv);
+        $date = base64_encode($encrypt_str);
+        return $date;
+    }
+
+    private function aesDecrypt($str, $key) {
+        $date = base64_decode($str);
+        $screct_key = $key;
+        $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128,MCRYPT_MODE_ECB),MCRYPT_RAND);
+        $encrypt_str =  mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $screct_key, $date, MCRYPT_MODE_ECB, $iv);
+        $encrypt_str = preg_replace('/[\x00-\x1F]/','', $encrypt_str);
+        return $encrypt_str;
+    }
+
+    private function addPKCS7Padding($source) {
+        $source = trim($source);
+        $block = mcrypt_get_block_size('rijndael-128', 'ecb');
+        $pad = $block - (strlen($source) % $block);
+        if ($pad <= $block) {
+            $char = chr($pad);
+            $source .= str_repeat($char, $pad);
+        }
+        return $source;
+    }
+
+    private function formatAmount($amount) {
+        $f = floatval($amount) * 100;
+        $i = intval($f);
+        return strval($i);
+    }
+    private function unFormatAmount($amount) {
+        $f = floatval($amount) / 100;
+        $amt = number_format($f, 2, '.', '');
+        return $amt;
     }
 }
 
