@@ -109,7 +109,7 @@ TransformView.prototype = {
   //设置默认属性
   SetOptions: function(options) {
 	this.options = {//默认值
-		Up:			true,//是否向上(否则向左)
+		Up:		true,//是否向上(否则向左)
 		Step:		5,//滑动变化率
 		Time:		10,//滑动延时
 		Auto:		true,//是否自动转换
@@ -164,7 +164,7 @@ window.onload=function(){
 	
 	var objs = $("idNum").getElementsByTagName("li");
 	
-	var tv = new TransformView("idTransformView", "idSlider", 413, 5, {
+	var tv = new TransformView("idTransformView", "idSlider", 413, 4, {
 		onStart : function(){ Each(objs, function(o, i){ o.className = tv.Index == i ? "on" : ""; }) }//按钮样式
 	});
 	
