@@ -99,7 +99,7 @@ class ecshop extends integrate
         {
             $sql = "SELECT " . $this->field_id .
                    " FROM " . $this->table($this->user_table).
-                   " WHERE " . $this->field_name . "='" . $post_username . "'";
+                   " WHERE " . $this->field_name . "='" . $post_username . "' AND is_validated=1";
 
             return $this->db->getOne($sql);
         }

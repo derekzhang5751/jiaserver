@@ -29,13 +29,17 @@ $back_act='';
 
 
 // 不需要登录的操作或自己验证是否登录（如ajax处理）的act
-$not_login_arr =
-array('login','act_login','register','act_register','act_edit_password','get_password','send_pwd_email','password', 'signin', 'add_tag', 'collect', 'return_to_cart', 'logout', 'email_list', 'validate_email', 'send_hash_mail', 'order_query', 'is_registered', 'check_email','clear_history','qpassword_name', 'get_passwd_question', 'check_answer');
+$not_login_arr = array('login','act_login','register','act_register','act_edit_password','get_password','send_pwd_email',
+    'password', 'signin', 'add_tag', 'collect', 'return_to_cart', 'logout', 'email_list', 'validate_email',
+    'send_hash_mail', 'resend_active_email', 'order_query', 'is_registered', 'check_email','clear_history',
+    'qpassword_name', 'get_passwd_question', 'check_answer');
 
 /* 显示页面的action列表 */
 $ui_arr = array('register', 'login', 'profile', 'order_list', 'order_detail', 'address_list', 'collection_list',
-'message_list', 'tag_list', 'get_password', 'reset_password', 'booking_list', 'add_booking', 'account_raply',
-'account_deposit', 'account_log', 'account_detail', 'act_account', 'pay', 'default', 'bonus', 'group_buy', 'group_buy_detail', 'affiliate', 'comment_list','validate_email','track_packages', 'transform_points','qpassword_name', 'get_passwd_question', 'check_answer');
+    'message_list', 'tag_list', 'get_password', 'reset_password', 'booking_list', 'add_booking', 'account_raply',
+    'account_deposit', 'account_log', 'account_detail', 'act_account', 'pay', 'default', 'bonus', 'group_buy',
+    'group_buy_detail', 'affiliate', 'comment_list','validate_email','track_packages', 'transform_points',
+    'qpassword_name', 'get_passwd_question', 'check_answer');
 
 /* 未登录处理 */
 if (empty($_SESSION['user_id']))
@@ -235,9 +239,13 @@ elseif ($action == 'act_register')
             /* 判断是否需要自动发送注册邮件 */
             if ($GLOBALS['_CFG']['member_email_validate'] && $GLOBALS['_CFG']['send_verify_email'])
             {
-                send_regiter_hash($_SESSION['user_id']);
+                $userId = get_userid_by_username($username);
+                send_regiter_hash($userId);
             }
             $ucdata = empty($user->ucdata)? "" : $user->ucdata;
+
+            $smarty->assign('reg_email', $email);
+            $smarty->assign('user_id', $userId);
             $GLOBALS['smarty']->display('reg_success.dwt');
             //show_message(sprintf($_LANG['register_success'], $username . $ucdata), array($_LANG['back_up_page'], $_LANG['profile_lnk']), array($back_act, 'user.php'), 'info');
         }
@@ -2413,6 +2421,22 @@ elseif ($action == 'send_hash_mail')
 
     die($json->encode($result));
 }
+elseif ($action == 'resend_active_email')
+{
+    include_once(ROOT_PATH .'includes/lib_passport.php');
+
+    $userId = isset($_REQUEST['userid']) ? intval($_REQUEST['userid']) : 0;
+
+    if ($userId > 0) {
+        $email = send_regiter_hash($userId);
+    } else {
+        $email = '';
+    }
+
+    $smarty->assign('reg_email', $email);
+    $smarty->assign('user_id', $userId);
+    $GLOBALS['smarty']->display('reg_success.dwt');
+}
 else if ($action == 'track_packages')
 {
     include_once(ROOT_PATH . 'includes/lib_transaction.php');
@@ -2753,5 +2777,8 @@ elseif ($action == 'act_transform_ucenter_points')
 elseif ($action == 'clear_history')
 {
     setcookie('ECS[history]',   '', 1);
+}
+else {
+    $GLOBALS['smarty']->display('reg_success.dwt');
 }
 ?>

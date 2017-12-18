@@ -199,6 +199,15 @@ function get_crlf()
  */
 function send_mail($name, $email, $subject, $content, $type = 0, $notification=false)
 {
+    /*
+    error_log("\n[MAIL]USER NAME: " . $name, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
+    error_log("\n[MAIL]EMAIL: " . $email, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
+    error_log("\n[MAIL]SUBJECT: " . $subject, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
+    error_log("\n[MAIL]CONTENT: " . $content, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
+    error_log("\n[MAIL]IS_HTML: " . $type, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
+    error_log("\n[MAIL]NOTIFICATION: " . $notification, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
+    */
+
     /* 如果邮件编码不是EC_CHARSET，创建字符集转换对象，转换编码 */
     if ($GLOBALS['_CFG']['mail_charset'] != EC_CHARSET)
     {
@@ -326,7 +335,7 @@ function send_mail($name, $email, $subject, $content, $type = 0, $notification=f
                         $GLOBALS['err']->add($err_msg);
                     }
                 }
-
+                //error_log("\n[MAIL]Send mail error: " . $err_msg, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
                 return false;
             }
         }

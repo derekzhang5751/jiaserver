@@ -326,7 +326,8 @@ function send_regiter_hash ($user_id)
     /* 发送激活验证邮件 */
     if (send_mail($row['user_name'], $row['email'], $template['template_subject'], $content, $template['is_html']))
     {
-        return true;
+        //return true;
+        return $row['email'];
     }
     else
     {
@@ -400,6 +401,16 @@ function admin_registered( $adminname )
     $res = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('admin_user') .
                                   " WHERE user_name = '$adminname'");
     return $res;
+}
+
+function get_userid_by_username( $username ) {
+    $userId = $GLOBALS['db']->getOne("SELECT user_id FROM " . $GLOBALS['ecs']->table('users') .
+                                     " WHERE user_name = '$username'");
+    if ($userId) {
+        return $userId;
+    } else {
+        false;
+    }
 }
 
 ?>

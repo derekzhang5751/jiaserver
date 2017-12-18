@@ -193,14 +193,17 @@ class integrate
             return false;
         }
         /* 检查email是否重复 */
-        $sql = "SELECT " . $this->field_id .
+        $sql = "SELECT is_validated" .
                " FROM " . $this->table($this->user_table).
                " WHERE " . $this->field_email . " = '$email'";
-        if ($this->db->getOne($sql, true) > 0)
-        {
+        $isValidated = $this->db->getOne($sql, true);
+        $isValidated = intval($isValidated);
+        if ($isValidated > 0) {
             $this->error = ERR_EMAIL_EXISTS;
-
             return false;
+        } else {
+            // 该用户没有激活，删除重用
+            $this->remove_user($username);
         }
 
         $post_username = $username;
@@ -500,7 +503,7 @@ class integrate
         {
             $sql = "SELECT " . $this->field_id .
                    " FROM " . $this->table($this->user_table).
-                   " WHERE " . $this->field_name . "='" . $post_username . "'";
+                   " WHERE " . $this->field_name . "='" . $post_username . "' AND is_validated=1";
 
             return $this->db->getOne($sql);
         }
@@ -531,7 +534,7 @@ class integrate
           /* 检查email是否重复 */
             $sql = "SELECT " . $this->field_id .
                        " FROM " . $this->table($this->user_table).
-                       " WHERE " . $this->field_email . " = '$email' ";
+                       " WHERE " . $this->field_email . " = '$email' AND is_validated=1";
             if ($this->db->getOne($sql, true) > 0)
             {
                 $this->error = ERR_EMAIL_EXISTS;

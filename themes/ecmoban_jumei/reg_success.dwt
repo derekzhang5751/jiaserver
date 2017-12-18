@@ -16,10 +16,20 @@
 <body>
 <!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->
 
-<div class="block block1" style="height: 200px;">
-    <p style="font-size: 20px; margin-top: 100px;">注册成功！验证邮件已发送到您的邮箱，请查看您的注册邮箱，并点击链接激活您的账号。</p>
+<div class="block block1" style="height: 100px;">
+    <p style="font-size: 19px; color: black; margin-top: 100px; margin-left: 50px;">感谢注册，确认邮件已发送至你的注册邮箱：{$reg_email}</p>
+    <p style="font-size: 15px; color: grey; margin-top: 5px; margin-left: 50px;">请进入邮箱查看你的邮件，并点击链接激活您的账号。</p>
 </div>
-<div class="blank"></div>
+
+<div style="height: 30px; line-height: 30px; clear: both; visibility: hidden;"></div>
+
+<div class="block block1" style="height: 200px;">
+    <p style="font-size: 13px; margin-top: 5px; margin-left: 50px; color: grey;">没有收到邮件？</p>
+    <p style="font-size: 13px; margin-top: 5px; margin-left: 50px;">1. 检查邮件地址是否正确，你可以返回 <a href="user.php?act=register" style="color: blue;">重新填写</a> </p>
+    <p style="font-size: 13px; margin-top: 5px; margin-left: 50px;">2. 检查你的邮件垃圾箱</p>
+    <p style="font-size: 13px; margin-top: 5px; margin-left: 50px;">3. 若仍未收到确认，请尝试 <a href="user.php?act=resend_active_email&userid={$user_id}" style="color: blue;">重新发送</a> </p>
+</div>
+
 <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
 </body>
 <script type="text/javascript">
