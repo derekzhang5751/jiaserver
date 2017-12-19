@@ -2427,6 +2427,18 @@ elseif ($action == 'resend_active_email')
 
     $userId = isset($_REQUEST['userid']) ? intval($_REQUEST['userid']) : 0;
 
+    if (isset($_SESSION['last_send_email']))
+    {
+        if (time() - $_SESSION['last_send_email'] <= 60)
+        {
+            $smarty->assign('reg_email', 'intime');
+            $smarty->assign('user_id', $userId);
+            $GLOBALS['smarty']->display('reg_success.dwt');
+            exit('');
+        }
+    }
+    $_SESSION['last_send_email'] = time();
+
     if ($userId > 0) {
         $email = send_regiter_hash($userId);
     } else {

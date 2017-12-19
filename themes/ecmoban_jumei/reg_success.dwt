@@ -16,10 +16,17 @@
 <body>
 <!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->
 
+<!-- {if $reg_email eq "intime"}  -->
+<div class="block block1" style="height: 100px;">
+    <p style="font-size: 19px; color: black; margin-top: 100px; margin-left: 50px;">抱歉！请在一分钟后重试！</p>
+    <p style="font-size: 15px; color: grey; margin-top: 5px; margin-left: 50px;">两次发送激活邮件间隔需大于一分钟。</p>
+</div>
+<!-- {else} -->
 <div class="block block1" style="height: 100px;">
     <p style="font-size: 19px; color: black; margin-top: 100px; margin-left: 50px;">感谢注册，确认邮件已发送至你的注册邮箱：{$reg_email}</p>
     <p style="font-size: 15px; color: grey; margin-top: 5px; margin-left: 50px;">请进入邮箱查看你的邮件，并点击链接激活您的账号。</p>
 </div>
+<!-- {/if} -->
 
 <div style="height: 30px; line-height: 30px; clear: both; visibility: hidden;"></div>
 

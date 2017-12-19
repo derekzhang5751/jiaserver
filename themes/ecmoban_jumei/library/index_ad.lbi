@@ -110,7 +110,7 @@ TransformView.prototype = {
   SetOptions: function(options) {
 	this.options = {//默认值
 		Up:		true,//是否向上(否则向左)
-		Step:		5,//滑动变化率
+		Step:		80,//滑动变化率
 		Time:		10,//滑动延时
 		Auto:		true,//是否自动转换
 		Pause:		2000,//停顿时间(Auto为true时有效)
