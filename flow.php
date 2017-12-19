@@ -277,10 +277,15 @@ elseif ($_REQUEST['step'] == 'login')
                 }
             }
 
-            if (register(trim($_POST['username']), trim($_POST['password']), trim($_POST['email'])))
+            $userName = trim($_POST['username']);
+            if (register($userName, trim($_POST['password']), trim($_POST['email'])))
             {
                 /* 用户注册成功 */
-                ecs_header("Location: flow.php?step=consignee\n");
+                $userId = get_userid_by_username($userName);
+                $smarty->assign('reg_email', $_POST['email']);
+                $smarty->assign('user_id', $userId);
+                $GLOBALS['smarty']->display('reg_success.dwt');
+                //ecs_header("Location: flow.php?step=consignee\n");
                 exit;
             }
             else

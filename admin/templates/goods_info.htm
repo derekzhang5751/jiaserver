@@ -115,7 +115,7 @@
           </tr>
           {/if}
 
-          <!--鍟嗗搧浼樻儬浠锋牸-->
+          <!--商品优惠价格-->
           <tr>
             <td class="label"><a href="javascript:showNotice('volumePrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_volume_price}</td>
             <td>
@@ -137,14 +137,14 @@
               <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="volumePrice">{$lang.notice_volume_price}</span>
             </td>
           </tr>
-          <!--鍟嗗搧浼樻儬浠锋牸 end -->
+          <!--商品优惠价格 end -->
 
-          <tr>
+          <!--tr>
             <td class="label">{$lang.lab_market_price}</td>
             <td><input type="text" name="market_price" value="{$goods.market_price}" size="20" />
               <input type="button" value="{$lang.integral_market_price}" onclick="integral_market_price()" />
             </td>
-          </tr>
+          </tr-->
           <tr>
             <td class="label"><a href="javascript:showNotice('giveIntegral');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_give_integral}</td>
             <td><input type="text" name="give_integral" value="{$goods.give_integral}" size="20" />
@@ -217,8 +217,8 @@
           {if $cfg.use_storage}
           <tr>
             <td class="label"><a href="javascript:showNotice('noticeStorage');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_number}</td>
-<!--            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" {if $code neq '' || $goods._attribute neq ''}readonly="readonly"{/if} /><br />-->
-            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" /><br />
+            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" {if $code neq '' || $goods._attribute neq ''}readonly="readonly"{/if} /><br />
+            <!--td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" /><br /-->
             <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeStorage">{$lang.notice_storage}</span></td>
           </tr>
           <tr>
@@ -239,8 +239,17 @@
             <td><input type="checkbox" name="is_alone_sale" value="1" {if $goods.is_alone_sale}checked="checked"{/if} /> {$lang.alone_sale}</td>
           </tr>
           <tr>
-            <td class="label">{$lang.lab_is_free_shipping}</td>
+            <td class="label">{$lang.lab_is_free_shipping}：</td>
             <td><input type="checkbox" name="is_shipping" value="1" {if $goods.is_shipping}checked="checked"{/if} /> {$lang.free_shipping}</td>
+          </tr>
+          <tr>
+            <td class="label">运费设定：</td>
+            <td>
+              <select name="shipping_fee">
+                <option value="0">-- 运费级别 --</option>
+                {html_options options=$shippingfee_list selected=$shippingfee_selected}
+              </select>
+            </td>
           </tr>
           <tr>
             <td class="label">{$lang.lab_keywords}</td>
@@ -467,32 +476,32 @@
 
   function validate(goods_id)
   {
-      var validator = new Validator('theForm');
-      var goods_sn  = document.forms['theForm'].elements['goods_sn'].value;
+    var validator = new Validator('theForm');
+    var goods_sn  = document.forms['theForm'].elements['goods_sn'].value;
 
-      validator.required('goods_name', goods_name_not_null);
-      if (document.forms['theForm'].elements['cat_id'].value == 0)
-      {
-          validator.addErrorMsg(goods_cat_not_null);
-      }
+    validator.required('goods_name', goods_name_not_null);
+    if (document.forms['theForm'].elements['cat_id'].value == 0)
+    {
+      validator.addErrorMsg(goods_cat_not_null);
+    }
 
-      checkVolumeData("1",validator);
+    checkVolumeData("1",validator);
 
-      validator.required('shop_price', shop_price_not_null);
-      validator.isNumber('shop_price', shop_price_not_number, true);
-      validator.isNumber('market_price', market_price_not_number, false);
-      if (document.forms['theForm'].elements['is_promote'].checked)
-      {
-          validator.required('promote_start_date', promote_start_not_null);
-          validator.required('promote_end_date', promote_end_not_null);
-          validator.islt('promote_start_date', 'promote_end_date', promote_not_lt);
-      }
+    validator.required('shop_price', shop_price_not_null);
+    validator.isNumber('shop_price', shop_price_not_number, true);
+    //validator.isNumber('market_price', market_price_not_number, false);
+    if (document.forms['theForm'].elements['is_promote'].checked)
+    {
+      validator.required('promote_start_date', promote_start_not_null);
+      validator.required('promote_end_date', promote_end_not_null);
+      validator.islt('promote_start_date', 'promote_end_date', promote_not_lt);
+     }
 
-      if (document.forms['theForm'].elements['goods_number'] != undefined)
-      {
-          validator.isInt('goods_number', goods_number_not_int, false);
-          validator.isInt('warn_number', warn_number_not_int, false);
-      }
+    if (document.forms['theForm'].elements['goods_number'] != undefined)
+    {
+      validator.isInt('goods_number', goods_number_not_int, false);
+      validator.isInt('warn_number', warn_number_not_int, false);
+    }
 
     var callback = function(res)
     {

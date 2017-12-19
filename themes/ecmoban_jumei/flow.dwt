@@ -828,22 +828,22 @@
                <table width="98%" border="0" cellpadding="8" cellspacing="0" bgcolor="#B0D8FF" class="table">
                   <tr>
                     <td bgcolor="#ffffff" align="right" width="25%"><strong>{$lang.username}</strong></td>
-                    <td bgcolor="#ffffff"><input name="username" type="text" class="inputBg" id="username" onblur="is_registered(this.value);" /><br />
+                    <td bgcolor="#ffffff"><input name="username" type="text" class="inputBg" id="username" onblur="is_registered(this.value);" />
 		    <span id="username_notice" style="color:#FF0000"></span></td>
                   </tr>
                   <tr>
                     <td bgcolor="#ffffff" align="right"><strong>{$lang.email_address}</strong></td>
-                    <td bgcolor="#ffffff"><input name="email" type="text" class="inputBg" id="email" onblur="checkEmail(this.value);" /><br />
+                    <td bgcolor="#ffffff"><input name="email" type="text" class="inputBg" id="email" onblur="checkEmail(this.value);" />
 		    <span id="email_notice" style="color:#FF0000"></span></td>
                   </tr>
                   <tr>
                     <td bgcolor="#ffffff" align="right"><strong>{$lang.password}</strong></td>
-                    <td bgcolor="#ffffff"><input name="password" class="inputBg" type="password" id="password1" onblur="check_password(this.value);" onkeyup="checkIntensity(this.value)" /><br />
+                    <td bgcolor="#ffffff"><input name="password" class="inputBg" type="password" id="password1" onblur="check_password(this.value);" onkeyup="checkIntensity(this.value)" />
 		    <span style="color:#FF0000" id="password_notice"></span></td>
                   </tr>
                   <tr>
                     <td bgcolor="#ffffff" align="right"><strong>{$lang.confirm_password}</strong></td>
-                    <td bgcolor="#ffffff"><input name="confirm_password" class="inputBg" type="password" id="confirm_password" onblur="check_conform_password(this.value);" /><br />
+                    <td bgcolor="#ffffff"><input name="confirm_password" class="inputBg" type="password" id="confirm_password" onblur="check_conform_password(this.value);" />
 		    <span style="color:#FF0000" id="conform_password_notice"></span></td>
                   </tr>
                   <!-- 判断是否启用验证码{if $enabled_register_captcha} -->
