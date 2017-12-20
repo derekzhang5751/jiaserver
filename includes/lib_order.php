@@ -639,7 +639,6 @@ function order_fee($order, $goods, $consignee)
     $total['card_fee_formated'] = price_format($total['card_fee'], false);
 
     /* 红包 */
-
     if (!empty($order['bonus_id']))
     {
         $bonus          = bonus_info($order['bonus_id']);
@@ -648,7 +647,7 @@ function order_fee($order, $goods, $consignee)
     $total['bonus_formated'] = price_format($total['bonus'], false);
 
     /* 线下红包 */
-     if (!empty($order['bonus_kill']))
+    if (!empty($order['bonus_kill']))
     {
         $bonus          = bonus_info(0,$order['bonus_kill']);
         $total['bonus_kill'] = $order['bonus_kill'];
@@ -890,9 +889,73 @@ function cart_goods($type = CART_GENERAL_GOODS)
         {
             $arr[$key]['package_goods_list'] = get_package_goods($value['goods_id']);
         }
+
+        // 计算每种商品的运费及关税
+        $fee = get_shipping_fee_by_goodsid( $value['goods_id'], $value['goods_price'], $value['goods_number'] );
+        $arr[$key]['shipping_price'] = $fee['shipping_fee'];
+        $arr[$key]['duty']           = $fee['duty'];
+        $arr[$key]['formated_shipping_price'] = price_format($fee['shipping_fee'], false);
+        $arr[$key]['formated_duty']           = price_format($fee['duty'], false);
+        if ($fee['free'] === false) {
+            $subTotal = floatval( $value['subtotal'] );
+            $subTotal = $subTotal + $fee['shipping_fee'] + $fee['duty'];
+            $arr[$key]['subtotal'] = $subTotal;
+            $arr[$key]['formated_subtotal'] = price_format($subTotal, false);
+        }
     }
 
     return $arr;
+}
+
+function get_shipping_fee_by_goodsid($goodsId, $goodsPrice, $number) {
+    $fee = array(
+        'free' => true,
+        'shipping_fee' => 0.0,
+        'duty' => 0.0
+    );
+    $goodsId = intval($goodsId);
+    $sql = "SELECT goods_weight,is_shipping, shipfee_id".
+        " FROM " . $GLOBALS['ecs']->table('goods') .
+        " WHERE goods_id=" . $goodsId;
+
+    $goods = $GLOBALS['db']->getRow($sql);
+    if ($goods) {
+        if ($goods['is_shipping'] == '0') {
+            // 获取运费参数
+            $feeId = intval( $goods['shipfee_id'] );
+            $sql = "SELECT base_weight, base_fee, increase_weitht, increase_fee, tax".
+                " FROM " . $GLOBALS['ecs']->table('shipping_fee') .
+                " WHERE fee_id=" . $feeId;
+            $feeSet = $GLOBALS['db']->getRow($sql);
+            if ($feeSet) {
+                $fee['free'] = false;
+                $fee['shipping_fee'] = price_by_shipping_fee($goods['goods_weight'], $number, $feeSet);
+                $fee['duty']         = floatval($goodsPrice) * floatval($feeSet['tax']) / 100;
+            }
+        }
+    }
+
+    return $fee;
+}
+
+function price_by_shipping_fee($weight, $number, $feeSet) {
+    $price = 0.0;
+    $weight         = floatval($weight);
+    $number         = floatval($number);
+    $baseWeight     = floatval($feeSet['base_weight']);
+    $baseFee        = floatval($feeSet['base_fee']);
+    $increaseWeight = floatval($feeSet['increase_weitht']);
+    $increaseFee    = floatval($feeSet['increase_fee']);
+
+    $weight = $weight * $number;
+    if ($weight > $baseWeight) {
+        $inc = $weight - $baseWeight;
+        $price = $baseFee + (ceil($inc / $increaseWeight) * $increaseFee);
+    } else {
+        $price = $baseFee;
+    }
+
+    return $price;
 }
 
 /**

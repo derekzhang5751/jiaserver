@@ -350,11 +350,13 @@
           <tr>
               <th bgcolor="#ffffff">{$lang.goods_name}</th>
               <th bgcolor="#ffffff">{$lang.goods_attr}</th>
-              <!-- {if $show_marketprice} -->
+              <!-- {if $show_marketprice and false} -->
               <th bgcolor="#ffffff">{$lang.market_prices}</th>
               <!-- {/if} -->
               <th bgcolor="#ffffff">{if $gb_deposit}{$lang.deposit}{else}{$lang.shop_prices}{/if}</th>
               <th bgcolor="#ffffff">{$lang.number}</th>
+              <th bgcolor="#ffffff">运费</th>
+              <th bgcolor="#ffffff">关税</th>
               <th bgcolor="#ffffff">{$lang.subtotal}</th>
           </tr>
           <!-- {foreach from=$goods_list item=goods} -->
@@ -379,11 +381,13 @@
             </td>
 
             <td bgcolor="#ffffff">{$goods.goods_attr|nl2br}</td>
-            <!-- {if $show_marketprice} -->
+            <!-- {if $show_marketprice and false} -->
             <td align="right" bgcolor="#ffffff">{$goods.formated_market_price}</td>
             <!-- {/if} -->
             <td bgcolor="#ffffff" align="right">{$goods.formated_goods_price}</td>
             <td bgcolor="#ffffff" align="right">{$goods.goods_number}</td>
+            <td bgcolor="#ffffff" align="right">{$goods.formated_shipping_price}</td>
+            <td bgcolor="#ffffff" align="right">{$goods.formated_duty}</td>
             <td bgcolor="#ffffff" align="right">{$goods.formated_subtotal}</td>
           </tr>
           <!-- {/foreach} -->

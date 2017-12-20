@@ -927,7 +927,7 @@ function price_format($price, $change_price = true)
 {
     if($price==='')
     {
-     $price=0;
+        $price=0;
     }
     if ($change_price && defined('ECS_ADMIN') === false)
     {
