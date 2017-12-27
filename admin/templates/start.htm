@@ -10,8 +10,8 @@
     <tr>
       <td width="20%"><a href="#" title="更新实时汇率">实时汇率</a></td>
       <td width="30%"><strong style="color: red">5.15</strong></td>
-      <td width="20%"><a href="javascript:setNewRate('{$exchange_rate}');" title="修改当前汇率">当前设置汇率</a></td>
-      <td width="30%"><strong>{$exchange_rate}</strong></td>
+      <td width="20%"><a href="javascript:setNewRate();" title="修改当前汇率">当前设置汇率</a></td>
+      <td width="30%"><strong id="exchangeRate">{$exchange_rate}</strong></td>
     </tr>
   </table>
 </div>
@@ -274,10 +274,18 @@
     }
   }
 
-  function setNewRate(rate) {
+  function setNewRate() {
+    var rate = document.getElementById("exchangeRate").innerHTML;
     var newRate = prompt("请输入新的汇率：", rate);
     if (newRate != null && newRate != rate) {
-      console.log("New reate is " + newRate);
+        Ajax.call('index.php?is_ajax=1&act=setup_exchange_rate&rate='+newRate,'', callback_setup_exchange_rate, 'GET', 'JSON');
+        function callback_setup_exchange_rate(result) {
+            if (result.error == 0) {
+                document.getElementById("exchangeRate").innerHTML = result.rate;
+            } else {
+                console.log('Setup exchange rate error!');
+            }
+        }
     }
   }
 </script>

@@ -1279,6 +1279,39 @@ elseif ($_REQUEST['act'] == 'license')
     }
 }
 
+/*------------------------------------------------------ */
+//-- setup exchange rate
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'setup_exchange_rate')
+{
+    $is_ajax = $_GET['is_ajax'];
+    $rate    = $_GET['rate'];
+
+    if (isset($is_ajax) && $is_ajax && isset($rate))
+    {
+        // license 检查
+        include_once(ROOT_PATH . 'includes/cls_transport.php');
+        include_once(ROOT_PATH . 'includes/lib_main.php');
+
+        $f = floatval($rate);
+        $rate = number_format($f, 4, '.', '');
+
+        $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '$rate' WHERE cry_from='CAD' AND cry_to='RMB' AND type=0";
+        $db->query($sql);
+        $saved = $db->getOne("SELECT rate FROM " . $ecs->table('exchange_rate') . " WHERE cry_from='CAD' AND cry_to='RMB' AND type=0");
+
+        if ($saved) {
+            make_json_result('', 'success', array('rate' => $saved));
+        } else {
+            make_json_error(0);
+        }
+    }
+    else
+    {
+        make_json_error(0);
+    }
+}
+
 /**
  * license check
  * @return  bool

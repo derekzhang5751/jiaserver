@@ -39,7 +39,7 @@ if (!defined('ADMIN_PATH')) {
 define('ROOT_PATH', str_replace(ADMIN_PATH . '/includes/init.php', '', str_replace('\\', '/', __FILE__)));
 
 if (defined('DEBUG_MODE') == false) {
-    define('DEBUG_MODE', 0);
+    define('DEBUG_MODE', 0); // 0 off, 8 mysql output
 }
 
 if (PHP_VERSION >= '5.1' && !empty($timezone)) {
