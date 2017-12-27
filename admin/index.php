@@ -159,7 +159,7 @@ elseif ($_REQUEST['act'] == 'clear_cache')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'main')
 {
-    //开店向导第一步
+    // 开店向导第一步
     if(isset($_SESSION['shop_guide']) && $_SESSION['shop_guide'] === true)
     {
         unset($_SESSION['shop_guide']);//销毁session
@@ -311,9 +311,14 @@ elseif ($_REQUEST['act'] == 'main')
     /* 取得支持货到付款和不支持货到付款的支付方式 */
     $ids = get_pay_ids();
 
+    /* exchange rate info */
+    $exchangeRate     = $db->GetOne('SELECT rate FROM ' . $ecs->table('exchange_rate').
+    " WHERE cry_from='CAD' AND cry_to='RMB' AND type=0 ");
+    $smarty->assign('exchange_rate', $exchangeRate);
+
     /* 已完成的订单 */
     $order['finished']     = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('order_info').
-    " WHERE 1 " . order_query_sql('finished'));
+        " WHERE 1 " . order_query_sql('finished'));
     $status['finished']    = CS_FINISHED;
 
     /* 待发货的订单： */
