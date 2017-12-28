@@ -48,6 +48,8 @@ if ($_REQUEST['act'] == 'list')
     $content = load_template($cur);
 
     /* 创建 html editor */
+    create_html_editor('content', $content['template_content']);
+    /*
     $editor = new FCKeditor('content');
     $editor->BasePath   = '../includes/fckeditor/';
     $editor->ToolbarSet = 'Normal';
@@ -56,6 +58,7 @@ if ($_REQUEST['act'] == 'list')
     $editor->Value      = $content['template_content'];
     $FCKeditor = $editor->CreateHtml();
     $smarty->assign('FCKeditor', $FCKeditor);
+    */
     $smarty->assign('tpl', $cur);
     $smarty->assign('cur',          $cur);
     $smarty->assign('ur_here',      $_LANG['mail_template_manage']);
@@ -103,6 +106,8 @@ elseif ($_REQUEST['act'] == 'loat_template')
     if (($mail_type == -1 && $content['is_html'] == 1) || $mail_type == 1)
     {
         /* 创建 html editor */
+        create_html_editor('content', $content['template_content']);
+        /*
         $editor = new FCKeditor('content');
         $editor->BasePath   = '../includes/fckeditor/';
         $editor->ToolbarSet = 'Normal';
@@ -111,7 +116,7 @@ elseif ($_REQUEST['act'] == 'loat_template')
         $editor->Value      = $content['template_content'];
         $FCKeditor = $editor->CreateHtml();
         $smarty->assign('FCKeditor', $FCKeditor);
-
+        */
         $content['is_html'] = 1;
     }
     elseif ($mail_type == 0)
