@@ -78,6 +78,17 @@ class ottpay
         }
     }
 
+    protected function RMB2CAD($rmb) {
+        $rate = get_exchange_rate('CAD', 'RMB', 0);
+        $rate = floatval($rate);
+        if ($rate > 0.0) {
+            $cad = floatval($rmb) / $rate;
+            return $cad;
+        } else {
+            return $rmb;
+        }
+    }
+
     /**
      * AES 加密方法
      * @param string $str

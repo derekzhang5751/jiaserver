@@ -1339,13 +1339,18 @@ elseif ($_REQUEST['act'] == 'get_realtime_exchange_rate')
         $ott = new ottpay();
         $rate = $ott->getRealtimeExRate('CAD');
 
-        $f = floatval($rate) / 100000000;
-        $rate = number_format($f, 4, '.', '');
+        if ($rate) {
+            $f = floatval($rate) / 100000000;
+            $rate = number_format($f, 4, '.', '');
 
-        $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '$rate' WHERE cry_from='CAD' AND cry_to='RMB' AND type=1";
-        $db->query($sql);
-        $saved = $db->getOne("SELECT rate FROM " . $ecs->table('exchange_rate') . " WHERE cry_from='CAD' AND cry_to='RMB' AND type=1");
-
+            $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '$rate' WHERE cry_from='CAD' AND cry_to='RMB' AND type=1";
+            $db->query($sql);
+            $saved = $db->getOne("SELECT rate FROM " . $ecs->table('exchange_rate') . " WHERE cry_from='CAD' AND cry_to='RMB' AND type=1");
+        } else {
+            $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '0.0000' WHERE cry_from='CAD' AND cry_to='RMB' AND type=1";
+            $db->query($sql);
+            $saved = '0.0000';
+        }
         if ($saved) {
             make_json_result('', 'success', array('realtimeExRate' => $saved));
         } else {
