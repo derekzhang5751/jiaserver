@@ -9,6 +9,8 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
+require(dirname(__FILE__) . '/ottpay.php');
+
 $payment_lang = ROOT_PATH . 'languages/' .$GLOBALS['_CFG']['lang']. '/payment/alipay.php';
 
 if (file_exists($payment_lang))
@@ -58,10 +60,8 @@ if (isset($set_modules) && $set_modules == TRUE)
 /**
  * 类
  */
-class alipay
+class alipay extends ottpay
 {
-    //private $logPath = '/Users/derek/WebProjects/jiajiajia/jiaserver/log/home/error.log';
-    private $logPath = '/usr/local/apache2/htdocs/log/home/error.log';
     /**
      * 构造函数
      *
@@ -80,7 +80,7 @@ class alipay
      * @param   array   $order      订单信息
      * @param   array   $payment    支付方式信息
      */
-    function get_code($order, $payment)
+    public function get_code($order, $payment)
     {
         $amount = $this->formatAmount( $order['order_amount'] );
         $data = array(
@@ -112,28 +112,10 @@ class alipay
             'md5'           => $sign
         );
 
-        $dstUrl = 'https://frontapi.ottpay.com:443/process';
-        $postData = json_encode($parameter);
-        $headers = array(
-            'Content-Type: application/json',
-        );
-        //error_log("\n[WECHATPAY]PostData: ".$postData, 3, $this->logPath);
-
-        $ch = curl_init ();
-        curl_setopt ( $ch, CURLOPT_URL, $dstUrl );
-        curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
-        curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
-        curl_setopt ( $ch, CURLOPT_POST, true );
-        curl_setopt ( $ch, CURLOPT_POSTFIELDS, $postData );
-        curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, FALSE );
-        curl_setopt ( $ch, CURLOPT_SSL_VERIFYHOST, 2 );
-        $output = curl_exec ( $ch );
-        //error_log("\n[WECHATPAY]Response: ".$output, 3, $this->logPath);
-        if (curl_errno($ch) || $output === false) {
-            curl_close($ch);
+        $output = $this->postRequest($parameter);
+        if ($output === false) {
             return false;
         }
-        curl_close($ch);
 
         $fields = json_decode($output, true);
         $respCode = $fields['rsp_code'];
@@ -180,7 +162,7 @@ class alipay
     /**
      * 响应操作
      */
-    function respond()
+    public function respond()
     {
         $postData = file_get_contents('php://input', 'r');
         //error_log("\n[WECHATPAY]POST BODY: ".$postData, 3, $this->logPath);
@@ -241,52 +223,6 @@ class alipay
         }
     }
 
-    /**
-     * AES 加密方法
-     * @param string $str
-     * @return string
-     */
-    private function aesEncrypt($str, $aesKey) {
-        $screct_key = $aesKey;
-
-        $str = trim($str);
-        $str = $this->addPKCS7Padding($str);
-        $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128,MCRYPT_MODE_ECB),MCRYPT_RAND);
-        $encrypt_str = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $screct_key, $str, MCRYPT_MODE_ECB, $iv);
-        $date = base64_encode($encrypt_str);
-        return $date;
-    }
-
-    private function aesDecrypt($str, $key) {
-        $date = base64_decode($str);
-        $screct_key = $key;
-        $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128,MCRYPT_MODE_ECB),MCRYPT_RAND);
-        $encrypt_str =  mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $screct_key, $date, MCRYPT_MODE_ECB, $iv);
-        $encrypt_str = preg_replace('/[\x00-\x1F]/','', $encrypt_str);
-        return $encrypt_str;
-    }
-
-    private function addPKCS7Padding($source) {
-        $source = trim($source);
-        $block = mcrypt_get_block_size('rijndael-128', 'ecb');
-        $pad = $block - (strlen($source) % $block);
-        if ($pad <= $block) {
-            $char = chr($pad);
-            $source .= str_repeat($char, $pad);
-        }
-        return $source;
-    }
-
-    private function formatAmount($amount) {
-        $f = floatval($amount) * 100;
-        $i = intval($f);
-        return strval($i);
-    }
-    private function unFormatAmount($amount) {
-        $f = floatval($amount) / 100;
-        $amt = number_format($f, 2, '.', '');
-        return $amt;
-    }
 }
 
 ?>

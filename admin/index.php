@@ -312,9 +312,19 @@ elseif ($_REQUEST['act'] == 'main')
     $ids = get_pay_ids();
 
     /* exchange rate info */
-    $exchangeRate     = $db->GetOne('SELECT rate FROM ' . $ecs->table('exchange_rate').
-    " WHERE cry_from='CAD' AND cry_to='RMB' AND type=0 ");
+    $exchangeRate = $db->GetOne('SELECT rate FROM ' . $ecs->table('exchange_rate').
+                        " WHERE cry_from='CAD' AND cry_to='RMB' AND type=0 ");
+    if (!$exchangeRate) {
+        $exchangeRate = '-';
+    }
     $smarty->assign('exchange_rate', $exchangeRate);
+
+    $realtimeExRate = $db->GetOne('SELECT rate FROM ' . $ecs->table('exchange_rate').
+        " WHERE cry_from='CAD' AND cry_to='RMB' AND type=1 ");
+    if (!$realtimeExRate) {
+        $realtimeExRate = '-';
+    }
+    $smarty->assign('realtime_ex_rate', $realtimeExRate);
 
     /* 已完成的订单 */
     $order['finished']     = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('order_info').
@@ -1284,12 +1294,12 @@ elseif ($_REQUEST['act'] == 'license')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'setup_exchange_rate')
 {
+    admin_priv('all');
     $is_ajax = $_GET['is_ajax'];
     $rate    = $_GET['rate'];
 
     if (isset($is_ajax) && $is_ajax && isset($rate))
     {
-        // license 检查
         include_once(ROOT_PATH . 'includes/cls_transport.php');
         include_once(ROOT_PATH . 'includes/lib_main.php');
 
@@ -1302,6 +1312,42 @@ elseif ($_REQUEST['act'] == 'setup_exchange_rate')
 
         if ($saved) {
             make_json_result('', 'success', array('rate' => $saved));
+        } else {
+            make_json_error(0);
+        }
+    }
+    else
+    {
+        make_json_error(0);
+    }
+}
+
+/*------------------------------------------------------ */
+//-- get realtime exchange rate
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'get_realtime_exchange_rate')
+{
+    admin_priv('all');
+    $is_ajax = $_GET['is_ajax'];
+
+    if (isset($is_ajax) && $is_ajax)
+    {
+        include_once(ROOT_PATH . 'includes/cls_transport.php');
+        include_once(ROOT_PATH . 'includes/lib_main.php');
+        include_once(ROOT_PATH . 'includes/modules/payment/ottpay.php');
+
+        $ott = new ottpay();
+        $rate = $ott->getRealtimeExRate('CAD');
+
+        $f = floatval($rate) / 100000000;
+        $rate = number_format($f, 4, '.', '');
+
+        $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '$rate' WHERE cry_from='CAD' AND cry_to='RMB' AND type=1";
+        $db->query($sql);
+        $saved = $db->getOne("SELECT rate FROM " . $ecs->table('exchange_rate') . " WHERE cry_from='CAD' AND cry_to='RMB' AND type=1");
+
+        if ($saved) {
+            make_json_result('', 'success', array('realtimeExRate' => $saved));
         } else {
             make_json_error(0);
         }
