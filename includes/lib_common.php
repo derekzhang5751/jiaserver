@@ -2779,4 +2779,42 @@ if (!function_exists('array_combine')) {
     }
 }
 
+/**
+ * 获取文章分类类型
+ *
+ * @access  public
+ * @param:  $artCatId[string] 文章分类ID
+ *
+ * @return int
+ */
+function get_article_cat_type($artCatId)
+{
+    $artCatId = intval($artCatId);
+    if ($artCatId > 0) {
+        $sql = 'SELECT cat_type FROM ' . $GLOBALS['ecs']->table('article_cat') . " WHERE cat_id = $artCatId";
+        return $GLOBALS['db']->GetOne($sql);
+    } else {
+        return 0;
+    }
+}
+
+/**
+ * 获取文章分类ID
+ *
+ * @access  public
+ * @param:  $articleId[string] 文章ID
+ *
+ * @return int
+ */
+function get_article_cat_id($articleId)
+{
+    $articleId = intval($articleId);
+    if ($articleId > 0) {
+        $sql = 'SELECT cat_id FROM ' . $GLOBALS['ecs']->table('article') . " WHERE article_id = $articleId";
+        return $GLOBALS['db']->GetOne($sql);
+    } else {
+        return 0;
+    }
+}
+
 ?>

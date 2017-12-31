@@ -53,10 +53,18 @@ $page   = !empty($_REQUEST['page'])  && intval($_REQUEST['page'])  > 0 ? intval(
 //-- PROCESSOR
 /*------------------------------------------------------ */
 
+$catType = get_article_cat_type($cat_id);
+$catType = intval($catType);
+if ($catType == 1) {
+    $templateName = 'article_cat_grids.dwt';
+} else {
+    $templateName = 'article_cat.dwt';
+}
+
 /* 获得页面的缓存ID */
 $cache_id = sprintf('%X', crc32($cat_id . '-' . $page . '-' . $_CFG['lang']));
 
-if (!$smarty->is_cached('article_cat.dwt', $cache_id))
+if (!$smarty->is_cached($templateName, $cache_id))
 {
     /* 如果页面没有被缓存则重新获得页面的内容 */
 
@@ -129,6 +137,6 @@ if (!$smarty->is_cached('article_cat.dwt', $cache_id))
 
 $smarty->assign('feed_url',         ($_CFG['rewrite'] == 1) ? "feed-typearticle_cat" . $cat_id . ".xml" : 'feed.php?type=article_cat' . $cat_id); // RSS URL
 
-$smarty->display('article_cat.dwt', $cache_id);
+$smarty->display($templateName, $cache_id);
 
 ?>

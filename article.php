@@ -37,9 +37,18 @@ if(isset($_REQUEST['cat_id']) && $_REQUEST['cat_id'] < 0)
 //-- PROCESSOR
 /*------------------------------------------------------ */
 
+$catId = get_article_cat_id($article_id);
+$catType = get_article_cat_type($catId);
+$catType = intval($catType);
+if ($catType == 1) {
+    $templateName = 'article_grids.dwt';
+} else {
+    $templateName = 'article.dwt';
+}
+
 $cache_id = sprintf('%X', crc32($_REQUEST['id'] . '-' . $_CFG['lang']));
 
-if (!$smarty->is_cached('article.dwt', $cache_id))
+if (!$smarty->is_cached($templateName, $cache_id))
 {
     /* 文章详情 */
     $article = get_article_info($article_id);
@@ -122,7 +131,7 @@ if (!$smarty->is_cached('article.dwt', $cache_id))
 }
 if(isset($article) && $article['cat_id'] > 2)
 {
-    $smarty->display('article.dwt', $cache_id);
+    $smarty->display($templateName, $cache_id);
 }
 else
 {
