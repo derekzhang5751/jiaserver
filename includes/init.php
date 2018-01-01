@@ -57,7 +57,7 @@ require(ROOT_PATH . 'data/config.php');
 
 if (defined('DEBUG_MODE') == false)
 {
-    define('DEBUG_MODE', 0);
+    define('DEBUG_MODE', 0); // 0 off, 8 mysql output
 }
 
 if (PHP_VERSION >= '5.1' && !empty($timezone))

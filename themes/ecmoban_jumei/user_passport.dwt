@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--suppress JSAnnotator -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -17,7 +18,7 @@
 <!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->
 
 <div class="block block1">
-  <!-- #BeginLibraryItem "/library/ur_here.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/ur_here.lbi" --><!-- #EndLibraryItem -->
 
 <!--#登录界面 start-->
 <!-- {if $action eq 'login'} -->
@@ -29,7 +30,7 @@
         <li ><a href="user.php?act=register">用户注册</a></li>
     </ul>
     </div>
-   <form name="formLogin" action="user.php" method="post" onSubmit="return userLogin()">
+      <form name="formLogin" action="user.php" method="post" onSubmit="return userLogin()">
         <table width="100%" border="0" align="left" cellpadding="3" cellspacing="5">
           <tr>
             <td width="25%" align="right">{$lang.label_username}</td>
@@ -58,31 +59,40 @@
             <input type="hidden" name="back_act" value="{$back_act}" />
             <input type="submit" name="submit" value="" class="us_Submit" />            </td>
           </tr>
-	  <tr><td></td><td><a href="user.php?act=qpassword_name" class="f3">{$lang.get_password_by_question}</a>&nbsp;&nbsp;&nbsp;<a href="user.php?act=get_password" class="f3">{$lang.get_password_by_mail}</a></td></tr>
-      </table>
-    </form>
+          <tr>
+            <td colspan="2"></td>
+          </tr>
+	      <tr>
+            <td></td>
+            <td>
+              <!--a href="user.php?act=qpassword_name" class="f3">{$lang.get_password_by_question}</a>&nbsp;&nbsp;&nbsp; -->
+              <a href="user.php?act=get_password" class="f6">{$lang.get_password_by_mail}</a>
+            </td>
+          </tr>
+        </table>
+      </form>
     <div class="blank"></div>
   </div>
   
   <div class="usTxt">
-  <!-- #BeginLibraryItem "/library/goto_ecmoban.lbi" --><!-- #EndLibraryItem -->
-   </div>
+<!-- #BeginLibraryItem "/library/goto_ecmoban.lbi" --><!-- #EndLibraryItem -->
+</div>
 </div>
 <!--{/if}-->
 <!--#登录界面 end-->
 
 <!--*会员注册界面 start-->
-    <!--{if $action eq 'register'}-->
-    <!-- {if $shop_reg_closed eq 1} -->
-    <div class="usBox">
-      <div class="usBox_2 clearfix">
+<!--{if $action eq 'register'}-->
+  <!-- {if $shop_reg_closed eq 1} -->
+  <div class="usBox">
+    <div class="usBox_2 clearfix">
         <div class="f1 f5" align="center">{$lang.shop_register_closed}</div>
-      </div>
     </div>
-    <!-- {else} -->
-    {insert_scripts files='utils.js'}
-<div class="usBox">
-   <div class="usBox_1 f_l">
+  </div>
+  <!-- {else} -->
+  {insert_scripts files='utils.js'}
+  <div class="usBox">
+  <div class="usBox_1 f_l">
     <div class="login_tab">
     <ul>
         <li  ><a href="user.php">用户登录</a></li>
@@ -112,6 +122,13 @@
             <span style="color:#FF0000" id="password_notice"> *</span>
           </td>
         </tr>
+          <tr>
+              <td align="right">{$lang.label_confirm_password}</td>
+              <td>
+                  <input name="confirm_password" type="password" id="conform_password" onblur="check_conform_password(this.value);"  class="inputBg" style="width:179px;"/>
+                  <span style="color:#FF0000" id="conform_password_notice"> *</span>
+              </td>
+          </tr>
         <tr>
           <td align="right">{$lang.label_password_intensity}</td>
           <td>
@@ -122,13 +139,6 @@
                 <td width="33%" id="pwd_high">{$lang.pwd_high}</td>
               </tr>
             </table>
-          </td>
-        </tr>
-        <tr>
-          <td align="right">{$lang.label_confirm_password}</td>
-          <td>
-          <input name="confirm_password" type="password" id="conform_password" onblur="check_conform_password(this.value);"  class="inputBg" style="width:179px;"/>
-            <span style="color:#FF0000" id="conform_password_notice"> *</span>
           </td>
         </tr>
         <!-- {foreach from=$extend_info_list item=field} -->
@@ -180,11 +190,15 @@
           </td>
         </tr>
         <tr>
-          <td colspan="2">&nbsp;</td>
+          <td colspan="2"></td>
         </tr>
-                 <tr>
-                    <td bgcolor="#ffffff" colspan="2" align="center"><a href="user.php?act=qpassword_name" class="f6">{$lang.get_password_by_question}</a>   <a href="user.php?act=get_password" class="f6">{$lang.get_password_by_mail}</a></td>
-                  </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td bgcolor="#ffffff" colspan="2" align="left">
+              <!--a href="user.php?act=qpassword_name" class="f6">{$lang.get_password_by_question}</a-->
+              <a href="user.php?act=get_password" class="f6">{$lang.get_password_by_mail}</a>
+          </td>
+        </tr>
 
       </table>
     </form>

@@ -2466,9 +2466,9 @@ elseif ($_REQUEST['act'] == 'templates')
     $file_content = file_get_contents($file_path);
     @fclose($file_content);
 
-    include_once(ROOT_PATH."includes/fckeditor/fckeditor.php");
-
     /* 编辑器 */
+    //create_html_editor('FCKeditor1', $file_content);
+
     $editor = new FCKeditor('FCKeditor1');
     $editor->BasePath   = "../includes/fckeditor/";
     $editor->ToolbarSet = "Normal";

@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--suppress JSAnnotator -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -60,15 +61,15 @@ function reg(str){
     <!--{foreach from=$categories item=cat}-->
      <dl>
      <dt><a href="{$cat.url}">{$cat.name|escape:html}</a></dt>
-	 
+
      <dd>
 	 <!--{foreach from=$cat.cat_id item=child}-->
      <a href="{$child.url}">{$child.name|escape:html}</a>
-      
+
      <!--{/foreach}-->
        </dd>
        </dl>
-    <!--{/foreach}--> 
+    <!--{/foreach}-->
   </div>
 </div>
 <div class="blank"></div>
@@ -85,7 +86,7 @@ function reg(str){
   <div class="AreaR">
    <!--商品详情start-->
    <div id="goodsInfo" class="clearfix">
-    
+
      <!--商品图片和相册 start-->
      <div class="imgInfo">
      <a href="{$pictures.0.img_url}" id="zoom1" class="MagicZoom MagicThumb" title="{$goods.goods_style_name}">
@@ -101,8 +102,8 @@ function reg(str){
       <a href="{$next_good.url}"><img style="position: absolute;right:0;"  alt="next" src="./images/down.gif" /></a>
       {/if}
       </div>
-      
- 
+
+
          <div class="blank"></div>
            <!--相册 START-->
      <!-- #BeginLibraryItem "/library/goods_gallery.lbi" --><!-- #EndLibraryItem -->
@@ -115,8 +116,8 @@ function reg(str){
      <form action="javascript:addToCart({$goods.goods_id})" method="post" name="ECS_FORMBUY" id="ECS_FORMBUY" >
 	  <h1 class="clearfix" >
       {$goods.goods_style_name}
-      </h1> 
- 
+      </h1>
+
        <!-- {if $promotion} -->
       <div class="padd">
       <!-- {foreach from=$promotion item=item key=key} 优惠活动-->
@@ -133,38 +134,38 @@ function reg(str){
       <a href="{$item.url}" title="{$lang.$item.type} {$item.act_name}{$item.time}" style="font-weight:100; color:#f69;">{$item.act_name}</a><br />
       <!-- {/foreach} -->
       </div>
-      <!-- {/if} --> 
-	   
-	  
+      <!-- {/if} -->
+
+
 	  <ul class="ul2 clearfix">
         <li class="clearfix" style="width:100%">
        <dd>
- 
+
        <!--本店售价-->
-       <strong>{$lang.shop_price}</strong><font class="shop" id="ECS_SHOPPRICE">{$goods.shop_price_formated}</font> 
-   
-	   
-	   <!-- {if $cfg.show_marketprice} 市场价格-->
-       <font class="market">{$goods.market_price}</font> 
+       <strong>{$lang.shop_price}</strong><font class="shop" id="ECS_SHOPPRICE">{$goods.shop_price_formated}</font>
+
+
+	   <!-- {if $cfg.show_marketprice and false } 市场价格-->
+       <font class="market">{$goods.market_price}</font>
        <!-- {/if} -->
        </dd>
        </li>
-      
-      
-      
-      
+
+
+
+
        <!-- {if $cfg.show_goodssn} 显示商品货号-->
       <li class="clearfix">
        <dd>
        <strong>{$lang.goods_sn}</strong>{$goods.goods_sn}
-      
+
        </dd>
-       </li> 
+       </li>
         <!-- {/if} -->
        <!-- {if $goods.goods_number neq "" and $cfg.show_goodsnumber} 商品库存-->
        <li class="clearfix">
        <dd>
-      
+
         <!-- {if $goods.goods_number eq 0} -->
           <strong>{$lang.goods_number}</strong>
           <font color='red'>{$lang.stock_up}</font>
@@ -172,34 +173,34 @@ function reg(str){
           <strong>{$lang.goods_number}</strong>
           {$goods.goods_number} {$goods.measure_unit}
         <!-- {/if} -->
-     
+
        </dd>
-       </li>  
+       </li>
        <!-- {/if} -->
        <!-- {if $goods.goods_brand neq "" and $cfg.show_brand} 显示商品品牌-->
       <li class="clearfix">
        <dd>
-      
+
        <strong>{$lang.goods_brand}</strong><a href="{$goods.goods_brand_url}" >{$goods.goods_brand}</a>
-    
+
        </dd>
-       </li>  
+       </li>
         <!--{/if}-->
         <!-- {if $cfg.show_goodsweight} 商品重量-->
        <li class="clearfix">
        <dd>
-       
+
        <strong>{$lang.goods_weight}</strong>{$goods.goods_weight}
-       
+
        </dd>
       </li>
-      <!-- {/if} -->  
+      <!-- {/if} -->
        <!-- {if $cfg.show_addtime} 上架时间-->
       <li class="clearfix">
        <dd>
-    
+
       <strong>{$lang.add_time}</strong>{$goods.add_time}
-      
+
        </dd>
        </li>
        <!-- {/if} -->
@@ -210,11 +211,11 @@ function reg(str){
        </dd>
       </li>
 	  </ul>
-	  
-	  
+
+
 	  <ul>
-     
-        
+
+
 
       <!--{if $volume_price_list } -->
       <li class="padd">
@@ -237,33 +238,32 @@ function reg(str){
       <!--{if $goods.is_promote and $goods.gmt_end_time } 促销-->
       {insert_scripts files='lefttime.js'}
       <li class="padd loop" style="margin-bottom:5px; border-bottom:1px dashed #ccc;">
-      <strong>{$lang.promote_price}</strong><font class="shop">{$goods.promote_price}</font><br />
+      <strong>{$lang.promote_price}</strong><font class="shopRed">{$goods.promote_price}</font><br />
       <strong>{$lang.residual_time}</strong>
       <font class="f4" id="leftTime">{$lang.please_waiting}</font><br />
       </li>
       <!--{/if}-->
-  
-  
+
+
   <li class="clearfix">
-       <dd >
-  
+    <dd >
        <!-- {foreach from=$rank_prices item=rank_price key=key} 会员等级对应的价格-->
-       {$rank_price.rank_name}：<font class="f1" id="ECS_RANKPRICE_{$key}" style=" padding-right:10px;">{$rank_price.price}</font> 
+       {$rank_price.rank_name}：<font class="f1" id="ECS_RANKPRICE_{$key}" style=" padding-right:10px;">{$rank_price.price}</font>
        <!--{/foreach}-->
-       
-        <a href="javascript:collect({$goods.goods_id})">收藏</a> |  
-        <!-- {if $affiliate.on} -->
-      <a href="user.php?act=affiliate&goodsid={$goods.goods_id}" >推荐</a>
-      <!-- {/if} -->
-   </dd>
+
+       <a href="javascript:collect({$goods.goods_id})">收藏</a>
+       <!-- {if $affiliate.on and false } -->
+           |<a href="user.php?act=affiliate&goodsid={$goods.goods_id}" >推荐</a>
+       <!-- {/if} -->
+    </dd>
       </li>
-  
+
        <!-- {if $goods.give_integral > 0} 购买此商品赠送积分-->
        <li class="clearfix">
        <dd >
-       
+
         <strong>{$lang.goods_give_integral}</strong><font class="f4">{$goods.give_integral} {$points_name}</font>
-        
+
        </dd>
       </li>
       <!-- {/if} -->
@@ -272,8 +272,8 @@ function reg(str){
       <strong>{$lang.goods_bonus}</strong><font class="shop">{$goods.bonus_money}</font><br />
       </li>
       <!-- {/if} -->
-  
-      
+
+
        <!-- {if $cfg.use_integral} 购买此商品可使用积分-->
 
         <li class="clearfix">
@@ -289,7 +289,7 @@ function reg(str){
       <!-- {/if} -->
             </ul>
          <ul class="bnt_ul">
-     
+
       <!-- {* 开始循环所有可选属性 *} -->
       <!-- {foreach from=$specification item=spec key=spec_key} -->
       <li class="padd loop">
@@ -322,19 +322,28 @@ function reg(str){
       </li>
       <!-- {/foreach} -->
       <!-- {* 结束循环可选属性 *} -->
-      
-           <li class="clearfix">
-       <dd>
-       <strong>{$lang.number}：</strong>
-        <input name="number" type="text" id="number" value="1" size="4" onblur="changePrice()" style="border:1px solid #ccc; "/> <strong>{$lang.amount}：</strong><font id="ECS_GOODS_AMOUNT" class="f1"></font>
-       </dd>
-       </li>
-      
+
+      <li class="clearfix">
+      <dd>
+          <strong style="line-height: 38px; text-align: center;">{$lang.number}：</strong>
+          <dd class="change-goods-num">
+          <a href="javascript:void(0);" class="num-reduce" id="num-reduce" style="text-decoration: none;" onclick="onReduceBtnClick()"><i>-</i></a>
+          <input name="number" type="text" id="number" value="1" size="4" onblur="changePrice()" class="input-num"/>
+          <a href="javascript:void(0);" class="num-add" id="num-add" style="text-decoration: none;" onclick="onAddBtnClick()"><i>+</i></a>
+          </dd>
+      </dd>
+      </li>
+             <li class="clearfix">
+                 <dd>
+                     <strong>{$lang.amount}：</strong><font id="ECS_GOODS_AMOUNT" class="f1"></font>
+                 </dd>
+             </li>
+
       <li class="padd">
       <a href="javascript:addToCart({$goods.goods_id})"><img src="images/goumai2.gif" /></a>
-     
+
       </li>
-     
+
       </ul>
       </form>
      </div>
@@ -343,7 +352,7 @@ function reg(str){
    <!--商品详情end-->
    <!--商品描述，商品属性 START-->
      <div class="box">
- 
+
       <div style="padding:0 0px;">
         <div id="com_b" class="history clearfix">
         <h2>商品描述</h2>
@@ -359,8 +368,8 @@ function reg(str){
       <div id="com_h">
        <blockquote>
         {$goods.goods_desc}
-       </blockquote> 
-       
+       </blockquote>
+
        <blockquote>
       <table class="table" width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#dddddd">
         <!-- {foreach from=$properties item=property_group key=key} -->
@@ -378,7 +387,7 @@ function reg(str){
      </blockquote>
 
      <blockquote>
-   
+
 <!-- #BeginLibraryItem "/library/goods_tags.lbi" -->
 
 
@@ -454,9 +463,9 @@ function reg(str){
 
  <!-- #EndLibraryItem -->
      </blockquote>
-     
-     
-    
+
+
+
 
      <!-- {if $package_goods_list} -->
      <blockquote>
@@ -482,10 +491,10 @@ function reg(str){
        <!-- {/foreach} -->
      </blockquote>
      <!-- {/if} -->
-     
-     
+
+
      <blockquote>
-   
+
 <!-- #BeginLibraryItem "/library/goods_related.lbi" -->
 
 
@@ -561,7 +570,7 @@ function reg(str){
 
  <!-- #EndLibraryItem -->
      </blockquote>
-     
+
 
       </div>
      </div>
@@ -573,7 +582,7 @@ function reg(str){
     </script>
   <div class="blank"></div>
   <!--商品描述，商品属性 END-->
-  <!-- TemplateBeginEditable name="右边可编辑区域" --> 
+  <!-- TemplateBeginEditable name="右边可编辑区域" -->
 <!-- #BeginLibraryItem "/library/bought_goods.lbi" -->
 
 <!-- {if $bought_goods} -->
@@ -584,7 +593,7 @@ function reg(str){
        <!--{foreach from=$bought_goods item=bought_goods_data}-->
         <div class="goodsItem">
          <a href="{$bought_goods_data.url}"><img src="{$bought_goods_data.goods_thumb}" alt="{$bought_goods_data.goods_name}"  class="goodsimg" /></a><br />
-         <p><a href="{$bought_goods_data.url}" title="{$bought_goods_data.goods_name}">{$bought_goods_data.short_name}</a></p> 
+         <p><a href="{$bought_goods_data.url}" title="{$bought_goods_data.goods_name}">{$bought_goods_data.short_name}</a></p>
          <!-- {if $bought_goods_data.promote_price neq 0} -->
         <font class="shop_s">{$bought_goods_data.formated_promote_price}</font>
         <!-- {else} -->
@@ -622,10 +631,10 @@ var now_time = {$now_time};
 
 <!-- {literal} -->
 onload = function(){
-  changePrice();
-  fixpng();
-  try { onload_leftTime(); }
-  catch (e) {}
+    changePrice();
+    fixpng();
+    try { onload_leftTime(); }
+    catch (e) {}
 }
 
 /**
@@ -657,5 +666,22 @@ function changePriceResponse(res)
   }
 }
 <!-- {/literal} -->
+
+function onAddBtnClick() {
+    var inputNum = document.getElementById('number');
+    var numChange = parseInt(inputNum.value);
+    inputNum.value = numChange + 1;
+    changePrice();
+    return false;
+}
+function onReduceBtnClick() {
+    var inputNum = document.getElementById('number');
+    var numChange = parseInt(inputNum.value);
+    if (numChange > 1) {
+        inputNum.value = numChange - 1;
+        changePrice();
+    }
+    return false;
+}
 </script>
 </html>

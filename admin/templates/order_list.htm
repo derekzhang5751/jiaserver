@@ -43,7 +43,7 @@
     <td align="left" valign="top"><a href="mailto:{$order.email}"> {$order.consignee|escape}</a>{if $order.tel} [TEL: {$order.tel|escape}]{/if} <br />{$order.address|escape}</td>
     <td align="right" valign="top" nowrap="nowrap">{$order.formated_total_fee}</td>
     <td align="right" valign="top" nowrap="nowrap">{$order.formated_order_amount}</td>
-    <td align="center" valign="top" nowrap="nowrap">{$lang.os[$order.order_status]},{$lang.ps[$order.pay_status]},{$lang.ss[$order.shipping_status]}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$lang.os.$order.order_status},{$lang.ps.$order.pay_status},{$lang.ss.$order.shipping_status}</td>
     <td align="center" valign="top"  nowrap="nowrap">
      <a href="order.php?act=info&order_id={$order.order_id}">{$lang.detail}</a>
      {if $order.can_remove}

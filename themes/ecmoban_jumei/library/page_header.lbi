@@ -1,6 +1,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="themes/ecmoban_jumei/qq/images/qq.css" rel="stylesheet" type="text/css" />
- 
+<!--link href="themes/ecmoban_jumei/qq/images/qq.css" rel="stylesheet" type="text/css" /-->
+<link href="/ecmoban_qq/images/qq.css" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript">
 var process_request = "{$lang.process_request}";
 </script>
@@ -97,11 +98,11 @@ catch (e) {
         </div>
         <div class="clear_f"></div>
         <div class="header_top logo_wrap clearfix">
-            <a class="logo_new" href="index.php"><img src="images/logo.gif" /></a>
+            <a class="logo_new" href="index.php"><img src="images/logo.gif" height="85px" width="300px" /></a>
             <div class="ser_n">
                 <form id="searchForm" class="searchBox clearfix" name="searchForm" method="get" action="search.php" onSubmit="return checkSearchForm()">
                     <span class="ipt1"><input name="keywords" type="text" id="keyword" value="{$search_keywords|escape}" class="searchKey" /></span>
-                    <span class="ipt2"><input type="submit"  name="imageField" class="fm_hd_btm_shbx_bttn" value="搜美妆"></span>
+                    <span class="ipt2"><input type="submit"  name="imageField" class="fm_hd_btm_shbx_bttn" value="搜索"></span>
                 </form>
                 <div class="clear_f"></div>
                 <ul class="searchType none_f"></ul>

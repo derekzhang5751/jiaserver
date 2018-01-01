@@ -257,6 +257,7 @@ $_LANG['shop_authorized'] = 'Authorized';
 $_LANG['shp_webcollect'] = 'Webcollect';
 $_LANG['02_payment_list'] = 'Payment';
 $_LANG['03_shipping_list'] = 'Shipping';
+$_LANG['031_shipping_fee'] = 'Shipping Fees';
 $_LANG['04_mail_settings'] = 'Mail Settings';
 $_LANG['05_area_list'] = 'Area List';
 $_LANG['07_cron_schcron'] = 'Cron';

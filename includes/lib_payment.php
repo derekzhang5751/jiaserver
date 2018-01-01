@@ -59,22 +59,20 @@ function get_order_id_by_sn($order_sn, $voucher = 'false')
 {
     if ($voucher == 'true')
     {
-        if(is_numeric($order_sn))
-        {
+        //if(is_numeric($order_sn))
+        //{
               return $GLOBALS['db']->getOne("SELECT log_id FROM " . $GLOBALS['ecs']->table('pay_log') . " WHERE order_id=" . $order_sn . ' AND order_type=1');
-        }
-        else
-        {
-            return "";
-        }
+        //}
+        //else
+        //{
+        //    return "";
+        //}
     }
     else
     {
-        if(is_numeric($order_sn))
-        {
-            $sql = 'SELECT order_id FROM ' . $GLOBALS['ecs']->table('order_info'). " WHERE order_sn = '$order_sn'";
-            $order_id = $GLOBALS['db']->getOne($sql);
-        }
+        $sql = 'SELECT order_id FROM ' . $GLOBALS['ecs']->table('order_info'). " WHERE order_sn = '$order_sn'";
+        $order_id = $GLOBALS['db']->getOne($sql);
+
         if (!empty($order_id))
         {
             $pay_log_id = $GLOBALS['db']->getOne("SELECT log_id FROM " . $GLOBALS['ecs']->table('pay_log') . " WHERE order_id='" . $order_id . "'");
@@ -98,6 +96,17 @@ function get_goods_name_by_id($order_id)
     return implode(',', $goods_name);
 }
 
+function get_exchange_rate($from, $to, $type=0) {
+    $rate = $GLOBALS['db']->getOne("SELECT rate FROM " . $GLOBALS['ecs']->table('exchange_rate').
+        " WHERE cry_from='$from' AND cry_to='$to' AND type=$type");
+
+    if ($rate) {
+        return $rate;
+    } else {
+        return false;
+    }
+}
+
 /**
  * 检查支付的金额是否与订单相符
  *
@@ -112,7 +121,7 @@ function check_money($log_id, $money)
               " WHERE log_id = '$log_id'";
     $amount = $GLOBALS['db']->getOne($sql);
 
-    if ($money == $amount)
+    if ( floatval($money) == floatval($amount) )
     {
         return true;
     }

@@ -39,11 +39,6 @@ class cls_image
 
     function __construct($bgcolor='')
     {
-        $this->cls_image($bgcolor);
-    }
-
-    function cls_image($bgcolor='')
-    {
         if ($bgcolor)
         {
             $this->bgcolor = $bgcolor;
@@ -142,6 +137,7 @@ class cls_image
      */
     function make_thumb($img, $thumb_width = 0, $thumb_height = 0, $path = '', $bgcolor='')
     {
+        //$this->debug_out("Make thumb: with=$thumb_width, height=$thumb_height");
          $gd = $this->gd_version(); //获取 GD 版本。0 表示没有 GD 库，1 表示 GD 1.x，2 表示 GD 2.x
          if ($gd == 0)
          {
@@ -190,10 +186,12 @@ class cls_image
         /* 创建缩略图的标志符 */
         if ($gd == 2)
         {
+            //$this->debug_out("imagecreatetruecolor: with=$thumb_width, height=$thumb_height");
             $img_thumb  = imagecreatetruecolor($thumb_width, $thumb_height);
         }
         else
         {
+            //$this->debug_out("imagecreate: with=$thumb_width, height=$thumb_height");
             $img_thumb  = imagecreate($thumb_width, $thumb_height);
         }
 
@@ -225,10 +223,12 @@ class cls_image
         /* 将原始图片进行缩放处理 */
         if ($gd == 2)
         {
+            //$this->debug_out("imagecopyresampled: x=$dst_x, y=$dst_y, w=$lessen_width, h=$lessen_height");
             imagecopyresampled($img_thumb, $img_org, $dst_x, $dst_y, 0, 0, $lessen_width, $lessen_height, $org_info[0], $org_info[1]);
         }
         else
         {
+            //$this->debug_out("imagecopyresized: x=$dst_x, y=$dst_y, w=$lessen_width, h=$lessen_height");
             imagecopyresized($img_thumb, $img_org, $dst_x, $dst_y, 0, 0, $lessen_width, $lessen_height, $org_info[0], $org_info[1]);
         }
 
@@ -288,6 +288,7 @@ class cls_image
         //确认文件是否生成
         if (file_exists($dir . $filename))
         {
+            //$this->debug_out("Generate image file: " . $dir . $filename);
             return str_replace(ROOT_PATH, '', $dir) . $filename;
         }
         else
@@ -757,6 +758,25 @@ class cls_image
 
         return true;
     }
+
+    // for debug
+    function debug_out($strMsg) {
+        return;
+        // check if path exists
+        $logPath = '/Users/derek/WebProjects/jiajiajia/jiaserver/log/admin';
+        if ( ! file_exists($logPath) ) {
+            return;
+        }
+
+        // build log file name
+        $logFilename = $logPath . "/image_" . date("Ymd") . ".log";
+        $logDate = date("Y-m-d H:i:s");
+        $message = "[" . $logDate . "]";
+
+        $message = $message . $strMsg . "\r\n";
+        file_put_contents($logFilename, $message, FILE_APPEND | LOCK_EX);
+    }
+
 }
 
 ?>

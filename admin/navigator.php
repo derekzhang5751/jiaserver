@@ -1,17 +1,5 @@
 <?php
 
-/**
- * ECSHOP 程序说明
- * ===========================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
- * 网站地址: http://www.ecshop.com；
- * ----------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ==========================================================
- * $Author: liubo $
- * $Id: navigator.php 17217 2011-01-19 06:29:08Z liubo $
- */
 
 define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
@@ -379,14 +367,15 @@ function get_sysnav()
     $catlist = array_merge(cat_list(0, 0, false), array('-'), article_cat_list(0, 0, false));
     foreach($catlist as $key => $val)
     {
-        $val['view_name'] = $val['cat_name'];
-        for($i=0;$i<$val['level'];$i++)
-        {
-            $val['view_name'] = '&nbsp;&nbsp;&nbsp;&nbsp;' . $val['view_name'];
+        if (is_array($val)) {
+            $val['view_name'] = $val['cat_name'];
+            for ($i = 0; $i < $val['level']; $i++) {
+                $val['view_name'] = '&nbsp;&nbsp;&nbsp;&nbsp;' . $val['view_name'];
+            }
+            $val['url'] = str_replace('&amp;', '&', $val['url']);
+            $val['url'] = str_replace('&', '&amp;', $val['url']);
+            $sysmain[] = array($val['cat_name'], $val['url'], $val['view_name']);
         }
-        $val['url'] = str_replace( '&amp;', '&', $val['url']);
-        $val['url'] = str_replace( '&', '&amp;', $val['url']);
-        $sysmain[] = array($val['cat_name'], $val['url'], $val['view_name']);
     }
     return $sysmain;
 }

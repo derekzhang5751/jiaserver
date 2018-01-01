@@ -313,10 +313,12 @@ function check_password( password )
 {
     if ( password.length < 6 )
     {
+        document.getElementById('password_notice').style.color = "red";
         document.getElementById('password_notice').innerHTML = password_shorter;
     }
     else
     {
+        document.getElementById('password_notice').style.color = "blue";
         document.getElementById('password_notice').innerHTML = msg_can_rg;
     }
 }
@@ -327,15 +329,18 @@ function check_conform_password( conform_password )
     
     if ( conform_password.length < 6 )
     {
+        document.getElementById('conform_password_notice').style.color = "red";
         document.getElementById('conform_password_notice').innerHTML = password_shorter;
         return false;
     }
     if ( conform_password != password )
     {
+        document.getElementById('conform_password_notice').style.color = "red";
         document.getElementById('conform_password_notice').innerHTML = confirm_password_invalid;
     }
     else
     {
+        document.getElementById('conform_password_notice').style.color = "blue";
         document.getElementById('conform_password_notice').innerHTML = msg_can_rg;
     }
 }
@@ -347,27 +352,32 @@ function is_registered( username )
 
     if ( username == '' )
     {
+        document.getElementById('username_notice').style.color = "red";
         document.getElementById('username_notice').innerHTML = msg_un_blank;
         var submit_disabled = true;
     }
 
     if ( !chkstr( username ) )
     {
+        document.getElementById('username_notice').style.color = "red";
         document.getElementById('username_notice').innerHTML = msg_un_format;
         var submit_disabled = true;
     }
     if ( unlen < 3 )
-    { 
+    {
+        document.getElementById('username_notice').style.color = "red";
         document.getElementById('username_notice').innerHTML = username_shorter;
         var submit_disabled = true;
     }
     if ( unlen > 14 )
     {
+        document.getElementById('username_notice').style.color = "red";
         document.getElementById('username_notice').innerHTML = msg_un_length;
         var submit_disabled = true;
     }
     if ( submit_disabled )
     {
+        document.getElementById('username_notice').style.color = "red";
         document.forms['formUser'].elements['Submit'].disabled = 'disabled';
         return false;
     }
@@ -380,11 +390,13 @@ function registed_callback(result)
 {
   if ( result == "true" )
   {
+    document.getElementById('username_notice').style.color = "blue";
     document.getElementById('username_notice').innerHTML = msg_can_rg;
     document.forms['formUser'].elements['Submit'].disabled = '';
   }
   else
   {
+    document.getElementById('username_notice').style.color = "red";
     document.getElementById('username_notice').innerHTML = msg_un_registered;
     document.forms['formUser'].elements['Submit'].disabled = 'disabled';
   }
@@ -396,11 +408,13 @@ function checkEmail(email)
   
   if (email == '')
   {
+      document.getElementById('email_notice').style.color = "red";
     document.getElementById('email_notice').innerHTML = msg_email_blank;
     submit_disabled = true;
   }
   else if (!Utils.isEmail(email))
   {
+      document.getElementById('email_notice').style.color = "red";
     document.getElementById('email_notice').innerHTML = msg_email_format;
     submit_disabled = true;
   }
@@ -417,11 +431,13 @@ function check_email_callback(result)
 {
   if ( result == 'ok' )
   {
+      document.getElementById('email_notice').style.color = "blue";
     document.getElementById('email_notice').innerHTML = msg_can_rg;
     document.forms['formUser'].elements['Submit'].disabled = '';
   }
   else
   {
+      document.getElementById('email_notice').style.color = "red";
     document.getElementById('email_notice').innerHTML = msg_email_registered;
     document.forms['formUser'].elements['Submit'].disabled = 'disabled';
   }

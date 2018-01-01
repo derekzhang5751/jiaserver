@@ -69,6 +69,38 @@
     <td bgcolor="#ffffff"><input name="best_time" type="text"  class="inputBg" id="best_time_{$sn}" value="{$consignee.best_time|escape}" /></td>
   </tr>
   <!-- {/if} -->
+  <!-- 身份证照片 -->
+  <tr>
+    <td align="right" bgcolor="#ffffff">身份证：<br>（必需，否则不能发货）</td>
+    <td colspan="3" align="center" bgcolor="#ffffff">
+      <table width="100%" border="0px">
+        <tr>
+          <td align="center" bgcolor="#ffffff">
+              <!-- {if $consignee.idcard_a} -->
+              <img width="300px" height="190px" alt="身份证正面" src="{$consignee.idcard_a}">
+              <!-- {else} -->
+              <img width="300px" height="190px" alt="身份证背面" src="/images/default/idcarda.jpg">
+              <!-- {/if} -->
+          </td>
+          <td align="center" bgcolor="#ffffff">
+              <!-- {if $consignee.idcard_b} -->
+              <img width="300px" height="190px" alt="身份证正面" src="{$consignee.idcard_b}">
+              <!-- {else} -->
+              <img width="300px" height="190px" alt="身份证背面" src="/images/default/idcardb.jpg">
+              <!-- {/if} -->
+          </td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#ffffff">
+              <input type="file" name="idcard_img_a">
+          </td>
+          <td align="center" bgcolor="#ffffff">
+              <input type="file" name="idcard_img_b">
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
   <tr>
     <td colspan="4" align="center" bgcolor="#ffffff">
     <input type="submit" name="Submit" class="bnt_blue_2" value="{$lang.shipping_address}" />

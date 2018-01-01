@@ -81,8 +81,6 @@ if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash')
 
 elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'copy')
 {
-    include_once(ROOT_PATH . 'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
-
     $is_add = $_REQUEST['act'] == 'add'; // 添加还是编辑的标识
     $is_copy = $_REQUEST['act'] == 'copy'; //是否复制
     $code = empty($_REQUEST['extension_code']) ? '' : trim($_REQUEST['extension_code']);

@@ -5,3 +5,4 @@ backup/library
 caches
 compiled
 static_caches
+query_caches

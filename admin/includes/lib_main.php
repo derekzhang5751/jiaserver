@@ -312,11 +312,32 @@ function create_html_editor($input_name, $input_value = '')
 {
     global $smarty;
 
+    $kindeditor = "<script charset='utf-8' src='/includes/kindeditor/kindeditor-all-min.js'></script>
+<script charset='utf-8' src='/includes/kindeditor/lang/zh-CN.js'></script>
+<script>
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create('textarea[name=\"$input_name\"]', {
+    allowFileManager : true,
+    width : '100%',
+    height: '700px',
+    resizeType: 0 //固定宽高
+    });
+});
+</script>
+<textarea id=\"$input_name\" name=\"$input_name\" style='width:100%;height:700px;'>$input_value</textarea>";
+
+    $smarty->assign('FCKeditor', $kindeditor);
+}
+function create_html_editor_old($input_name, $input_value = '')
+{
+    global $smarty;
+
     $editor = new FCKeditor($input_name);
     $editor->BasePath   = '../includes/fckeditor/';
     $editor->ToolbarSet = 'Normal';
     $editor->Width      = '100%';
-    $editor->Height     = '320';
+    $editor->Height     = '640';
     $editor->Value      = $input_value;
     $FCKeditor = $editor->CreateHtml();
     $smarty->assign('FCKeditor', $FCKeditor);

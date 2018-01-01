@@ -1,17 +1,5 @@
 <?php
 
-/**
- * ECSHOP 配送方式管理程序
- * ============================================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
- * 网站地址: http://www.ecshop.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
- * $Author: liubo $
- * $Id: shipping.php 17217 2011-01-19 06:29:08Z liubo $
-*/
 
 define('IN_ECS', true);
 
@@ -76,9 +64,117 @@ if ($_REQUEST['act'] == 'list')
 }
 
 /*------------------------------------------------------ */
+//-- 管理运费计费方式
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'fee') {
+    admin_priv('ship_manage');
+
+    $smarty->assign('ur_here',      $_LANG['031_shipping_fee']);
+    $smarty->assign('action_link',  array('text' => '添加新的计费方式', 'href'=>'shipping.php?act=toAddShippingFee'));
+    $smarty->assign('full_page',    1);
+
+    $feeList = array();
+    $feeList = $db->getAll("SELECT * FROM " . $ecs->table('shipping_fee') . " ORDER BY base_fee");
+    $smarty->assign('fee_list',   $feeList);
+
+    assign_query_info();
+    $smarty->display('shipping_fee.htm');
+}
+
+/*------------------------------------------------------ */
+//-- 显示添加运费计费方式
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'toAddShippingFee') {
+    admin_priv('ship_manage');
+
+    $form_action = 'insertFee';
+
+    $fee_field['fee_id'] = 0;
+    $fee_field['fee_name'] = '';
+    $fee_field['fee_base_weight'] = 1;
+    $fee_field['fee_base_cost'] = 15.0;
+    $fee_field['fee_increase_weight'] = 1;
+    $fee_field['fee_increase_cost'] = 6.0;
+    $fee_field['fee_tax'] = 0.0;
+
+    $smarty->assign('fee_field',  $fee_field);
+    $smarty->assign('ur_here',      $_LANG['031_shipping_fee']);
+    $smarty->assign('action_link',  array('text' => $_LANG['031_shipping_fee'], 'href'=>'shipping.php?act=fee'));
+    $smarty->assign('form_action', $form_action);
+
+    assign_query_info();
+    $smarty->display('add_shipping_fee.htm');
+}
+elseif ($_REQUEST['act'] == 'toEditShippingFee') {
+    admin_priv('ship_manage');
+
+    $form_action = 'updateFee';
+
+    $sql = "SELECT fee_id,fee_name,base_weight,base_fee,increase_weitht,increase_fee,tax FROM " . $ecs->table('shipping_fee'). " WHERE fee_id='$_REQUEST[id]'";
+    $feeRec = $db->GetRow($sql);
+
+    $fee_field['fee_id'] = $feeRec['fee_id'];
+    $fee_field['fee_name'] = $feeRec['fee_name'];
+    $fee_field['fee_base_weight'] = $feeRec['base_weight'];
+    $fee_field['fee_base_cost'] = $feeRec['base_fee'];
+    $fee_field['fee_increase_weight'] = $feeRec['increase_weitht'];
+    $fee_field['fee_increase_cost'] = $feeRec['increase_fee'];
+    $fee_field['fee_tax'] = $feeRec['tax'];
+
+    $smarty->assign('fee_field',  $fee_field);
+    $smarty->assign('ur_here',      $_LANG['031_shipping_fee']);
+    $smarty->assign('action_link',  array('text' => $_LANG['031_shipping_fee'], 'href'=>'shipping.php?act=fee'));
+    $smarty->assign('form_action', $form_action);
+
+    assign_query_info();
+    $smarty->display('add_shipping_fee.htm');
+}
+
+/*------------------------------------------------------ */
+//-- 添加运费计费方式
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'insertFee') {
+    admin_priv('ship_manage');
+
+    $sql = "INSERT INTO " .$ecs->table('shipping_fee') ."( ".
+        "fee_name, base_weight, base_fee, increase_weitht, increase_fee, tax".
+        ") VALUES (".
+        "'$_POST[fee_name]', '$_POST[fee_base_weight]', '$_POST[fee_base_cost]', '$_POST[fee_increase_weight]', '$_POST[fee_increase_cost]', '$_POST[fee_tax]')";
+    $db->query($sql);
+
+    /* 管理员日志 */
+    //admin_log(trim($_POST['fee_name']), 'add', 'reg_fields');
+    clear_cache_files();
+
+    $lnk[] = array('text' => '返回运费设置列表',    'href'=>'shipping.php?act=fee');
+    $lnk[] = array('text' => '继续添加新的计费方式', 'href'=>'shipping.php?act=toAddShippingFee');
+    sys_msg('添加新的计费方式成功！', 0, $lnk);
+}
+
+/*------------------------------------------------------ */
+//-- 修改运费计费方式
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'updateFee') {
+    admin_priv('ship_manage');
+
+    $sql = "UPDATE " . $ecs->table('shipping_fee').
+        " SET `fee_name` = '$_POST[fee_name]', `base_weight` = '$_POST[fee_base_weight]',".
+        " `base_fee` = '$_POST[fee_base_cost]', `increase_weitht` = '$_POST[fee_increase_weight]',".
+        " `increase_fee` = '$_POST[fee_increase_cost]', `tax` = '$_POST[fee_tax]'".
+        " WHERE `fee_id` = '$_POST[id]'";
+    $db->query($sql);
+
+    /* 管理员日志 */
+    //admin_log(trim($_POST['fee_name']), 'add', 'reg_fields');
+    clear_cache_files();
+
+    $lnk[] = array('text' => '返回运费设置列表',    'href'=>'shipping.php?act=fee');
+    sys_msg('添加新的计费方式成功！', 0, $lnk);
+}
+
+/*------------------------------------------------------ */
 //-- 安装配送方式
 /*------------------------------------------------------ */
-
 elseif ($_REQUEST['act'] == 'install')
 {
     admin_priv('ship_manage');

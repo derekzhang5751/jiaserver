@@ -74,7 +74,16 @@
         <td><input type="file" name="file">
           <span class="narrow-label">{$lang.file_url}
           <input name="file_url" type="text" value="{$article.file_url|escape}" size="30" maxlength="255" />
-          </span></td>
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td class="narrow-label">封面图片</td>
+        <td><input type="file" name="cover_img">
+          <span class="narrow-label">或输入封面图片地址
+          <input name="cover_url" type="text" value="{$article.cover_img|escape}" size="30" maxlength="255" />
+          </span>
+        </td>
       </tr>
     </table>
 

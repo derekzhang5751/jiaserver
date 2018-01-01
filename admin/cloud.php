@@ -1,16 +1,7 @@
 <?php
 
 /**
- * ECSHOP  云服务接口
- * ============================================================================
- * 版权所有 2005-2010 上海商派网络科技有限公司，并保留所有权利。
- * 网站地址: http://www.ecshop.com；
- * ----------------------------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ============================================================================
- * $Author: liubo $
- * $Id: cloud.php 17063 2011-07-25 06:35:46Z liubo $
+ * 云服务接口
 */
 
 define('IN_ECS', true);
@@ -44,9 +35,9 @@ $data['ent_email'] = $_CFG['ent_email'];
 $act = !empty($_REQUEST['act']) ? $_REQUEST['act'] :  'index';
 
 $must = array('version','ecs_lang','charset','patch','stamp','api_ver');
-if($act =='menu_api')
-{
 
+if ($act == 'menu_api')
+{
     if (!admin_priv('all','',false))
     {
         make_json_result('0');
@@ -89,7 +80,7 @@ if($act =='menu_api')
         make_json_result($api_data['content']);
     }
 }
-elseif($act == 'cloud_remind')
+elseif ($act == 'cloud_remind')
 {
     $api_data = read_static_cache('cloud_remind');
     
@@ -131,9 +122,8 @@ elseif($act == 'cloud_remind')
         make_json_result($api_data['content']);
     }
 }
-elseif($act == 'close_remind')
+elseif ($act == 'close_remind')
 {
-
     $remind_id=$_REQUEST['remind_id'];
     $t = new transport('-1',5);
     $apiget = "ver= $data[version] &ecs_lang= $data[ecs_lang] &charset= $data[charset] &certificate_id=$data[certificate_id]&ent_id=$data[ent_id]&remind_id=$remind_id";
@@ -143,7 +133,7 @@ elseif($act == 'close_remind')
     $json = new Services_JSON;
     $api_arr = array();
     $api_arr = @$json->decode($api_str,1);
-    if(!empty($api_str))
+    if (!empty($api_str))
     {
         if (!empty($api_arr) && $api_arr['error'] == 0 && md5($api_arr['content']) == $api_arr['hash'])
         {
@@ -158,10 +148,9 @@ elseif($act == 'close_remind')
 
                 $result=$t->request('http://ecshop.ecmoban.com/cloud_remind.php', $apiget);
                 foreach ($result as $key => $value) {
-    echo $key.'-------------'.urldecode($value).'<br/>';
-
-}
-exit;
+                    echo $key.'-------------'.urldecode($value).'<br/>';
+                }
+                exit;
                 $api_str = $result["body"];
                 //var_dump($api_str);
                 $api_arr = array();

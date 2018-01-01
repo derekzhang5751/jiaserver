@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--suppress JSAnnotator -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -782,7 +783,7 @@
               {/literal}
             </script>
             <!-- {foreach from=$consignee_list item=consignee key=sn} -->
-            <form action="user.php" method="post" name="theForm" onsubmit="return checkConsignee(this)">
+            <form action="user.php" method="post" enctype="multipart/form-data" name="theForm" onsubmit="return checkConsignee(this)">
               <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#dddddd">
                 <tr>
                   <td align="right" bgcolor="#ffffff">{$lang.country_province}：</td>
@@ -839,6 +840,37 @@
                   <td align="left" bgcolor="#ffffff"><input name="sign_building" type="text" class="inputBg" id="sign_building_{$sn}" value="{$consignee.sign_building|escape}" /></td>
                   <td align="right" bgcolor="#ffffff">{$lang.deliver_goods_time}：</td>
                   <td align="left" bgcolor="#ffffff"><input name="best_time" type="text"  class="inputBg" id="best_time_{$sn}" value="{$consignee.best_time|escape}" /></td>
+                </tr>
+                <tr>
+                  <td align="right" bgcolor="#ffffff">身份证：<br>（必需，否则不能发货）</td>
+                  <td colspan="3" align="center" bgcolor="#ffffff">
+                    <table width="100%" border="0px">
+                      <tr>
+                        <td align="center" bgcolor="#ffffff">
+                            <!-- {if $consignee.idcard_a} -->
+                            <img width="300px" height="190px" alt="身份证正面" src="{$consignee.idcard_a}">
+                            <!-- {else} -->
+                            <img width="300px" height="190px" alt="身份证背面" src="/images/default/idcarda.jpg">
+                            <!-- {/if} -->
+                        </td>
+                        <td align="center" bgcolor="#ffffff">
+                            <!-- {if $consignee.idcard_b} -->
+                            <img width="300px" height="190px" alt="身份证正面" src="{$consignee.idcard_b}">
+                            <!-- {else} -->
+                            <img width="300px" height="190px" alt="身份证背面" src="/images/default/idcardb.jpg">
+                            <!-- {/if} -->
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="center" bgcolor="#ffffff">
+                            <input type="file" name="idcard_img_a">
+                        </td>
+                        <td align="center" bgcolor="#ffffff">
+                            <input type="file" name="idcard_img_b">
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
                 </tr>
                 <tr>
                   <td align="right" bgcolor="#ffffff">&nbsp;</td>

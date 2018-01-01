@@ -277,10 +277,15 @@ elseif ($_REQUEST['step'] == 'login')
                 }
             }
 
-            if (register(trim($_POST['username']), trim($_POST['password']), trim($_POST['email'])))
+            $userName = trim($_POST['username']);
+            if (register($userName, trim($_POST['password']), trim($_POST['email'])))
             {
                 /* 用户注册成功 */
-                ecs_header("Location: flow.php?step=consignee\n");
+                $userId = get_userid_by_username($userName);
+                $smarty->assign('reg_email', $_POST['email']);
+                $smarty->assign('user_id', $userId);
+                $GLOBALS['smarty']->display('reg_success.dwt');
+                //ecs_header("Location: flow.php?step=consignee\n");
                 exit;
             }
             else
@@ -1484,7 +1489,7 @@ elseif ($_REQUEST['step'] == 'done')
         $order[$key] = addslashes($value);
     }
 
-   /* 判断是不是实体商品 */
+    /* 判断是不是实体商品 */
     foreach ($cart_goods AS $val)
     {
         /* 统计实体商品的个数 */
@@ -1493,14 +1498,14 @@ elseif ($_REQUEST['step'] == 'done')
             $is_real_good=1;
         }
     }
-    if(isset($is_real_good))
+    /*if (isset($is_real_good))
     {
         $sql="SELECT shipping_id FROM " . $ecs->table('shipping') . " WHERE shipping_id=".$order['shipping_id'] ." AND enabled =1"; 
         if(!$db->getOne($sql))
         {
            show_message($_LANG['flow_no_shipping']);
         }
-    }
+    }*/
     /* 订单中的总额 */
     $total = order_fee($order, $cart_goods, $consignee);
     $order['bonus']        = $total['bonus'];
@@ -1777,7 +1782,7 @@ elseif ($_REQUEST['step'] == 'done')
 
         $smarty->assign('pay_online', $pay_online);
     }
-    if(!empty($order['shipping_name']))
+    if (!empty($order['shipping_name']))
     {
         $order['shipping_name']=trim(stripcslashes($order['shipping_name']));
     }

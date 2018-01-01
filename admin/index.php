@@ -80,7 +80,7 @@ elseif ($_REQUEST['act'] == 'menu')
     {
         ksort($modules[$key]);
     }
-    ksort($modules);
+    //ksort($modules);
 
     foreach ($modules AS $key => $val)
     {
@@ -159,7 +159,7 @@ elseif ($_REQUEST['act'] == 'clear_cache')
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'main')
 {
-    //开店向导第一步
+    // 开店向导第一步
     if(isset($_SESSION['shop_guide']) && $_SESSION['shop_guide'] === true)
     {
         unset($_SESSION['shop_guide']);//销毁session
@@ -311,9 +311,24 @@ elseif ($_REQUEST['act'] == 'main')
     /* 取得支持货到付款和不支持货到付款的支付方式 */
     $ids = get_pay_ids();
 
+    /* exchange rate info */
+    $exchangeRate = $db->GetOne('SELECT rate FROM ' . $ecs->table('exchange_rate').
+                        " WHERE cry_from='CAD' AND cry_to='RMB' AND type=0 ");
+    if (!$exchangeRate) {
+        $exchangeRate = '-';
+    }
+    $smarty->assign('exchange_rate', $exchangeRate);
+
+    $realtimeExRate = $db->GetOne('SELECT rate FROM ' . $ecs->table('exchange_rate').
+        " WHERE cry_from='CAD' AND cry_to='RMB' AND type=1 ");
+    if (!$realtimeExRate) {
+        $realtimeExRate = '-';
+    }
+    $smarty->assign('realtime_ex_rate', $realtimeExRate);
+
     /* 已完成的订单 */
     $order['finished']     = $db->GetOne('SELECT COUNT(*) FROM ' . $ecs->table('order_info').
-    " WHERE 1 " . order_query_sql('finished'));
+        " WHERE 1 " . order_query_sql('finished'));
     $status['finished']    = CS_FINISHED;
 
     /* 待发货的订单： */
@@ -1266,6 +1281,80 @@ elseif ($_REQUEST['act'] == 'license')
             case 'reg_ping_fail':
                 make_json_error(0);
             break;
+        }
+    }
+    else
+    {
+        make_json_error(0);
+    }
+}
+
+/*------------------------------------------------------ */
+//-- setup exchange rate
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'setup_exchange_rate')
+{
+    admin_priv('all');
+    $is_ajax = $_GET['is_ajax'];
+    $rate    = $_GET['rate'];
+
+    if (isset($is_ajax) && $is_ajax && isset($rate))
+    {
+        include_once(ROOT_PATH . 'includes/cls_transport.php');
+        include_once(ROOT_PATH . 'includes/lib_main.php');
+
+        $f = floatval($rate);
+        $rate = number_format($f, 4, '.', '');
+
+        $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '$rate' WHERE cry_from='CAD' AND cry_to='RMB' AND type=0";
+        $db->query($sql);
+        $saved = $db->getOne("SELECT rate FROM " . $ecs->table('exchange_rate') . " WHERE cry_from='CAD' AND cry_to='RMB' AND type=0");
+
+        if ($saved) {
+            make_json_result('', 'success', array('rate' => $saved));
+        } else {
+            make_json_error(0);
+        }
+    }
+    else
+    {
+        make_json_error(0);
+    }
+}
+
+/*------------------------------------------------------ */
+//-- get realtime exchange rate
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'get_realtime_exchange_rate')
+{
+    admin_priv('all');
+    $is_ajax = $_GET['is_ajax'];
+
+    if (isset($is_ajax) && $is_ajax)
+    {
+        include_once(ROOT_PATH . 'includes/cls_transport.php');
+        include_once(ROOT_PATH . 'includes/lib_main.php');
+        include_once(ROOT_PATH . 'includes/modules/payment/ottpay.php');
+
+        $ott = new ottpay();
+        $rate = $ott->getRealtimeExRate('CAD');
+
+        if ($rate) {
+            $f = floatval($rate) / 100000000;
+            $rate = number_format($f, 4, '.', '');
+
+            $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '$rate' WHERE cry_from='CAD' AND cry_to='RMB' AND type=1";
+            $db->query($sql);
+            $saved = $db->getOne("SELECT rate FROM " . $ecs->table('exchange_rate') . " WHERE cry_from='CAD' AND cry_to='RMB' AND type=1");
+        } else {
+            $sql = "UPDATE " . $ecs->table('exchange_rate') . " SET rate = '0.0000' WHERE cry_from='CAD' AND cry_to='RMB' AND type=1";
+            $db->query($sql);
+            $saved = '0.0000';
+        }
+        if ($saved) {
+            make_json_result('', 'success', array('realtimeExRate' => $saved));
+        } else {
+            make_json_error(0);
         }
     }
     else

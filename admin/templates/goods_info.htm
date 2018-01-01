@@ -29,9 +29,9 @@
     <!-- tab body -->
     <div id="tabbody-div">
       <form enctype="multipart/form-data" action="" method="post" name="theForm" >
-        <!-- 鏈€澶ф枃浠堕檺鍒 -->
+        <!-- 最大文件尺寸 -->
         <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
-        <!-- 閫氱敤淇℃伅 -->
+        <!-- 通用信息 -->
         <table width="90%" id="general-table" align="center">
           <tr>
             <td class="label">{$lang.lab_goods_name}</td>
@@ -115,7 +115,7 @@
           </tr>
           {/if}
 
-          <!--鍟嗗搧浼樻儬浠锋牸-->
+          <!--商品优惠价格-->
           <tr>
             <td class="label"><a href="javascript:showNotice('volumePrice');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.lab_volume_price}</td>
             <td>
@@ -137,14 +137,14 @@
               <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="volumePrice">{$lang.notice_volume_price}</span>
             </td>
           </tr>
-          <!--鍟嗗搧浼樻儬浠锋牸 end -->
+          <!--商品优惠价格 end -->
 
-          <tr>
+          <!--tr>
             <td class="label">{$lang.lab_market_price}</td>
             <td><input type="text" name="market_price" value="{$goods.market_price}" size="20" />
               <input type="button" value="{$lang.integral_market_price}" onclick="integral_market_price()" />
             </td>
-          </tr>
+          </tr-->
           <tr>
             <td class="label"><a href="javascript:showNotice('giveIntegral');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_give_integral}</td>
             <td><input type="text" name="give_integral" value="{$goods.give_integral}" size="20" />
@@ -199,14 +199,14 @@
           </tr>
         </table>
 
-        <!-- 璇︾粏鎻忚堪 -->
+        <!-- 详细描述 -->
         <table width="90%" id="detail-table" style="display:none">
           <tr>
             <td>{$FCKeditor}</td>
           </tr>
         </table>
 
-        <!-- 鍏朵粬淇℃伅 -->
+        <!-- 其他信息 -->
         <table width="90%" id="mix-table" style="display:none" align="center">
           {if $code eq ''}
           <tr>
@@ -217,8 +217,8 @@
           {if $cfg.use_storage}
           <tr>
             <td class="label"><a href="javascript:showNotice('noticeStorage');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_number}</td>
-<!--            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" {if $code neq '' || $goods._attribute neq ''}readonly="readonly"{/if} /><br />-->
-            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" /><br />
+            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" {if $code neq '' || $goods._attribute neq ''}readonly="readonly"{/if} /><br />
+            <!--td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" /><br /-->
             <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeStorage">{$lang.notice_storage}</span></td>
           </tr>
           <tr>
@@ -239,8 +239,17 @@
             <td><input type="checkbox" name="is_alone_sale" value="1" {if $goods.is_alone_sale}checked="checked"{/if} /> {$lang.alone_sale}</td>
           </tr>
           <tr>
-            <td class="label">{$lang.lab_is_free_shipping}</td>
+            <td class="label">{$lang.lab_is_free_shipping}：</td>
             <td><input type="checkbox" name="is_shipping" value="1" {if $goods.is_shipping}checked="checked"{/if} /> {$lang.free_shipping}</td>
+          </tr>
+          <tr>
+            <td class="label">运费设定：</td>
+            <td>
+              <select name="shipping_fee">
+                <option value="0">-- 运费级别 --</option>
+                {html_options options=$shippingfee_list selected=$shippingfee_selected}
+              </select>
+            </td>
           </tr>
           <tr>
             <td class="label">{$lang.lab_keywords}</td>
@@ -258,7 +267,7 @@
           </tr>
         </table>
 
-        <!-- 灞炴€т笌瑙勬牸 -->
+        <!-- 商品属性 -->
         {if $goods_type_list}
         <table width="90%" id="properties-table" style="display:none" align="center">
           <tr>
@@ -276,9 +285,9 @@
         </table>
         {/if}
 
-        <!-- 鍟嗗搧鐩稿唽 -->
+        <!-- 商品相册 -->
         <table width="90%" id="gallery-table" style="display:none" align="center">
-          <!-- 鍥剧墖鍒楄〃 -->
+          <!-- 图片列表 -->
           <tr>
             <td>
               {foreach from=$img_list item=img key=i}
@@ -293,7 +302,7 @@
             </td>
           </tr>
           <tr><td>&nbsp;</td></tr>
-          <!-- 涓婁紶鍥剧墖 -->
+          <!-- 上传文件 -->
           <tr>
             <td>
               <a href="javascript:;" onclick="addImg(this)">[+]</a>
@@ -304,7 +313,7 @@
           </tr>
         </table>
 
-        <!-- 鍏宠仈鍟嗗搧 -->
+        <!-- 相关商品 -->
         <table width="90%" id="linkgoods-table" style="display:none" align="center">
           <!-- 鍟嗗搧鎼滅储 -->
           <tr>
@@ -345,7 +354,7 @@
           </tr>
         </table>
 
-        <!-- 閰嶄欢 -->
+        <!-- 配件 -->
         <table width="90%" id="groupgoods-table" style="display:none" align="center">
           <!-- 鍟嗗搧鎼滅储 -->
           <tr>
@@ -384,7 +393,7 @@
           </tr>
         </table>
 
-        <!-- 鍏宠仈鏂囩珷 -->
+        <!-- 关联文章 -->
         <table width="90%" id="article-table" style="display:none" align="center">
           <!-- 鏂囩珷鎼滅储 -->
           <tr>
@@ -467,47 +476,48 @@
 
   function validate(goods_id)
   {
-      var validator = new Validator('theForm');
-      var goods_sn  = document.forms['theForm'].elements['goods_sn'].value;
+    var validator = new Validator('theForm');
+    var goods_sn  = document.forms['theForm'].elements['goods_sn'].value;
 
-      validator.required('goods_name', goods_name_not_null);
-      if (document.forms['theForm'].elements['cat_id'].value == 0)
-      {
-          validator.addErrorMsg(goods_cat_not_null);
-      }
+    validator.required('goods_name', goods_name_not_null);
+    if (document.forms['theForm'].elements['cat_id'].value == 0)
+    {
+      validator.addErrorMsg(goods_cat_not_null);
+    }
 
-      checkVolumeData("1",validator);
+    checkVolumeData("1",validator);
 
-      validator.required('shop_price', shop_price_not_null);
-      validator.isNumber('shop_price', shop_price_not_number, true);
-      validator.isNumber('market_price', market_price_not_number, false);
-      if (document.forms['theForm'].elements['is_promote'].checked)
-      {
-          validator.required('promote_start_date', promote_start_not_null);
-          validator.required('promote_end_date', promote_end_not_null);
-          validator.islt('promote_start_date', 'promote_end_date', promote_not_lt);
-      }
+    validator.required('shop_price', shop_price_not_null);
+    validator.isNumber('shop_price', shop_price_not_number, true);
+    //validator.isNumber('market_price', market_price_not_number, false);
+    if (document.forms['theForm'].elements['is_promote'].checked)
+    {
+      validator.required('promote_start_date', promote_start_not_null);
+      validator.required('promote_end_date', promote_end_not_null);
+      validator.islt('promote_start_date', 'promote_end_date', promote_not_lt);
+     }
 
-      if (document.forms['theForm'].elements['goods_number'] != undefined)
-      {
-          validator.isInt('goods_number', goods_number_not_int, false);
-          validator.isInt('warn_number', warn_number_not_int, false);
-      }
+    if (document.forms['theForm'].elements['goods_number'] != undefined)
+    {
+      validator.isInt('goods_number', goods_number_not_int, false);
+      validator.isInt('warn_number', warn_number_not_int, false);
+    }
 
-      var callback = function(res)
-     {
+    var callback = function(res)
+    {
       if (res.error > 0)
       {
         alert("{$lang.goods_sn_exists}");
       }
       else
       {
-         if(validator.passed())
-         {
-         document.forms['theForm'].submit();
-         }
+        if(validator.passed())
+        {
+          editor.sync();
+          document.forms['theForm'].submit();
+        }
       }
-  }
+    }
     Ajax.call('goods.php?is_ajax=1&act=check_goods_sn', "goods_sn=" + goods_sn + "&goods_id=" + goods_id, callback, "GET", "JSON");
 }
 

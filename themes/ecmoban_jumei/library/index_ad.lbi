@@ -109,8 +109,8 @@ TransformView.prototype = {
   //设置默认属性
   SetOptions: function(options) {
 	this.options = {//默认值
-		Up:			true,//是否向上(否则向左)
-		Step:		5,//滑动变化率
+		Up:		true,//是否向上(否则向左)
+		Step:		80,//滑动变化率
 		Time:		10,//滑动延时
 		Auto:		true,//是否自动转换
 		Pause:		2000,//停顿时间(Auto为true时有效)
@@ -164,7 +164,7 @@ window.onload=function(){
 	
 	var objs = $("idNum").getElementsByTagName("li");
 	
-	var tv = new TransformView("idTransformView", "idSlider", 413, 5, {
+	var tv = new TransformView("idTransformView", "idSlider", 413, 4, {
 		onStart : function(){ Each(objs, function(o, i){ o.className = tv.Index == i ? "on" : ""; }) }//按钮样式
 	});
 	
@@ -185,7 +185,7 @@ window.onload=function(){
 	})
 	
 	////////////////////////test2
-	
+	/*
 	var objs2 = $("idNum2").getElementsByTagName("li");
 	
 	var tv2 = new TransformView("idTransformView2", "idSlider2",1200, 3, {
@@ -209,7 +209,7 @@ window.onload=function(){
 		}
 	})
 	
-	$("idStop").onclick = function(){ tv2.Auto = false; tv2.Stop(); }
+	//$("idStop").onclick = function(){ tv2.Auto = false; tv2.Stop(); }
 	$("idStart").onclick = function(){ tv2.Auto = true; tv2.Start(); }
 	$("idNext").onclick = function(){ tv2.Index++; tv2.Start(); }
 	$("idPre").onclick = function(){ tv2.Index--;tv2.Start(); }
@@ -224,6 +224,6 @@ window.onload=function(){
 		tv2.Auto = !!tv2.options.Auto;
 		tv2.Pause = Math.abs(tv2.options.Pause);
 	}
-	
+	*/
 }
 </script>

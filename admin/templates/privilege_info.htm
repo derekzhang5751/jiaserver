@@ -11,7 +11,7 @@
   <tr>
     <td class="label">{$lang.email}</td>
     <td>
-      <input type="text" name="email" value="{$user.email|escape}" size="34" />{$lang.require_field}</td>
+      <input type="text" name="email" value="{$user.email|escape}" size="34" /></td>
   </tr>
  {if $action eq "add"}
   <tr>
@@ -189,7 +189,7 @@ function validate()
   }
 
   validator.required("user_name", user_name_empty);
-  validator.required("email", email_empty, 1);
+  //validator.required("email", email_empty, 1);
   validator.isEmail("email", email_error);
 
   if (action == "add")

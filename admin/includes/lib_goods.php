@@ -1342,4 +1342,22 @@ function move_image_file($source, $dest)
     return false;
 }
 
+/**
+ * 取得运费分类信息
+ * @return  array   运费分类列表
+ */
+function get_shipping_fee_list()
+{
+    $list = array();
+
+    $sql = "SELECT fee_id,fee_name FROM " . $GLOBALS['ecs']->table('shipping_fee') .
+        " ORDER BY fee_id";
+
+    $res = $GLOBALS['db']->getAll($sql);
+    foreach ($res as $shipping) {
+        $list[$shipping['fee_id']] = $shipping['fee_name'];
+    }
+    return $list;
+}
+
 ?>

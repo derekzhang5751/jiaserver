@@ -5,4 +5,11 @@ temp/backup/*
 temp/caches/*
 temp/compiled/*
 temp/static_caches/*
+temp/query_caches/*
 nbproject/private/*
+.idea/*
+log/admin/*
+log/goods/*
+log/home/*
+log/user/*
+images/201711/*

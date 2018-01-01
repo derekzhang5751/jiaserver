@@ -28,7 +28,12 @@
   {/if}
   <tr>
     <td class="label">{$lang.email}:</td>
-    <td><input type="text" name="email" maxlength="60" size="40" value="{$user.email}" />{$lang.require_field}</td>
+    <td>
+      <input type="text" name="email" maxlength="60" size="40" value="{$user.email}" />{$lang.require_field}
+      <select name="is_validated" style="margin-left: 5px; height: 25px;">
+        {html_options name=is_validated options=$isValidatedOptions selected=$isValidatedSelect}
+      </select>
+    </td>
   </tr>
   {if $form_action eq "insert"}
   <tr>
@@ -37,7 +42,9 @@
   </tr>
   <tr>
     <td class="label">{$lang.confirm_password}:</td>
-    <td><input type="password" name="confirm_password" maxlength="20" size="20" />{$lang.require_field}</td>
+    <td>
+      <input type="password" name="confirm_password" maxlength="20" size="20" />{$lang.require_field}
+    </td>
   </tr>
   {elseif  $form_action eq "update"}
   <tr>

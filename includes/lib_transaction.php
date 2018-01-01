@@ -536,7 +536,51 @@ function save_consignee($consignee, $default=false)
         $res = $GLOBALS['db']->query($sql);
     }
 
-    return $res !== false;
+    // get user name
+    $sql = "SELECT user_name".
+        " FROM " . $GLOBALS['ecs']->table('users') .
+        " WHERE user_id = " . $consignee['user_id'];
+    $userName = $GLOBALS['db']->getOne($sql);
+
+    // create directory
+    $pathName = 'images/upload/idcard/' . date("Ym");
+    $realPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $pathName;
+    if (!is_dir($realPath)) {
+        if (@!mkdir($realPath, 0777)) {
+            exit("上传图像失败，目录不可写！");
+        }
+    }
+
+    // 更新身份证照片,正面
+    if ($_FILES['idcard_img_a']['tmp_name'] != '' && $_FILES['idcard_img_a']['tmp_name'] != 'none') {
+        // build image path
+        $ext = get_img_type($_FILES['idcard_img_a']['type']);
+        if (empty($ext)) {
+            exit("上传文件类型不支持，请选择身份证图像文件！");
+        }
+        $fileName = $pathName . '/' . $userName . '_a.' . $ext;
+        $readFileName = $realPath . '/' . $userName . '_a.' . $ext;
+        // copy file
+        move_upload_file($_FILES['idcard_img_a']['tmp_name'], $readFileName);
+        // save image url to db
+        $idcardImage = array('idcard_a' => $fileName);
+        $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_address'), $idcardImage, 'UPDATE', 'address_id = ' .$consignee['address_id'] . ' AND user_id = ' . $consignee['user_id']);
+    }
+    // 更新身份证照片,背面
+    if ($_FILES['idcard_img_b']['tmp_name'] != '' && $_FILES['idcard_img_b']['tmp_name'] != 'none') {
+        // build image path
+        $ext = get_img_type($_FILES['idcard_img_b']['type']);
+        if (empty($ext)) {
+            exit("上传文件类型不支持，请选择身份证图像文件！");
+        }
+        $fileName = $pathName . '/' . $userName . '_b.' . $ext;
+        $readFileName = $realPath . '/' . $userName . '_b.' . $ext;
+        // copy file
+        move_upload_file($_FILES['idcard_img_b']['tmp_name'], $readFileName);
+        // save image url to db
+        $idcardImage = array('idcard_b' => $fileName);
+        $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_address'), $idcardImage, 'UPDATE', 'address_id = ' .$consignee['address_id'] . ' AND user_id = ' . $consignee['user_id']);
+    }
 }
 
 /**
@@ -561,6 +605,23 @@ function drop_consignee($id)
         $res = $GLOBALS['db']->query($sql);
 
         return $res;
+    }
+}
+
+function get_img_type($img_type)
+{
+    if ($img_type == 'image/jpeg') {
+        return 'jpg';
+    } else if ($img_type == 'image/png') {
+        return 'png';
+    } else if ($img_type == 'image/gif') {
+        return 'gif';
+    } else if ($img_type == 'image/x-png') {
+        return 'png';
+    } else if ($img_type == 'image/pjpeg') {
+        return 'jpg';
+    } else {
+        return '';
     }
 }
 
@@ -593,7 +654,56 @@ function update_address($address)
         $sql = "UPDATE ".$GLOBALS['ecs']->table('users') .
                 " SET address_id = '".$address_id."' ".
                 " WHERE user_id = '" .$address['user_id']. "'";
-        $GLOBALS['db'] ->query($sql);
+        $GLOBALS['db']->query($sql);
+    }
+
+    // get user name
+    $sql = "SELECT user_name".
+        " FROM " . $GLOBALS['ecs']->table('users') .
+        " WHERE user_id = " . $address['user_id'];
+    $userName = $GLOBALS['db']->getOne($sql);
+
+    // create directory
+    $pathName = 'images/upload/idcard/' . date("Ym");
+    $realPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $pathName;
+    if (!is_dir($realPath)) {
+        if (@!mkdir($realPath, 0777)) {
+            exit("上传图像失败，目录不可写！");
+            return false;
+        }
+    }
+
+    // 更新身份证照片,正面
+    if ($_FILES['idcard_img_a']['tmp_name'] != '' && $_FILES['idcard_img_a']['tmp_name'] != 'none') {
+        // build image path
+        $ext = get_img_type($_FILES['idcard_img_a']['type']);
+        if (empty($ext)) {
+            exit("上传文件类型不支持，请选择身份证图像文件！");
+            return false;
+        }
+        $fileName = $pathName . '/' . $userName . '_a.' . $ext;
+        $readFileName = $realPath . '/' . $userName . '_a.' . $ext;
+        // copy file
+        move_upload_file($_FILES['idcard_img_a']['tmp_name'], $readFileName);
+        // save image url to db
+        $idcardImage = array('idcard_a' => $fileName);
+        $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_address'), $idcardImage, 'UPDATE', 'address_id = ' .$address_id . ' AND user_id = ' . $address['user_id']);
+    }
+    // 更新身份证照片,背面
+    if ($_FILES['idcard_img_b']['tmp_name'] != '' && $_FILES['idcard_img_b']['tmp_name'] != 'none') {
+        // build image path
+        $ext = get_img_type($_FILES['idcard_img_b']['type']);
+        if (empty($ext)) {
+            exit("上传文件类型不支持，请选择身份证图像文件！");
+            return false;
+        }
+        $fileName = $pathName . '/' . $userName . '_b.' . $ext;
+        $readFileName = $realPath . '/' . $userName . '_b.' . $ext;
+        // copy file
+        move_upload_file($_FILES['idcard_img_b']['tmp_name'], $readFileName);
+        // save image url to db
+        $idcardImage = array('idcard_b' => $fileName);
+        $GLOBALS['db']->autoExecute($GLOBALS['ecs']->table('user_address'), $idcardImage, 'UPDATE', 'address_id = ' .$address_id . ' AND user_id = ' . $address['user_id']);
     }
 
     return true;

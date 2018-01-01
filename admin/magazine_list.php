@@ -1,17 +1,5 @@
 <?php
 
-/**
- * ECSHOP 程序说明
- * ===========================================================
- * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
- * 网站地址: http://www.ecshop.com；
- * ----------------------------------------------------------
- * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
- * 使用；不允许对程序代码以任何形式任何目的的再发布。
- * ==========================================================
- * $Author: liubo $
- * $Id: magazine_list.php 17217 2011-01-19 06:29:08Z liubo $
- */
 
 define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
@@ -58,7 +46,6 @@ elseif ($_REQUEST['act'] == 'add')
 {
     if (empty($_POST['step']))
     {
-        include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
         $smarty->assign('action_link', array('text' => $_LANG['go_list'], 'href' => 'magazine_list.php?act=list'));
         $smarty->assign(array('ur_here'=>$_LANG['magazine_list'],'act'=>'add'));
         create_html_editor('magazine_content');
@@ -80,7 +67,6 @@ elseif ($_REQUEST['act'] == 'add')
 }
 elseif ($_REQUEST['act'] == 'edit')
 {
-    include_once(ROOT_PATH.'includes/fckeditor/fckeditor.php'); // 包含 html editor 类文件
     $id = intval($_REQUEST['id']);
     if (empty($_POST['step']))
     {

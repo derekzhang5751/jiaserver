@@ -1,0 +1,70 @@
+{include file="pageheader.htm"}
+
+<div class="main-div">
+<form action="shipping.php" method="post" name="theForm" onsubmit="return validate()">
+<table width="100%">
+  <tr >
+    <td class="label">计费名称: </td>
+    <td><input type="text" name="fee_name" value="{$fee_field.fee_name}" maxlength="50" />{$lang.require_field}</td>
+  </tr>
+  <tr >
+    <td class="label">基础重量: </td>
+    <td><input type="text" name="fee_base_weight" value="{$fee_field.fee_base_weight}" maxlength="10" size="10"/>{$lang.require_field}</td>
+  </tr>
+  <tr >
+    <td class="label">基础计费: </td>
+    <td><input type="text" name="fee_base_cost" value="{$fee_field.fee_base_cost}" maxlength="10" size="10"/>{$lang.require_field}</td>
+  </tr>
+  <tr >
+    <td class="label">超出增加重量(每N磅): </td>
+    <td><input type="text" name="fee_increase_weight" value="{$fee_field.fee_increase_weight}" maxlength="10" size="10"/>{$lang.require_field}</td>
+  </tr>
+  <tr >
+    <td class="label">超出增加计费(每N磅多少钱): </td>
+    <td><input type="text" name="fee_increase_cost" value="{$fee_field.fee_increase_cost}" maxlength="10" size="10"/>{$lang.require_field}</td>
+  </tr>
+  <tr >
+    <td class="label">关税(%): </td>
+    <td><input type="text" name="fee_tax" value="{$fee_field.fee_tax}" maxlength="10" size="10"/>{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td></td>    
+    <td align="left">
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="id" value="{$fee_field.fee_id}" />
+      <input type="submit" value="{$lang.button_submit}" class="button" />
+      <input type="reset" value="{$lang.button_reset}" class="button" />
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+document.forms['theForm'].elements['fee_name'].focus();
+
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+}
+
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+  validator = new Validator("theForm");
+  validator.required('fee_name', '计费名称不能为空！');
+  validator.required('fee_base_weight', '基础重量不能为空！');
+  validator.required('fee_base_cost', '基础计费不能为空！');
+  validator.required('fee_increase_weight', '超出增加重量不能为空！');
+  validator.required('fee_increase_cost', '超出增加计费不能为空！');
+  return validator.passed();
+}
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

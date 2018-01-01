@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
+<!--suppress JSAnnotator -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -207,7 +208,7 @@ document.getElementById('history_list').innerHTML = '{$lang.no_history}';
     <!--{foreach from=$goods_list item=goods}-->
     <!-- {if $goods.goods_id} -->
      <div class="goodsItem">
-           <a href="{$goods.url}"><img src="{$goods.goods_thumb}" alt="{$goods.goods_name}" class="goodsimg" /></a><br />
+           <a href="{$goods.url}"><img src="{$goods.goods_img}" alt="{$goods.goods_name}" class="goodsimg" /></a><br />
            <p><a href="{$goods.url}" title="{$goods.name|escape:html}">{$goods.goods_name}</a></p>
            <!-- {if $show_marketprice} -->
             <font class="market_s">{$goods.market_price}</font><br />

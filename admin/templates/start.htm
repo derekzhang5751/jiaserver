@@ -1,39 +1,22 @@
 <!-- $Id: start.htm 17216 2011-01-19 06:03:12Z liubo $ -->
 {include file="pageheader.htm"}
-<!-- directory install start -->
-<ul id="cloud_list" style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
- 
-</ul>
-<script type="Text/Javascript" language="JavaScript">
-<!--
-  Ajax.call('cloud.php?is_ajax=1&act=cloud_remind','', cloud_api, 'GET', 'JSON');
-    function cloud_api(result)
-    {
-      //alert(result.content);
-      if(result.content=='0')
-      {
-        document.getElementById("cloud_list").style.display ='none';
-      }
-      else
-       {
-         document.getElementById("cloud_list").innerHTML =result.content;
-      }
-    } 
-   function cloud_close(id)
-    {
-      Ajax.call('cloud.php?is_ajax=1&act=close_remind&remind_id='+id,'', cloud_api, 'GET', 'JSON');
-    }
-  //-->
- </script> 
-<ul id="lilist" style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
-  {foreach from=$warning_arr item=warning}
-  <li class="Start315">{$warning}</li>
-  {/foreach}
-</ul>
-<ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
- <!-- <script type="text/javascript" src="http://bbs.ecshop.com/notice.php?v=1&n=8&f=ul"></script>-->
-</ul>
-<!-- directory install end -->
+
+<!-- start exchange rate -->
+<div class="list-div">
+  <table cellspacing='1' cellpadding='3'>
+    <tr>
+      <th colspan="4" class="group-title">加币 - 人民币 汇率</th>
+    </tr>
+    <tr>
+      <td width="20%"><a href="javascript:getRealtimeRate();" title="更新实时汇率">实时汇率</a></td>
+      <td width="30%"><strong id="realtimeExRate" style="color: red">{$realtime_ex_rate}</strong></td>
+      <td width="20%"><a href="javascript:setNewRate();" title="修改当前汇率">当前设置汇率</a></td>
+      <td width="30%"><strong id="exchangeRate">{$exchange_rate}</strong></td>
+    </tr>
+  </table>
+</div>
+<!-- end exchange rate -->
+<br />
 <!-- start personal message -->
 {if $admin_msg}
 <div class="list-div" style="border: 1px solid #CC0000">
@@ -225,73 +208,97 @@
 {literal}
 {insert_scripts files="../js/utils.js"}
 <script type="Text/Javascript" language="JavaScript">
-<!--
-onload = function()
-{
-  /* 检查订单 */
-  startCheckOrder();
-}
-  Ajax.call('index.php?is_ajax=1&act=main_api','', start_api, 'GET', 'TEXT','FLASE');
+  onload = function()
+  {
+    /* 检查订单 */
+    startCheckOrder();
+  }
+  //Ajax.call('index.php?is_ajax=1&act=main_api','', start_api, 'GET', 'TEXT','FLASE');
   //Ajax.call('cloud.php?is_ajax=1&act=cloud_remind','', cloud_api, 'GET', 'JSON');
-   function start_api(result)
+  function start_api(result)
+  {
+    apilist = document.getElementById("lilist").innerHTML;
+    document.getElementById("lilist").innerHTML = result+apilist;
+    if(document.getElementById("Marquee") != null)
     {
-      apilist = document.getElementById("lilist").innerHTML;
-      document.getElementById("lilist").innerHTML =result+apilist;
-      if(document.getElementById("Marquee") != null)
+      var Mar = document.getElementById("Marquee");
+      lis = Mar.getElementsByTagName('div');
+      //alert(lis.length); //显示li元素的个数
+      if(lis.length>1)
       {
-        var Mar = document.getElementById("Marquee");
-        lis = Mar.getElementsByTagName('div');
-        //alert(lis.length); //显示li元素的个数
-        if(lis.length>1)
-        {
-          api_styel();
-        }      
+        api_styel();
       }
     }
+  }
  
-      function api_styel()
+  function api_styel()
+  {
+    if(document.getElementById("Marquee") != null)
+    {
+      var Mar = document.getElementById("Marquee");
+      if (Browser.isIE)
       {
-        if(document.getElementById("Marquee") != null)
-        {
-            var Mar = document.getElementById("Marquee");
-            if (Browser.isIE)
-            {
-              Mar.style.height = "52px";
-            }
-            else
-            {
-              Mar.style.height = "36px";
-            }
-            
-            var child_div=Mar.getElementsByTagName("div");
+        Mar.style.height = "52px";
+      }
+      else
+      {
+        Mar.style.height = "36px";
+      }
 
-        var picH = 16;//移动高度
-        var scrollstep=2;//移动步幅,越大越快
-        var scrolltime=30;//移动频度(毫秒)越大越慢
-        var stoptime=4000;//间断时间(毫秒)
-        var tmpH = 0;
-        
-        function start()
+      var child_div=Mar.getElementsByTagName("div");
+
+      var picH = 16;//移动高度
+      var scrollstep=2;//移动步幅,越大越快
+      var scrolltime=30;//移动频度(毫秒)越大越慢
+      var stoptime=4000;//间断时间(毫秒)
+      var tmpH = 0;
+
+      function start()
+      {
+        if(tmpH < picH)
         {
-          if(tmpH < picH)
-          {
-            tmpH += scrollstep;
-            if(tmpH > picH )tmpH = picH ;
-            Mar.scrollTop = tmpH;
-            setTimeout(start,scrolltime);
-          }
-          else
-          {
-            tmpH = 0;
-            Mar.appendChild(child_div[0]);
-            Mar.scrollTop = 0;
-            setTimeout(start,stoptime);
-          }
+          tmpH += scrollstep;
+          if(tmpH > picH )tmpH = picH ;
+          Mar.scrollTop = tmpH;
+          setTimeout(start,scrolltime);
         }
-        setTimeout(start,stoptime);
+        else
+        {
+          tmpH = 0;
+          Mar.appendChild(child_div[0]);
+          Mar.scrollTop = 0;
+          setTimeout(start,stoptime);
         }
       }
-//-->
+      setTimeout(start,stoptime);
+    }
+  }
+
+  function setNewRate() {
+    var rate = document.getElementById("exchangeRate").innerHTML;
+    var newRate = prompt("请输入新的汇率：", rate);
+    if (newRate != null && newRate != rate) {
+        Ajax.call('index.php?is_ajax=1&act=setup_exchange_rate&rate='+newRate,'', callback_setup_exchange_rate, 'GET', 'JSON');
+        function callback_setup_exchange_rate(result) {
+            if (result.error == 0) {
+                document.getElementById("exchangeRate").innerHTML = result.rate;
+            } else {
+                console.log('Setup exchange rate error!');
+            }
+        }
+    }
+  }
+
+  function getRealtimeRate() {
+      Ajax.call('index.php?is_ajax=1&act=get_realtime_exchange_rate','', callback_get_realtime_exchange_rate, 'GET', 'JSON');
+      function callback_get_realtime_exchange_rate(result) {
+          if (result.error == 0) {
+              document.getElementById("realtimeExRate").innerHTML = result.realtimeExRate;
+          } else {
+              console.log('Setup exchange rate error!');
+          }
+      }
+  }
 </script>
 {/literal}
 {include file="pagefooter.htm"}
