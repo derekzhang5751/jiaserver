@@ -11,6 +11,7 @@ function get_category_list() {
     $categoryList = $gBricker->db->select('category',
         ['cat_id','cat_name'],
         ['is_show' => 1,
+            'parent_id' => 0,
             'ORDER' => ['sort_order'=>'DESC'],
             'LIMIT' => 500]);
 
@@ -42,7 +43,7 @@ function get_goodslist_best() {
             'is_delete' => 0,
             'is_best' => 1,
             'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
-            'LIMIT' => 10]);
+            'LIMIT' => 100]);
 
     if ($goodsList) {
         $return['result'] = true;
@@ -82,7 +83,7 @@ function get_goodslist_new() {
             'is_delete' => 0,
             'is_new' => 1,
             'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
-            'LIMIT' => 10]);
+            'LIMIT' => 100]);
 
     if ($goodsList) {
         $return['result'] = true;
@@ -116,7 +117,7 @@ function get_goods_detail($goodsId) {
     ];
 
     $goods = $gBricker->db->get('goods',
-        ['goods_id','goods_sn','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
+        ['goods_id','goods_sn','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_desc', 'goods_thumb','goods_img'],
         ['goods_id' => $goodsId]);
 
     if ($goods) {
@@ -130,6 +131,9 @@ function get_goods_detail($goodsId) {
         $return['goods']['goods_thumb'] = $goods['goods_thumb'];
         $return['goods']['goods_img'] = $goods['goods_img'];
         $return['goods']['goods_gallery'] = array();
+
+        $desc = filterAddSelfDomain( $goods['goods_desc'] );
+        $return['goods']['goods_desc'] = $desc;
 
         // 获取图片库
         $imgList = $gBricker->db->select('goods_gallery',

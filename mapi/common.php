@@ -18,3 +18,21 @@ function jsonResponse($result = 'success', $msg='', $data=[])
     $json = json_encode($data_arr);
     exit($json);
 }
+
+/**
+ *  修改页面中的URL地址，添加域名
+ *
+ *  @param   string    $source     页面代码
+ *
+ * @return   string    修改后的代码
+ *
+ */
+function filterAddSelfDomain($source) {
+    $domain = $_SERVER['HTTP_HOST'];
+
+    $search  = 'src="/';
+    $replace = 'src="http://' . $domain . '/';
+    $ret = str_replace($search, $replace, $source);
+
+    return $ret;
+}
