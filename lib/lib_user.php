@@ -2,6 +2,8 @@
 
 require_once BRICKER_PATH . '/Lib/email.php';
 require_once BRICKER_PATH . '/Lib/network.php';
+require_once dirname(__FILE__) . '/lib_common.php';
+
 
 function user_signin_check($username, $password) {
     global $gBricker;
@@ -11,24 +13,79 @@ function user_signin_check($username, $password) {
         'userid' => ''
     ];
     $isEmail = \Bricker\email_address_check($username);
-    
     if ($isEmail === true) {
-        // email address
-        $user = $gBricker->db->get('users', ['user_id', 'user_name'], [
-            'email'    => $username,
-            'password' => $password]);
+        $checkFieldName = 'email';
     } else {
-        // username
-        $user = $gBricker->db->get('users', ['user_id', 'email'], [
-            'user_name' => $username,
-            'password'  => $password]);
+        $checkFieldName = 'user_name';
     }
+
+    $user = $gBricker->db->get('users',
+        ['user_id', 'user_name', 'password', 'salt', 'ec_salt'],
+        [$checkFieldName => $username]);
+
     if ($user) {
-        $return['result'] = true;
-        $return['userid'] = $user['user_id'];
+        $ec_salt = $user['ec_salt'];
+        if (empty($user['salt'])) {
+            if ($user['password'] == compile_password(array('password'=>$password,'ec_salt'=>$ec_salt))) {
+                if (empty($ec_salt)) {
+                    $ec_salt = rand(1, 9999);
+                    $new_password = md5(md5($password).$ec_salt);
+                    $gBricker->db->update('users',
+                        [
+                            'password' => $new_password,
+                            'ec_salt' => $ec_salt
+                        ], [
+                            'user_id' => $user['user_id']
+                        ]);
+                }
+                $return['result'] = true;
+                $return['userid'] = $user['user_id'];
+            } else {
+                $return['result'] = false;
+                $return['msg'] = '密码错误 !!!';
+            }
+        } else {
+            /* 如果salt存在，使用salt方式加密验证，验证通过洗白用户密码 */
+            $encrypt_type = substr($user['salt'], 0, 1);
+            $encrypt_salt = substr($user['salt'], 1);
+
+            /* 计算加密后密码 */
+            $encrypt_password = '';
+            switch ($encrypt_type)
+            {
+                case ENCRYPT_ZC :
+                    $encrypt_password = md5($encrypt_salt.$password);
+                    break;
+                /* 如果还有其他加密方式添加到这里  */
+                //case other :
+                //  ----------------------------------
+                //  break;
+                case ENCRYPT_UC :
+                    $encrypt_password = md5(md5($password).$encrypt_salt);
+                    break;
+
+                default:
+                    $encrypt_password = '';
+            }
+
+            if ($user['password'] != $encrypt_password) {
+                $return['result'] = false;
+                $return['msg'] = '密码错误 !!!';
+            } else {
+                $gBricker->db->update('users',
+                    [
+                        'password' => compile_password(array('password' => $password)),
+                        'salt' => ''
+                    ], [
+                        'user_id' => $user['user_id']
+                    ]);
+                $return['result'] = true;
+                $return['userid'] = $user['user_id'];
+            }
+        }
     } else {
         $return['result'] = false;
-        $return['msg'] = 'User is not exist or the password error!';
+        $return['msg'] = '用户不存在 !!!';
     }
     return $return;
 }

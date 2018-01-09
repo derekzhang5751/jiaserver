@@ -123,7 +123,7 @@ class ecshop extends integrate
                 }
                 else
                 {
-					if(empty($ec_salt))
+					if (empty($ec_salt))
 				    {
 						$ec_salt=rand(1,9999);
 						$new_password=md5(md5($password).$ec_salt);

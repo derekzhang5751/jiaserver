@@ -13,6 +13,7 @@ if ($action == 'signin') {
     // User sign in
     $userName = $_POST['username'];
     $password = $_POST['password'];
+    $uuid     = $_POST['uuid'];
     
     $gBricker->applog('user', 'User signin with username='.$userName.', password='.$password);
     
