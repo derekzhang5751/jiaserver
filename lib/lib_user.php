@@ -112,3 +112,45 @@ function user_signin_update($userId) {
     }
     return $return;
 }
+
+function get_user_info($username)
+{
+    global $gBricker;
+    $return = [
+        'result' => false,
+        'msg' => '',
+        'user' => []
+    ];
+    $isEmail = \Bricker\email_address_check($username);
+    if ($isEmail === true) {
+        $checkFieldName = 'email';
+    } else {
+        $checkFieldName = 'user_name';
+    }
+
+    $user = $gBricker->db->get('users',
+        ['user_id', 'email', 'user_name', 'sex', 'birthday'],
+        [$checkFieldName => $username]);
+
+    $sex = intval( $user['sex'] );
+    switch ($sex) {
+        case 1:
+            $user['sex'] = '男';
+            break;
+        case 2:
+            $user['sex'] = '女';
+            break;
+        default:
+            $user['sex'] = '保密';
+            break;
+    }
+
+    if ($user) {
+        $return['result'] = true;
+        $return['user'] = $user;
+    } else {
+        $return['result'] = false;
+        $return['msg'] = '用户不存在 !!!';
+    }
+    return $return;
+}

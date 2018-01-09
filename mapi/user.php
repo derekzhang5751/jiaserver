@@ -31,6 +31,22 @@ if ($action == 'signin') {
 elseif ($action == 'signup') {
     // User sign up
 }
+elseif ($action == 'userinfo') {
+    // get user info
+    $userName = $_POST['username'];
+    $uuid     = $_POST['uuid'];
+
+    if (isset($userName) && !empty($userName)) {
+        $ret = get_user_info($userName);
+        if ($ret['result'] == true) {
+            jsonResponse('success', '', $ret['user']);
+        } else {
+            jsonResponse('fail', $ret['msg']);
+        }
+    } else {
+        jsonResponse('fail', 'Invalid Request !');
+    }
+}
 else {
     // error
     exit("Invalid Request !!");
