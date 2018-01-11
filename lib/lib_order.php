@@ -235,6 +235,7 @@ function add_to_cart($goods_id, $num = 1, $spec = array(), $parent = 0) {
             " AND rec_type = 'CART_GENERAL_GOODS'";
 
         //$row = $GLOBALS['db']->getRow($sql);
+        $row = null;
         $res = $gBricker->db->query($sql)->fetchAll();
         if ($res) {
             $row = $res[0];

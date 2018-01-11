@@ -432,7 +432,7 @@ function bargain_price($price, $start, $end)
     }
     else
     {
-        $time = gmtime();
+        $time = time(); // gmtime();
         if ($time >= $start && $time <= $end)
         {
             return $price;

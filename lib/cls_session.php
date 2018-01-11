@@ -3,6 +3,7 @@
 /**
  * SESSION
 */
+require_once BRICKER_PATH . '/Lib/network.php';
 
 if (!defined('USE_BRICKER'))
 {
@@ -70,7 +71,7 @@ class Session
         $this->session_data_table = $session_data_table;
 
         $this->db  = $db;
-        $this->_ip = client_real_ip();
+        $this->_ip = \Bricker\client_real_ip();
 
         if ($session_id == '' && !empty($_COOKIE[$this->session_name]))
         {
@@ -126,7 +127,7 @@ class Session
             $ip = substr($this->_ip, 0, strrpos($this->_ip, '.'));
         }
 
-        return sprintf('%08x', crc32(ROOT_PATH . $ip . $session_id));
+        return sprintf('%08x', crc32(BRICKER_PATH . $ip . $session_id));
     }
 
     function insert_session()
@@ -221,8 +222,7 @@ class Session
 
         if (isset($data{255}))
         {
-            $this->db->autoReplace($this->session_data_table, array('sesskey' => $this->session_id, 'expiry' => $this->_time, 'data' => $data), array('expiry' => $this->_time,'data' => $data));
-
+            auto_replace($this->db, $this->session_data_table, array('sesskey' => $this->session_id, 'expiry' => $this->_time, 'data' => $data), array('expiry' => $this->_time,'data' => $data));
             $data = '';
         }
 
