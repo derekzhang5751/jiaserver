@@ -1,5 +1,4 @@
 <?php
-require_once dirname(__FILE__) . '/lib_common.php';
 
 function get_category_list() {
     global $gBricker;
@@ -197,22 +196,13 @@ function promote_price($price, $start, $end) {
  */
 function sort_goods_attr_id_array($goods_attr_id_array, $sort = 'asc')
 {
-    global $gBricker;
     if (empty($goods_attr_id_array))
     {
         return $goods_attr_id_array;
     }
 
     //重新排序
-    $sql = "SELECT a.attr_type, v.attr_value, v.goods_attr_id
-            FROM ecs_attribute AS a
-            LEFT JOIN ecs_goods_attr AS v
-                ON v.attr_id = a.attr_id
-                AND a.attr_type = 1
-            WHERE v.goods_attr_id " . db_create_in($goods_attr_id_array) . "
-            ORDER BY a.attr_id $sort";
-
-    $row = $gBricker->db->query($sql)->fetchAll();
+    $row = db_get_goods_attr($goods_attr_id_array);
 
     $return_arr = array();
     foreach ($row as $value)
@@ -235,7 +225,6 @@ function sort_goods_attr_id_array($goods_attr_id_array, $sort = 'asc')
  */
 function get_products_info($goods_id, $spec_goods_attr_id)
 {
-    global $gBricker;
     $return_array = array();
 
     if (empty($spec_goods_attr_id) || !is_array($spec_goods_attr_id) || empty($goods_id))
@@ -249,10 +238,7 @@ function get_products_info($goods_id, $spec_goods_attr_id)
     {
         $goods_attr = implode('|', $goods_attr_array['sort']);
 
-        //$sql = "SELECT * FROM " .$GLOBALS['ecs']->table('products'). " WHERE goods_id = '$goods_id' AND goods_attr = '$goods_attr' LIMIT 0, 1";
-        $return_array = $gBricker->db->get('products',
-            ['product_id', 'goods_id', 'goods_attr', 'product_sn', 'product_number'],
-            ['goods_id' => $goods_id, 'goods_attr' => $goods_attr]);
+        $return_array = db_get_products_info($goods_id, $goods_attr);
     }
     return $return_array;
 }
@@ -319,16 +305,7 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
 
     //取得商品促销价格列表
     /* 取得商品信息 */
-    $sql = "SELECT g.promote_price, g.promote_start_date, g.promote_end_date, ".
-        "IFNULL(mp.user_price, g.shop_price * '" . $_SESSION['discount'] . "') AS shop_price ".
-        " FROM ecs_goods AS g ".
-        " LEFT JOIN ecs_member_price AS mp ".
-        "ON mp.goods_id = g.goods_id AND mp.user_rank = '" . $_SESSION['user_rank']. "' ".
-        " WHERE g.goods_id = '" . $goods_id . "'" .
-        " AND g.is_delete = 0";
-
-    $res = $gBricker->db->query($sql)->fetchAll();
-    $goods = $res[0];
+    $goods = db_get_final_price($goods_id);
 
     /* 计算商品的促销价格 */
     if ($goods['promote_price'] > 0)
@@ -393,16 +370,10 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
  */
 function get_volume_price_list($goods_id, $price_type = '1')
 {
-    global $gBricker;
     $volume_price = array();
     $temp_index   = '0';
 
-    $sql = "SELECT `volume_number` , `volume_price`".
-        " FROM ecs_volume_price".
-        " WHERE `goods_id` = '" . $goods_id . "' AND `price_type` = '" . $price_type . "'".
-        " ORDER BY `volume_number`";
-
-    $res = $gBricker->db->query($sql)->fetchAll();
+    $res = db_get_volume_price_list($goods_id, $price_type);
 
     foreach ($res as $k => $v)
     {
@@ -490,22 +461,12 @@ function get_goods_attr_info($arr, $type = 'pice')
  */
 function is_spec($goods_attr_id_array, $sort = 'asc')
 {
-    global $gBricker;
     if (empty($goods_attr_id_array))
     {
-        return $goods_attr_id_array;
+        return false;
     }
 
-    //重新排序
-    $sql = "SELECT a.attr_type, v.attr_value, v.goods_attr_id
-            FROM ecs_attribute AS a
-            LEFT JOIN ecs_goods_attr AS v
-                ON v.attr_id = a.attr_id
-                AND a.attr_type = 1
-            WHERE v.goods_attr_id " . db_create_in($goods_attr_id_array) . "
-            ORDER BY a.attr_id $sort";
-
-    $row = $gBricker->db->query($sql)->fetchAll();
+    $row = db_get_goods_attr($goods_attr_id_array);
 
     $return_arr = array();
     foreach ($row as $value)
