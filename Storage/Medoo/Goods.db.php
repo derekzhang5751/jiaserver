@@ -84,6 +84,25 @@ function db_get_goods_category($parentId, $maxSize)
     return $categoryList;
 }
 
+function db_get_goods_detail($goodsId)
+{
+    $goods = $GLOBALS['db']->get('goods',
+        ['goods_id','goods_sn','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_desc', 'goods_thumb','goods_img'],
+        ['goods_id' => $goodsId]);
+    return $goods;
+}
+
+function db_get_goods_gallery($goodsId, $maxSize)
+{
+    $imgList = $GLOBALS['db']->select('goods_gallery',
+        ['img_url','img_original','img_desc'],
+        ['goods_id' => $goodsId,
+            'ORDER' => ['img_id'=>'ASC'],
+            'LIMIT' => $maxSize]);
+    return $imgList;
+}
+
+
 /**
  * Database Assistant Functions
  */

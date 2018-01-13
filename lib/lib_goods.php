@@ -40,59 +40,6 @@ function get_goodslist_new() {
     return $return;
 }
 
-function get_goods_detail($goodsId) {
-    global $gBricker;
-    $return = [
-        'result' => false,
-        'msg' => '',
-        'goods' => []
-    ];
-
-    $goods = $gBricker->db->get('goods',
-        ['goods_id','goods_sn','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_desc', 'goods_thumb','goods_img'],
-        ['goods_id' => $goodsId]);
-
-    if ($goods) {
-        $return['result'] = true;
-
-        $return['goods']['goods_id'] = $goods['goods_id'];
-        $return['goods']['goods_sn'] = $goods['goods_sn'];
-        $return['goods']['goods_name'] = $goods['goods_name'];
-        $return['goods']['shop_price'] = $goods['shop_price'];
-        $return['goods']['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
-        $return['goods']['goods_thumb'] = $goods['goods_thumb'];
-        $return['goods']['goods_img'] = $goods['goods_img'];
-        $return['goods']['goods_gallery'] = array();
-
-        $desc = filterAddSelfDomain( $goods['goods_desc'] );
-        $return['goods']['goods_desc'] = $desc;
-
-        // 获取图片库
-        $imgList = $gBricker->db->select('goods_gallery',
-            ['img_url','img_original','img_desc'],
-            ['goods_id' => $goodsId,
-                'ORDER' => ['img_id'=>'ASC'],
-                'LIMIT' => 10]);
-        if ($imgList) {
-            $index = 0;
-            foreach ($imgList as $img) {
-                $return['goods']['goods_gallery'][$index]['img_url'] = $img['img_url'];
-                $return['goods']['goods_gallery'][$index]['img_original'] = $img['img_original'];
-                $return['goods']['goods_gallery'][$index]['img_desc'] = $img['img_desc'];
-                $index++;
-            }
-        }
-
-    } else {
-        $error = print_r( $gBricker->db->error(), true );
-        $return['result'] = false;
-        $return['msg'] = $error;
-        $gBricker->applog('goods', 'get_goods_detail ERROR:'.$error);
-    }
-
-    return $return;
-}
-
 /**
  * 判断某个商品是否正在特价促销期
  *
@@ -412,4 +359,22 @@ function is_spec($goods_attr_id_array, $sort = 'asc')
     } else {
         return false;
     }
+}
+
+/**
+ *  修改页面中的URL地址，添加域名
+ *
+ *  @param   string    $source     页面代码
+ *
+ * @return   string    修改后的代码
+ *
+ */
+function filter_add_self_domain($source) {
+    $domain = $_SERVER['HTTP_HOST'];
+
+    $search  = 'src="/';
+    $replace = 'src="http://' . $domain . '/';
+    $ret = str_replace($search, $replace, $source);
+
+    return $ret;
 }
