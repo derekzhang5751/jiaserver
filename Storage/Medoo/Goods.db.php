@@ -60,6 +60,29 @@ function db_get_final_price($goods_id)
     }
 }
 
+function db_get_goodslist_best($maxSize)
+{
+    $goodsList = $GLOBALS['db']->select('goods',
+        ['goods_id','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
+        ['is_on_sale' => 1,
+            'is_alone_sale' => 1,
+            'is_delete' => 0,
+            'is_best' => 1,
+            'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
+            'LIMIT' => $maxSize]);
+    return $goodsList;
+}
+
+function db_get_goods_category($parentId, $maxSize)
+{
+    $categoryList = $GLOBALS['db']->select('category',
+        ['cat_id','cat_name'],
+        ['is_show' => 1,
+            'parent_id' => $parentId,
+            'ORDER' => ['sort_order'=>'DESC'],
+            'LIMIT' => $maxSize]);
+    return $categoryList;
+}
 
 /**
  * Database Assistant Functions
