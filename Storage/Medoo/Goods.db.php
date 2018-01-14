@@ -73,6 +73,19 @@ function db_get_goodslist_best($maxSize)
     return $goodsList;
 }
 
+function db_get_goodslist_new($maxSize)
+{
+    $goodsList = $GLOBALS['db']->select('goods',
+        ['goods_id','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
+        ['is_on_sale' => 1,
+            'is_alone_sale' => 1,
+            'is_delete' => 0,
+            'is_new' => 1,
+            'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
+            'LIMIT' => $maxSize]);
+    return $goodsList;
+}
+
 function db_get_goods_category($parentId, $maxSize)
 {
     $categoryList = $GLOBALS['db']->select('category',
@@ -108,6 +121,21 @@ function db_has_child_category($categoryId)
         'parent_id' => $categoryId
     );
     return $GLOBALS['db']->has('category', $where);
+}
+
+function db_get_goodslist_by_category($categoryId, $maxSize)
+{
+    $goodsList = $GLOBALS['db']->select('goods',
+        ['goods_id','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
+        [
+            'cat_id' => $categoryId,
+            'is_on_sale' => 1,
+            'is_alone_sale' => 1,
+            'is_delete' => 0,
+            'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
+            'LIMIT' => $maxSize
+        ]);
+    return $goodsList;
 }
 
 

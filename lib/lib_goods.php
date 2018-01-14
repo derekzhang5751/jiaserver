@@ -1,45 +1,5 @@
 <?php
 
-function get_goodslist_new() {
-    global $gBricker;
-    $return = [
-        'result' => false,
-        'msg' => '',
-        'goodslist' => []
-    ];
-
-    $goodsList = $gBricker->db->select('goods',
-        ['goods_id','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
-        ['is_on_sale' => 1,
-            'is_alone_sale' => 1,
-            'is_delete' => 0,
-            'is_new' => 1,
-            'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
-            'LIMIT' => 100]);
-
-    if ($goodsList) {
-        $return['result'] = true;
-        $index = 0;
-        foreach ($goodsList as $goods) {
-            $return['goodslist'][$index]['goods_id'] = $goods['goods_id'];
-            $return['goodslist'][$index]['goods_name'] = $goods['goods_name'];
-            $return['goodslist'][$index]['shop_price'] = $goods['shop_price'];
-            $return['goodslist'][$index]['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
-            $return['goodslist'][$index]['goods_thumb'] = $goods['goods_thumb'];
-            $return['goodslist'][$index]['goods_img'] = $goods['goods_img'];
-
-            $index++;
-        }
-    } else {
-        $error = print_r( $gBricker->db->error(), true );
-        $return['result'] = false;
-        $return['msg'] = $error;
-        $gBricker->applog('goods', 'get_goodslist_new ERROR:'.$error);
-    }
-
-    return $return;
-}
-
 /**
  * 判断某个商品是否正在特价促销期
  *
