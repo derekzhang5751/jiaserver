@@ -8,6 +8,8 @@
 
 class Category extends \Bricker\RequestLifeCircle
 {
+    private $parentId;
+
     private $return = [
         'result' => false,
         'msg' => '',
@@ -15,15 +17,31 @@ class Category extends \Bricker\RequestLifeCircle
     ];
 
     protected function prepareRequestParams() {
+        $parentId = isset($_POST['parentid']) ? trim($_POST['parentid']) : '0';
+        $this->parentId = intval($parentId);
+        if ($this->parentId < 0) {
+            $this->parentId = 0;
+        }
         return true;
     }
 
     protected function process() {
-        $categoryList = db_get_goods_category(0, 500);
+        $categoryList = db_get_goods_category($this->parentId, 500);
 
         if ($categoryList) {
+            $i = 0;
+            foreach ($categoryList as $category) {
+                $this->return['categorylist'][$i]['cat_id'] = $category['cat_id'];
+                $this->return['categorylist'][$i]['cat_name'] = $category['cat_name'];
+                if ( db_has_child_category($category['cat_id']) ) {
+                    $this->return['categorylist'][$i]['has_child'] = true;
+                } else {
+                    $this->return['categorylist'][$i]['has_child'] = false;
+                }
+                $i++;
+            }
             $this->return['result'] = true;
-            $this->return['categorylist'] = $categoryList;
+            //$this->return['categorylist'] = $categoryList;
         } else {
             $this->return['result'] = false;
             $this->return['msg'] = $GLOBALS['LANG']['category_empty'];

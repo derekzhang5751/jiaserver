@@ -79,7 +79,7 @@ function db_get_goods_category($parentId, $maxSize)
         ['cat_id','cat_name'],
         ['is_show' => 1,
             'parent_id' => $parentId,
-            'ORDER' => ['sort_order'=>'DESC'],
+            'ORDER' => ['sort_order'=>'ASC'],
             'LIMIT' => $maxSize]);
     return $categoryList;
 }
@@ -100,6 +100,14 @@ function db_get_goods_gallery($goodsId, $maxSize)
             'ORDER' => ['img_id'=>'ASC'],
             'LIMIT' => $maxSize]);
     return $imgList;
+}
+
+function db_has_child_category($categoryId)
+{
+    $where = array(
+        'parent_id' => $categoryId
+    );
+    return $GLOBALS['db']->has('category', $where);
 }
 
 
