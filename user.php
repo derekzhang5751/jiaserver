@@ -2790,7 +2790,7 @@ elseif ($action == 'clear_history')
 {
     setcookie('ECS[history]',   '', 1);
 }
-else {
-    $GLOBALS['smarty']->display('reg_success.dwt');
-}
+//else {
+//    $GLOBALS['smarty']->display('reg_success.dwt');
+//}
 ?>

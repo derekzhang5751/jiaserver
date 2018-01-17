@@ -138,6 +138,32 @@ function db_get_goodslist_by_category($categoryId, $maxSize)
     return $goodsList;
 }
 
+function db_get_order_list($userId, $maxSize)
+{
+    $orderList = $GLOBALS['db']->select('order_info',
+        ['order_id','order_sn','order_status','shipping_status','pay_status','order_amount','add_time'],
+        [
+            'user_id' => $userId,
+            'ORDER' => ['order_id'=>'DESC'],
+            'LIMIT' => $maxSize
+        ]
+    );
+    return $orderList;
+}
+
+function db_get_order_thumb($orderId)
+{
+    $thumb = $GLOBALS['db']->get('order_goods',
+        ['[><]goods' => ['goods_id' => 'goods_id']],
+        ['goods.goods_thumb(thumb)'],
+        [
+            'order_goods.order_id' => $orderId,
+            'ORDER' => ['order_goods.goods_price'=>'DESC']
+        ]
+    );
+    return $thumb;
+}
+
 
 /**
  * Database Assistant Functions

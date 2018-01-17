@@ -14,7 +14,10 @@ class Signin extends \Bricker\RequestLifeCircle
 
     private $return = [
         'result' => false,
-        'msg' => ''
+        'msg' => '',
+        'user' => [
+            'userid' => 0
+        ]
     ];
 
     protected function prepareRequestParams() {
@@ -56,7 +59,7 @@ class Signin extends \Bricker\RequestLifeCircle
                         db_update_user_password_ecsalt($user['user_id'], $new_password, $ec_salt);
                     }
                     $this->return['result'] = true;
-                    $this->return['userid'] = $user['user_id'];
+                    $this->return['user']['userid'] = $user['user_id'];
                 } else {
                     $this->return['result'] = false;
                     $this->return['msg'] = $GLOBALS['LANG']['password_error'];
@@ -93,7 +96,7 @@ class Signin extends \Bricker\RequestLifeCircle
                     db_update_user_password_salt($user['user_id'], $newPassword, '');
 
                     $this->return['result'] = true;
-                    $this->return['userid'] = $user['user_id'];
+                    $this->return['user']['userid'] = $user['user_id'];
                 }
             }
 
@@ -108,7 +111,7 @@ class Signin extends \Bricker\RequestLifeCircle
 
     protected function responseHybrid() {
         if ($this->return['result'] === true) {
-            $this->jsonResponse('success', '');
+            $this->jsonResponse('success', '', $this->return['user']);
         } else {
             $this->jsonResponse('fail', $this->return['msg']);
         }
