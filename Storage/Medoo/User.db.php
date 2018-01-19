@@ -98,3 +98,22 @@ function db_get_my_address($userId, $maxSize)
     );
     return $address;
 }
+
+function db_get_my_cart_list($userId, $maxSize)
+{
+    $cartList = $GLOBALS['db']->select('cart',
+        [
+            '[>]goods' => ['goods_id' => 'goods_id'],
+        ],
+        [
+            'cart.rec_id','cart.goods_id','cart.goods_sn','cart.goods_name','cart.goods_price',
+            'cart.goods_number','cart.goods_attr','goods.shop_price','goods.goods_thumb'
+        ],
+        [
+            'user_id' => $userId,
+            'ORDER' => ['rec_id' => 'ASC'],
+            'LIMIT' => $maxSize
+        ]
+    );
+    return $cartList;
+}

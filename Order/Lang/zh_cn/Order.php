@@ -11,6 +11,7 @@ $GLOBALS['LANG']['products_no_alone_sale'] = '该商品不能单独销售 !!!';
 $GLOBALS['LANG']['products_stop_sale'] = '该商品已停止销售 !!!';
 $GLOBALS['LANG']['products_not_enough'] = '该商品库存不足 !!!';
 $GLOBALS['LANG']['order_list_empty'] = '订单列表为空 !!!';
+$GLOBALS['LANG']['cart_empty'] = '购物车为空 !!!';
 
 
 /* 订单状态 */
