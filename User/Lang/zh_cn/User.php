@@ -7,3 +7,5 @@
  */
 $GLOBALS['LANG']['password_error'] = '密码错误 !!!';
 $GLOBALS['LANG']['user_not_exist'] = '用户不存在 !!!';
+$GLOBALS['LANG']['collection_empty'] = '收藏夹为空 !!!';
+$GLOBALS['LANG']['address_empty'] = '收货地址为空 !!!';

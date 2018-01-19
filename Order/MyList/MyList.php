@@ -1,7 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: derek
+ * User: Derek
  * Date: 2018-01-16
  * Time: 11:30 AM
  */
@@ -10,7 +9,7 @@ class MyList extends \Bricker\RequestLifeCircle
 {
     private $userId;
     private $uuid;
-
+    
     private $return = [
         'result' => false,
         'msg' => '',
@@ -20,7 +19,7 @@ class MyList extends \Bricker\RequestLifeCircle
     protected function prepareRequestParams() {
         $this->userId = isset($_POST['userid']) ? trim($_POST['userid']) : '0';
         $this->uuid     = isset($_POST['uuid']) ? trim($_POST['uuid']) : '';
-
+        
         $this->userId = intval($this->userId);
         if ($this->userId <= 0) {
             return false;
@@ -28,14 +27,14 @@ class MyList extends \Bricker\RequestLifeCircle
         if (empty($this->uuid)) {
             return false;
         }
-
+        
         return true;
     }
 
     protected function process() {
         $maxSize = 100;
         $orderList = db_get_order_list($this->userId, $maxSize);
-
+        
         if ($orderList) {
             $i = 0;
             foreach ($orderList as $order) {

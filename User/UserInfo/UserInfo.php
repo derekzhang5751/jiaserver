@@ -10,27 +10,27 @@ class UserInfo extends \Bricker\RequestLifeCircle
 {
     private $userName;
     private $uuid;
-
+    
     private $return = [
         'result' => false,
         'msg' => '',
         'user' => []
     ];
-
+    
     protected function prepareRequestParams() {
         $this->userName = isset($_POST['username']) ? trim($_POST['username']) : '';
         $this->uuid     = isset($_POST['uuid']) ? trim($_POST['uuid']) : '';
-
+        
         if (empty($this->userName)) {
             return false;
         }
         if (empty($this->uuid)) {
             return false;
         }
-
+        
         return true;
     }
-
+    
     protected function process() {
         $isEmail = \Bricker\email_address_check($this->userName);
         if ($isEmail === true) {
@@ -38,9 +38,9 @@ class UserInfo extends \Bricker\RequestLifeCircle
         } else {
             $checkFieldName = 'user_name';
         }
-
+        
         $user = db_get_user_info($checkFieldName, $this->userName);
-
+        
         if ($user) {
             $sex = intval( $user['sex'] );
             switch ($sex) {
@@ -61,10 +61,10 @@ class UserInfo extends \Bricker\RequestLifeCircle
             $this->return['result'] = false;
             $this->return['msg'] = $GLOBALS['LANG']['user_not_exist'];
         }
-
+        
         return true;
     }
-
+    
     protected function responseHybrid() {
         if ($this->return['result'] === true) {
             $this->jsonResponse('success', '', $this->return['user']);
@@ -72,11 +72,11 @@ class UserInfo extends \Bricker\RequestLifeCircle
             $this->jsonResponse('fail', $this->return['msg']);
         }
     }
-
+    
     protected function responseWeb() {
         exit('Not support !!');
     }
-
+    
     protected function responseMobile() {
         exit('Not support !!');
     }

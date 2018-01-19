@@ -69,7 +69,9 @@ function db_get_goodslist_best($maxSize)
             'is_delete' => 0,
             'is_best' => 1,
             'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
-            'LIMIT' => $maxSize]);
+            'LIMIT' => $maxSize
+        ]
+    );
     return $goodsList;
 }
 

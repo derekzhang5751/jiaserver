@@ -62,3 +62,39 @@ function db_get_user_info($name_or_email, $value)
         [$name_or_email => $value]);
     return $user;
 }
+
+function db_get_my_collection($userId, $maxSize)
+{
+    $collection = $GLOBALS['db']->select('collect_goods',
+        [
+            '[>]goods' => ['goods_id' => 'goods_id'],
+            //'[>]member_price' => ['goods_id' => 'goods_id']
+        ],
+        [
+            'collect_goods.rec_id', 'goods.goods_id','goods.goods_name','goods.shop_price',
+            'goods.promote_price','goods.promote_start_date','goods.promote_end_date',
+            'goods.goods_thumb'
+        ],
+        [
+            'collect_goods.user_id' => $userId,
+            'ORDER' => ['collect_goods.rec_id'=>'DESC'],
+            'LIMIT' => $maxSize
+        ]
+    );
+    return $collection;
+}
+
+function db_get_my_address($userId, $maxSize)
+{
+    $address = $GLOBALS['db']->select('user_address',
+        [
+            'address_id','consignee','email','address','tel','idcard_a'
+        ],
+        [
+            'user_id' => $userId,
+            'ORDER' => ['address_id' => 'ASC'],
+            'LIMIT' => $maxSize
+        ]
+    );
+    return $address;
+}
