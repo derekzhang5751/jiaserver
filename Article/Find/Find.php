@@ -8,7 +8,7 @@
 
 class Find extends \Bricker\RequestLifeCircle
 {
-    private $articleCatId = 15;
+    private $articleCatId = 12;
 
     private $return = [
         'result' => false,
