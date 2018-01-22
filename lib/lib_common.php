@@ -22,7 +22,7 @@ function compile_password ($cfg)
     switch ($cfg['type'])
     {
         case PWD_MD5 :
-            if(!empty($cfg['ec_salt']))
+            if (!empty($cfg['ec_salt']))
             {
                 return md5($cfg['md5password'].$cfg['ec_salt']);
             }

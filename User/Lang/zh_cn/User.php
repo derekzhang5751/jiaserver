@@ -6,6 +6,10 @@
  * Time: 2:56 PM
  */
 $GLOBALS['LANG']['password_error'] = '密码错误 !!!';
-$GLOBALS['LANG']['user_not_exist'] = '用户不存在 !!!';
+$GLOBALS['LANG']['user_not_exist'] = '用户不存在或者没有激活 !!!';
 $GLOBALS['LANG']['collection_empty'] = '收藏夹为空 !!!';
 $GLOBALS['LANG']['address_empty'] = '收货地址为空 !!!';
+$GLOBALS['LANG']['email_format_error'] = '邮件地址格式不正确 !!!';
+$GLOBALS['LANG']['username_taken_up'] = '该用户名已被使用 !!!';
+$GLOBALS['LANG']['email_taken_up'] = '该邮件地址已被使用 !!!';
+$GLOBALS['LANG']['signup_error'] = '注册用户失败，请稍后再试 !!!';

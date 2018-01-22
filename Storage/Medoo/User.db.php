@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: derek
+ * User: Derek
  * Date: 2018-01-13
  * Time: 2:59 PM
  */
@@ -10,7 +10,11 @@ function db_get_user_signin_info($name_or_email, $value)
 {
     $user = $GLOBALS['db']->get('users',
         ['user_id', 'user_name', 'password', 'salt', 'ec_salt'],
-        [$name_or_email => $value]);
+        [
+            $name_or_email => $value,
+            'is_validated' => 1
+        ]
+    );
     return $user;
 }
 
@@ -116,4 +120,59 @@ function db_get_my_cart_list($userId, $maxSize)
         ]
     );
     return $cartList;
+}
+
+function db_has_user_name_takenup($userName)
+{
+    return $GLOBALS['db']->has('users', 
+            [
+                'user_name' => $userName,
+                'is_validated' => 1
+            ]);
+}
+
+function db_has_user_email_takenup($email)
+{
+    return $GLOBALS['db']->has('users', 
+            [
+                'email' => $email,
+                'is_validated' => 1
+            ]);
+}
+
+function db_has_admin_name_takenup($userName)
+{
+    return $GLOBALS['db']->has('admin_user', 
+            [
+                'user_name' => $userName
+            ]);
+}
+
+function db_delete_user_invalidate($userName)
+{
+    $data = $GLOBALS['db']->delete('users', 
+            [
+                'user_name' => $userName,
+                'is_validated' => 0
+            ]);
+    return $data->rowCount();
+}
+
+function db_insert_user($user)
+{
+    $data = [
+        'email' => $user['email'],
+        'user_name' => $user['user_name'],
+        'password' => $user['password'],
+        'birthday' => $user['birthday'],
+        'sex' => $user['sex'],
+        'mobile_phone' => $user['mobile'],
+        'reg_time' => time()
+    ];
+    $stat = $GLOBALS['db']->insert('users', $data);
+    if ($stat->rowCount() == 1) {
+        return $GLOBALS['db']->id();
+    } else {
+        return false;
+    }
 }
