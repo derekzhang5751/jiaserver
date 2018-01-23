@@ -18,6 +18,25 @@ function db_get_user_signin_info($name_or_email, $value)
     return $user;
 }
 
+function db_get_user_info($name_or_email, $value)
+{
+    $user = $GLOBALS['db']->get('users',
+        ['user_id', 'email', 'user_name', 'sex', 'birthday'],
+        [$name_or_email => $value]);
+    return $user;
+}
+
+function db_get_user_passwd_info_by_userid($userId)
+{
+    $user = $GLOBALS['db']->get('users',
+        ['user_id', 'user_name', 'password', 'salt', 'ec_salt', 'is_validated'],
+        [
+            'user_id' => $userId
+        ]
+    );
+    return $user;
+}
+
 function db_update_user_password_ecsalt($userId, $password, $ec_salt)
 {
     $GLOBALS['db']->update('users',
@@ -57,14 +76,6 @@ function db_update_user_signin_info($userId)
     } else {
         return false;
     }
-}
-
-function db_get_user_info($name_or_email, $value)
-{
-    $user = $GLOBALS['db']->get('users',
-        ['user_id', 'email', 'user_name', 'sex', 'birthday'],
-        [$name_or_email => $value]);
-    return $user;
 }
 
 function db_get_my_collection($userId, $maxSize)
@@ -174,5 +185,34 @@ function db_insert_user($user)
         return $GLOBALS['db']->id();
     } else {
         return false;
+    }
+}
+
+/**
+ * 获取邮件模板
+ *
+ * @access  public
+ * @param:  $tpl_name[string]       模板代码
+ *
+ * @return array
+ */
+function db_get_mail_template($tpl_name)
+{
+    $template = $GLOBALS['db']->get('mail_templates',
+        ['template_subject', 'is_html', 'template_content'],
+        [
+            'template_code' => $tpl_name
+        ]
+    );
+    return $template;
+}
+
+function db_get_mail_config($code)
+{
+    $rec = $GLOBALS['db']->get('shop_config', ['value'], ['code' => $code]);
+    if ($rec) {
+        return $rec['value'];
+    } else {
+        return '';
     }
 }

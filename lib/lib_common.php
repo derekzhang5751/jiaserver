@@ -165,3 +165,25 @@ function auto_replace($db, $table, $field_values, $update_values, $where = '', $
         return false;
     }
 }
+
+function get_mail_config()
+{
+    $userSmtp    = db_get_mail_config('mail_service');
+    $senderEmail = db_get_mail_config('smtp_mail');
+    $smtpHost    = db_get_mail_config('smtp_host');
+    $smtpPort    = db_get_mail_config('smtp_port');
+    $smtpUser    = db_get_mail_config('smtp_user');
+    $smtpPass    = db_get_mail_config('smtp_pass');
+    $shopName    = db_get_mail_config('shop_name');
+    
+    $config = array(
+        'USE_SMTP'     => $userSmtp,
+        'SENDER_NAME'  => $shopName,
+        'SENDER_EMAIL' => $senderEmail,
+        'SMTP_HOST'    => $smtpHost,
+        'SMTP_PORT'    => $smtpPort,
+        'SMTP_USER'    => $smtpUser,
+        'SMTP_PASS'    => $smtpPass,
+    );
+    return $config;
+}

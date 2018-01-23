@@ -13,3 +13,5 @@ $GLOBALS['LANG']['email_format_error'] = '邮件地址格式不正确 !!!';
 $GLOBALS['LANG']['username_taken_up'] = '该用户名已被使用 !!!';
 $GLOBALS['LANG']['email_taken_up'] = '该邮件地址已被使用 !!!';
 $GLOBALS['LANG']['signup_error'] = '注册用户失败，请稍后再试 !!!';
+$GLOBALS['LANG']['old_password_error'] = '原密码错误 !!!';
+$GLOBALS['LANG']['send_email_error'] = '发送找回密码邮件失败 !!!';

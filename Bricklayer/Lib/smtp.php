@@ -5,10 +5,7 @@
  * ============================================================================
 */
 
-if (!defined('IN_ECS'))
-{
-    die('Hacking attempt');
-}
+namespace Bricker;
 
 define('SMTP_STATUS_NOT_CONNECTED', 1, true);
 define('SMTP_STATUS_CONNECTED',     2, true);
@@ -40,7 +37,7 @@ class smtp
      *  timeout     连接超时的时间          默认：5
      *  @return  bool
      */
-    function smtp($params = array())
+    function __construct($params = array())
     {
         if (!defined('CRLF'))
         {
