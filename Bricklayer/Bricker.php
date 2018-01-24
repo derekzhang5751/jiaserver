@@ -106,43 +106,4 @@ require MODULE_PATH . $className . '/' . $className . '.php';
 $request = new $className();
 $request->run();
 
-
-class Bricker {
-    
-    public $db = null;
-    
-    private $applog = null;
-    
-    public function __construct() {
-        $this->db = getDatabase();
-        $this->applog = getAppLog();
-    }
-    
-    public function applog($strLogType, $strMsg) {
-        global $gConfig;
-        if ($gConfig['log']['logging'] === true) {
-            $this->applog->log($strLogType, $strMsg);
-        }
-    }
-
-    private function init() {
-        //
-    }
-
-    private function autoLoad() {
-        //
-    }
-
-    public function run() {
-        $this->init();
-
-        $this->autoLoad();
-
-        return;
-    }
-}
-
-//$gBricker = new Bricker();
-//$gBricker->run();
-
 // The End

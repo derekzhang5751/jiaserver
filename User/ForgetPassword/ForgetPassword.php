@@ -38,17 +38,36 @@ class ForgetPassword extends \Bricker\RequestLifeCircle
     protected function process() {
         $toEmail = $this->email;
         $toName = '';
+        $userId = '0';
+        $regTime = '';
         
         $user = db_get_user_info('email', $toEmail);
         if ($user) {
             $toName = $user['user_name'];
+            $userId = $user['user_id'];
+            $regTime = $user['reg_time'];
         }
         
         $template = db_get_mail_template('send_password');
         
-        $content = $template['template_content'];
-        
         $config = get_mail_config();
+        
+        $code = md5($userId . $config['HASH_CODE'] . $regTime);
+        $reset_email = 'http://' . $_SERVER['SERVER_NAME'] . '/user.php?act=get_password&uid=' . $userId . '&code=' . $code;
+        
+        $content = $template['template_content'];
+        $content = str_replace('{$user_name}',   $toName, $content);
+        $content = str_replace('{$reset_email}', $reset_email, $content);
+        $content = str_replace('{$shop_name}',   $config['SENDER_NAME'], $content);
+        $content = str_replace('{$send_date}',   date('Y-m-d'), $content);
+        $content = str_replace('{$sent_date}',   date('Y-m-d'), $content);
+        
+        //$GLOBALS['log']->log('user', 'Send mail, To Name: '.$toName);
+        //$GLOBALS['log']->log('user', 'Send mail, To Email: '.$toEmail);
+        //$GLOBALS['log']->log('user', 'Send mail, Subject: '.$template['template_subject']);
+        //$GLOBALS['log']->log('user', 'Send mail, Content: '.$content);
+        //$GLOBALS['log']->log('user', 'Send mail, IsHtml: '.$template['is_html']);
+        //$GLOBALS['log']->log('user', 'Send mail, Config: '. print_r($config, true));
         
         $ret = \Bricker\send_mail($toName, $toEmail, $template['template_subject'], $content, $config, $template['is_html']);
         if ($ret) {

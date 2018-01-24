@@ -26,6 +26,7 @@ class smtp
     var $auth;
     var $user;
     var $pass;
+    var $smtp_ssl;
 
     /**
      *  参数为一个数组
@@ -51,6 +52,7 @@ class smtp
         $this->auth     = false;
         $this->user     = '';
         $this->pass     = '';
+        $this->smtp_ssl = false;
         $this->errors   = array();
 
         foreach ($params AS $key => $value)
@@ -74,39 +76,35 @@ class smtp
             {
                 $obj->status = SMTP_STATUS_CONNECTED;
             }
-
             return $obj;
         }
         else
         {
-            if (!empty($GLOBALS['_CFG']['smtp_ssl']))
+            if ( $this->smtp_ssl )
             {
                 $this->host = "ssl://" . $this->host;
             }
-            $this->connection = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
+            $this->connection = fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
 
             if ($this->connection === false)
             {
                 $this->errors[] = 'Access is denied.';
-
                 return false;
             }
-
-            @socket_set_timeout($this->connection, 0, 250000);
-
+            
+            socket_set_timeout($this->connection, 60, 0);
+            
             $greeting = $this->get_data();
-
+            
             if (is_resource($this->connection))
             {
                 $this->status = 2;
-
                 return $this->auth ? $this->ehlo() : $this->helo();
             }
             else
             {
-                log_write($errstr, __FILE__, __LINE__);
+                //log_write($errstr, __FILE__, __LINE__);
                 $this->errors[] = 'Failed to connect to server: ' . $errstr;
-
                 return false;
             }
         }
@@ -137,7 +135,7 @@ class smtp
                     return false;
                 }
             }
-
+            
             $this->mail($this->from);
 
             if (is_array($this->recipients))
@@ -151,7 +149,7 @@ class smtp
             {
                 $this->rcpt($this->recipients);
             }
-
+            
             if (!$this->data())
             {
                 return false;
@@ -160,18 +158,17 @@ class smtp
             $headers = str_replace(CRLF . '.', CRLF . '..', trim(implode(CRLF, $this->headers)));
             $body    = str_replace(CRLF . '.', CRLF . '..', $this->body);
             $body    = substr($body, 0, 1) == '.' ? '.' . $body : $body;
-
+            
             $this->send_data($headers);
             $this->send_data('');
             $this->send_data($body);
             $this->send_data('.');
-
+            
             return (substr($this->get_data(), 0, 3) === '250');
         }
         else
         {
             $this->errors[] = 'Not connected!';
-
             return false;
         }
     }
@@ -303,7 +300,7 @@ class smtp
                 $line    = fgets($this->connection, 512);
                 $return .= $line;
             }
-
+            
             return trim($return);
         }
         else

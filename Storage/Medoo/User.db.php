@@ -21,7 +21,7 @@ function db_get_user_signin_info($name_or_email, $value)
 function db_get_user_info($name_or_email, $value)
 {
     $user = $GLOBALS['db']->get('users',
-        ['user_id', 'email', 'user_name', 'sex', 'birthday'],
+        ['user_id', 'email', 'user_name', 'sex', 'birthday', 'reg_time'],
         [$name_or_email => $value]);
     return $user;
 }

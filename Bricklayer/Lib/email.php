@@ -39,6 +39,7 @@ function send_mail($toName, $toEmail, $subject, $content, $config, $type = 0, $n
 {
     $charset = 'utf-8';
     $useSmtp = $config['USE_SMTP'];
+    $useSsl = $config['USE_SSL'];
     $senderName = $config['SENDER_NAME'];
     $senderEmail = $config['SENDER_EMAIL'];
     
@@ -76,6 +77,7 @@ function send_mail($toName, $toEmail, $subject, $content, $config, $type = 0, $n
         $params['port'] = $smtpPort;
         $params['user'] = $smtpUser;
         $params['pass'] = $smtpPass;
+        $params['smtp_ssl'] = $useSsl;
 
         if (empty($params['host']) || empty($params['port']))
         {
@@ -101,7 +103,7 @@ function send_mail($toName, $toEmail, $subject, $content, $config, $type = 0, $n
             {
                 $smtp = new smtp($params);
             }
-
+            
             if ($smtp->connect() && $smtp->send($send_params))
             {
                 return true;
@@ -109,7 +111,6 @@ function send_mail($toName, $toEmail, $subject, $content, $config, $type = 0, $n
             else
             {
                 $err_msg = $smtp->error_msg();
-                //error_log("\n[MAIL]Send mail error: " . $err_msg, 3, '/Users/derek/WebProjects/jiajiajia/jiaserver/log/user/mail.log');
                 return false;
             }
         }

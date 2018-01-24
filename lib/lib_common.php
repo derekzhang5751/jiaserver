@@ -175,15 +175,19 @@ function get_mail_config()
     $smtpUser    = db_get_mail_config('smtp_user');
     $smtpPass    = db_get_mail_config('smtp_pass');
     $shopName    = db_get_mail_config('shop_name');
+    $useSsl      = db_get_mail_config('smtp_ssl');
+    $hashCode    = db_get_mail_config('hash_code');
     
     $config = array(
         'USE_SMTP'     => $userSmtp,
+        'USE_SSL'      => $useSsl,
         'SENDER_NAME'  => $shopName,
         'SENDER_EMAIL' => $senderEmail,
         'SMTP_HOST'    => $smtpHost,
         'SMTP_PORT'    => $smtpPort,
         'SMTP_USER'    => $smtpUser,
         'SMTP_PASS'    => $smtpPass,
+        'HASH_CODE'    => $hashCode
     );
     return $config;
 }
