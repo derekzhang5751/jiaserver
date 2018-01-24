@@ -63,12 +63,22 @@ function db_get_final_price($goods_id)
 function db_get_goodslist_best($maxSize)
 {
     $goodsList = $GLOBALS['db']->select('goods',
-        ['goods_id','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
-        ['is_on_sale' => 1,
-            'is_alone_sale' => 1,
-            'is_delete' => 0,
-            'is_best' => 1,
-            'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
+        [
+            '[>]category' => ['cat_id' => 'cat_id'],
+            '[>]brand'    => ['brand_id' => 'brand_id']
+        ],
+        [
+            'goods.goods_id','goods.goods_sn','goods.goods_name','goods.shop_price','goods.promote_price','goods.promote_start_date',
+            'goods.promote_end_date','goods.goods_thumb','goods.goods_img',
+            'category.cat_name',
+            'brand.brand_name'
+        ],
+        [
+            'goods.is_on_sale' => 1,
+            'goods.is_alone_sale' => 1,
+            'goods.is_delete' => 0,
+            'goods.is_best' => 1,
+            'ORDER' => ['goods.sort_order'=>'DESC', 'goods.last_update'=>'DESC'],
             'LIMIT' => $maxSize
         ]
     );

@@ -27,21 +27,23 @@ class Home extends \Bricker\RequestLifeCircle
             $index = 0;
             foreach ($goodsList as $goods) {
                 $this->return['goodslist'][$index]['goods_id'] = $goods['goods_id'];
+                $this->return['goodslist'][$index]['goods_sn'] = $goods['goods_sn'];
                 $this->return['goodslist'][$index]['goods_name'] = $goods['goods_name'];
                 $this->return['goodslist'][$index]['shop_price'] = $goods['shop_price'];
                 $this->return['goodslist'][$index]['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
                 $this->return['goodslist'][$index]['goods_thumb'] = $goods['goods_thumb'];
                 $this->return['goodslist'][$index]['goods_img'] = $goods['goods_img'];
+                $this->return['goodslist'][$index]['cat_name'] = $goods['cat_name'];
+                $this->return['goodslist'][$index]['brand_name'] = $goods['brand_name'];
 
                 $index++;
             }
-            return true;
         } else {
             $this->return['result'] = false;
             $this->return['msg'] = $GLOBALS['LANG']['goods_empty'];
-            //$gBricker->applog('goods', 'get_goodslist_best ERROR:'.$error);
-            return false;
         }
+
+        return true;
     }
 
     protected function responseHybrid() {
