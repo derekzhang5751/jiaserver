@@ -112,7 +112,16 @@ function db_get_goods_category($parentId, $maxSize)
 function db_get_goods_detail($goodsId)
 {
     $goods = $GLOBALS['db']->get('goods',
-        ['goods_id','goods_sn','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_desc', 'goods_thumb','goods_img'],
+        [
+            '[>]category' => ['cat_id' => 'cat_id'],
+            '[>]brand'    => ['brand_id' => 'brand_id']
+        ],
+        [
+            'goods.goods_id','goods.goods_sn','goods.goods_name','goods.shop_price','goods.promote_price','goods.promote_start_date',
+            'goods.promote_end_date','goods.goods_desc','goods.goods_thumb','goods.goods_img',
+            'category.cat_name',
+            'brand.brand_name'
+        ],
         ['goods_id' => $goodsId]);
     return $goods;
 }
@@ -176,6 +185,41 @@ function db_get_order_thumb($orderId)
     return $thumb;
 }
 
+
+function db_get_goods_attr_group($goodsId)
+{
+    $attrGroup = $GLOBALS['db']->get('goods_type',
+        [
+            '[><]goods' => ['cat_id' => 'goods_type']
+        ],
+        [
+            'goods_type.attr_group'
+        ],
+        ['goods.goods_id' => $goodsId]);
+    return $attrGroup;
+}
+
+function db_get_goods_attr_full($goodsId)
+{
+    $attrs = $GLOBALS['db']->select('goods_attr',
+        [
+            '[>]attribute' => ['attr_id' => 'attr_id']
+        ],
+        [
+            'attribute.attr_id', 'attribute.attr_name', 'attribute.attr_group',
+            'attribute.is_linked', 'attribute.attr_type', 'goods_attr.goods_attr_id',
+            'goods_attr.attr_value', 'goods_attr.attr_price'
+        ],
+        [
+            'goods_attr.goods_id' => $goodsId,
+            'ORDER' => [
+                'attribute.sort_order' => 'ASC',
+                'goods_attr.attr_price' => 'ASC',
+                'goods_attr.goods_attr_id' => 'ASC'
+            ]
+        ]);
+    return $attrs;
+}
 
 /**
  * Database Assistant Functions
