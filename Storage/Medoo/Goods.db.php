@@ -6,6 +6,15 @@
  * Time: 9:23 PM
  */
 
+function db_exist_goods_id($goodsId)
+{
+    return $GLOBALS['db']->has('goods',
+        [
+            'goods_id' => $goodsId
+        ]
+    );
+}
+
 function db_get_goods_attr($goods_attr_id_array, $sort = 'asc')
 {
     $sql = "SELECT a.attr_type, v.attr_value, v.goods_attr_id
@@ -88,13 +97,25 @@ function db_get_goodslist_best($maxSize)
 function db_get_goodslist_new($maxSize)
 {
     $goodsList = $GLOBALS['db']->select('goods',
-        ['goods_id','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
-        ['is_on_sale' => 1,
-            'is_alone_sale' => 1,
-            'is_delete' => 0,
-            'is_new' => 1,
-            'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
-            'LIMIT' => $maxSize]);
+        [
+            '[>]category' => ['cat_id' => 'cat_id'],
+            '[>]brand'    => ['brand_id' => 'brand_id']
+        ],
+        [
+            'goods.goods_id','goods.goods_sn','goods.goods_name','goods.shop_price','goods.promote_price','goods.promote_start_date',
+            'goods.promote_end_date','goods.goods_thumb','goods.goods_img',
+            'category.cat_name',
+            'brand.brand_name'
+        ],
+        [
+            'goods.is_on_sale' => 1,
+            'goods.is_alone_sale' => 1,
+            'goods.is_delete' => 0,
+            'goods.is_new' => 1,
+            'ORDER' => ['goods.sort_order'=>'DESC', 'goods.last_update'=>'DESC'],
+            'LIMIT' => $maxSize
+        ]
+    );
     return $goodsList;
 }
 
@@ -147,15 +168,26 @@ function db_has_child_category($categoryId)
 function db_get_goodslist_by_category($categoryId, $maxSize)
 {
     $goodsList = $GLOBALS['db']->select('goods',
-        ['goods_id','goods_name','shop_price','promote_price','promote_start_date','promote_end_date','goods_thumb','goods_img'],
         [
-            'cat_id' => $categoryId,
-            'is_on_sale' => 1,
-            'is_alone_sale' => 1,
-            'is_delete' => 0,
-            'ORDER' => ['sort_order'=>'DESC', 'last_update'=>'DESC'],
+            '[>]category' => ['cat_id' => 'cat_id'],
+            '[>]brand'    => ['brand_id' => 'brand_id']
+        ],
+        [
+            'goods.goods_id','goods.goods_sn','goods.goods_name','goods.shop_price','goods.promote_price','goods.promote_start_date',
+            'goods.promote_end_date','goods.goods_thumb','goods.goods_img',
+            'category.cat_name',
+            'brand.brand_name'
+        ],
+        [
+            'goods.cat_id' => $categoryId,
+            'goods.is_on_sale' => 1,
+            'goods.is_alone_sale' => 1,
+            'goods.is_delete' => 0,
+            'ORDER' => ['goods.sort_order'=>'DESC', 'goods.last_update'=>'DESC'],
             'LIMIT' => $maxSize
-        ]);
+        ]
+    );
+
     return $goodsList;
 }
 

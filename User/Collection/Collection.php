@@ -34,18 +34,19 @@ class Collection extends \Bricker\RequestLifeCircle {
         $collection = db_get_my_collection($this->userId, $maxSize);
         
         if ($collection) {
-            $i = 0;
+            $index = 0;
             foreach ($collection as $goods) {
-                $this->return['collection'][$i]['rec_id'] = $goods['rec_id'];
-                $this->return['collection'][$i]['goods_id'] = $goods['goods_id'];
-                $this->return['collection'][$i]['goods_name'] = $goods['goods_name'];
-                $this->return['collection'][$i]['goods_thumb'] = $goods['goods_thumb'];
-                $this->return['collection'][$i]['shop_price'] = number_format($goods['shop_price'], 2, '.', '');
-                
-                $promotePrice = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
-                $this->return['collection'][$i]['promote_price'] = number_format($promotePrice, 2, '.', '');
-                
-                $i++;
+                $this->return['collection'][$index]['goods_id'] = $goods['goods_id'];
+                $this->return['collection'][$index]['goods_sn'] = $goods['goods_sn'];
+                $this->return['collection'][$index]['goods_name'] = $goods['goods_name'];
+                $this->return['collection'][$index]['shop_price'] = $goods['shop_price'];
+                $this->return['collection'][$index]['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+                $this->return['collection'][$index]['goods_thumb'] = $goods['goods_thumb'];
+                $this->return['collection'][$index]['goods_img'] = $goods['goods_img'];
+                $this->return['collection'][$index]['cat_name'] = $goods['cat_name'];
+                $this->return['collection'][$index]['brand_name'] = $goods['brand_name'];
+
+                $index++;
             }
             $this->return['result'] = true;
         } else {

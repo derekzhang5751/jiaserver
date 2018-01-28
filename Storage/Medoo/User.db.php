@@ -6,6 +6,15 @@
  * Time: 2:59 PM
  */
 
+function db_exist_user_id($userId)
+{
+    return $GLOBALS['db']->has('users',
+        [
+            'user_id' => $userId
+        ]
+    );
+}
+
 function db_get_user_signin_info($name_or_email, $value)
 {
     $user = $GLOBALS['db']->get('users',
@@ -80,15 +89,17 @@ function db_update_user_signin_info($userId)
 
 function db_get_my_collection($userId, $maxSize)
 {
-    $collection = $GLOBALS['db']->select('collect_goods',
+    $collection = $GLOBALS['db']->select('goods',
         [
-            '[>]goods' => ['goods_id' => 'goods_id'],
-            //'[>]member_price' => ['goods_id' => 'goods_id']
+            '[<]collect_goods' => ['goods_id' => 'goods_id'],
+            '[>]category' => ['cat_id' => 'cat_id'],
+            '[>]brand'    => ['brand_id' => 'brand_id']
         ],
         [
-            'collect_goods.rec_id', 'goods.goods_id','goods.goods_name','goods.shop_price',
-            'goods.promote_price','goods.promote_start_date','goods.promote_end_date',
-            'goods.goods_thumb'
+            'goods.goods_id','goods.goods_sn','goods.goods_name','goods.shop_price','goods.promote_price','goods.promote_start_date',
+            'goods.promote_end_date','goods.goods_thumb','goods.goods_img','collect_goods.rec_id',
+            'category.cat_name',
+            'brand.brand_name'
         ],
         [
             'collect_goods.user_id' => $userId,
@@ -97,6 +108,32 @@ function db_get_my_collection($userId, $maxSize)
         ]
     );
     return $collection;
+}
+
+function db_exist_in_collection($userId, $goodsId)
+{
+    return $GLOBALS['db']->has('collect_goods',
+        [
+            'user_id' => $userId,
+            'goods_id' => $goodsId
+        ]
+    );
+}
+
+function db_insert_to_collection($userId, $goodsId)
+{
+    $data = [
+        'user_id' => $userId,
+        'goods_id' => $goodsId,
+        'add_time' => time(),
+        'is_attention' => 0,
+    ];
+    $stat = $GLOBALS['db']->insert('collect_goods', $data);
+    if ($stat->rowCount() == 1) {
+        return $GLOBALS['db']->id();
+    } else {
+        return false;
+    }
 }
 
 function db_get_my_address($userId, $maxSize)
