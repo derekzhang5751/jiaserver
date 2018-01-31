@@ -12,6 +12,9 @@ $GLOBALS['LANG']['products_stop_sale'] = '该商品已停止销售 !!!';
 $GLOBALS['LANG']['products_not_enough'] = '该商品库存不足 !!!';
 $GLOBALS['LANG']['order_list_empty'] = '订单列表为空 !!!';
 $GLOBALS['LANG']['cart_empty'] = '购物车为空 !!!';
+$GLOBALS['LANG']['specification_empty'] = '请选择希望需要的商品规格 !!!';
+$GLOBALS['LANG']['goods_id_not_exist'] = '商品ID不存在 !!!';
+$GLOBALS['LANG']['accessories_no_alone_sale'] = '配件不能单独购买 !!!';
 
 
 /* 订单状态 */

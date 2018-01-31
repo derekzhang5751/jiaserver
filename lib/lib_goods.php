@@ -120,7 +120,7 @@ function spec_price($spec)
  *
  * @return  商品最终购买价格
  */
-function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $spec = array())
+function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $spec_price=0)
 {
     global $gBricker;
     $final_price   = '0'; //商品最终购买价格
@@ -185,14 +185,10 @@ function get_final_price($goods_id, $goods_num = '1', $is_spec_price = false, $s
         $final_price = $user_price;
     }
 
-    //如果需要加入规格价格
+    // 如果需要加入规格价格
     if ($is_spec_price)
     {
-        if (!empty($spec))
-        {
-            $spec_price   = spec_price($spec);
-            $final_price += $spec_price;
-        }
+        $final_price += floatval($spec_price);
     }
 
     //返回商品最终购买价格
@@ -263,30 +259,22 @@ function bargain_price($price, $start, $end)
  *
  * @return      string
  */
-function get_goods_attr_info($arr, $type = 'pice')
+function get_goods_attr_info($attr, $type = 'pice')
 {
-    global $gBricker;
-    $attr   = '';
-
-    if (!empty($arr))
-    {
+    $attrStr = '';
+    if ( !empty($attr) ) {
         $fmt = "%s:%s[%s] \n";
-
-        $sql = "SELECT a.attr_name, ga.attr_value, ga.attr_price ".
-            "FROM ecs_goods_attr AS ga, ecs_attribute AS a ".
-            "WHERE " .db_create_in($arr, 'ga.goods_attr_id')." AND a.attr_id = ga.attr_id";
-
-        $res = $gBricker->db->query($sql)->fetchAll();
-
-        foreach($res as $row) {
+        
+        $res = db_get_goods_attr_info($attr);
+        
+        foreach ($res as $row) {
             $attr_price = round(floatval($row['attr_price']), 2);
-            $attr .= sprintf($fmt, $row['attr_name'], $row['attr_value'], $attr_price);
+            $attrStr .= sprintf($fmt, $row['attr_name'], $row['attr_value'], $attr_price);
         }
-
-        $attr = str_replace('[0]', '', $attr);
+        
+        $attrStr = str_replace('[0]', '', $attrStr);
     }
-
-    return $attr;
+    return $attrStr;
 }
 
 /**

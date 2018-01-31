@@ -82,8 +82,10 @@ require MODULE_PATH . 'Lang/' . $GLOBALS['LifeCfg']['LANG'] . '/' . $GLOBALS['Li
  * Init session
  */
 if ( isset($GLOBALS['LifeCfg']['SESSION_CLASS']) ) {
+    //$GLOBALS['log']->log('bricker', 'Init mobile session, Device Type: '.$DeviceType);
+    //$GLOBALS['log']->log('bricker', 'POST session id = '.$_POST['SESSION_ID']);
     if ($DeviceType == DEVICE_HYBRID || $DeviceType == DEVICE_MOBILE) {
-        if (isset($_POST['SESSION_ID'])) {
+        if ( isset($_POST['SESSION_ID']) ) {
             $sessionId = $_POST['SESSION_ID'];
         } else {
             $sessionId = '';
@@ -91,10 +93,12 @@ if ( isset($GLOBALS['LifeCfg']['SESSION_CLASS']) ) {
     } else {
         $sessionId = '';
     }
+    //$GLOBALS['log']->log('bricker', 'Input session id = '.$sessionId);
     $MySession = new $GLOBALS['LifeCfg']['SESSION_CLASS']();
     $MySession->init($db, $sessionId);
-
+    
     define('SESSION_ID',    $MySession->getSessionId());
+    //$GLOBALS['log']->log('bricker', 'Current session id = '.SESSION_ID);
 }
 
 /*

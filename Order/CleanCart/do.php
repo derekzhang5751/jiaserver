@@ -2,19 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: Derek
- * Date: 2018-01-11
+ * Date: 2018-01-30
  * Time: 1:02 PM
  */
 define('USE_BRICKER', true);
 
 $LifeCfg = array(
     'MODULE_NAME'    => 'Order',
-    'REQUEST_NAME'   => 'AddToCart',
+    'REQUEST_NAME'   => 'CleanCart',
     'LANG'           => 'zh_cn',
     'SESSION_CLASS'  => 'JiaSession',
     'DB_TYPE'        => 'Medoo',
     'LOAD_DB'        => array(
-        'Session', 'Goods', 'Order'
+        'Session', 'Order'
     ),
     'LOAD_LIB'       => array(
         'Bricklayer/Lib/network.php',

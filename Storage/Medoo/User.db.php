@@ -79,7 +79,27 @@ function db_update_user_signin_info($userId)
     ], [
         'user_id' => $userId
     ]);
+    
+    if ($state->rowCount() > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
+function db_update_user_session($sessionId, $userId, $userName)
+{
+    $state = $GLOBALS['db']->update('sessions',
+        [
+            'userid' => $userId,
+            'user_name' => $userName,
+            'discount' => 1
+        ],
+        [
+            'sesskey' => $sessionId
+        ]
+    );
+    
     if ($state->rowCount() > 0) {
         return true;
     } else {

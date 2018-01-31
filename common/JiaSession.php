@@ -28,73 +28,59 @@ class JiaSession implements \Bricker\ISession
     var $_time = 0;
 
     public function init($db, $session_id = '') {
+        //$GLOBALS['log']->log('bricker', 'JiaSession init with session id = '.$session_id);
         $GLOBALS['_SESSION'] = array();
 
-        if (!empty($GLOBALS['cookie_path']))
-        {
+        if ( !empty($GLOBALS['cookie_path']) ) {
             $this->session_cookie_path = $GLOBALS['cookie_path'];
-        }
-        else
-        {
+        } else {
             $this->session_cookie_path = '/';
         }
-
-        if (!empty($GLOBALS['cookie_domain']))
-        {
+        
+        if ( !empty($GLOBALS['cookie_domain']) ) {
             $this->session_cookie_domain = $GLOBALS['cookie_domain'];
-        }
-        else
-        {
+        } else {
             $this->session_cookie_domain = '';
         }
-
-        if (!empty($GLOBALS['cookie_secure']))
-        {
+        
+        if ( !empty($GLOBALS['cookie_secure']) ) {
             $this->session_cookie_secure = $GLOBALS['cookie_secure'];
-        }
-        else
-        {
+        } else {
             $this->session_cookie_secure = false;
         }
-
+        
         $this->db  = $db;
         $this->_ip = \Bricker\client_real_ip();
-
-        if ($session_id == '' && !empty($_COOKIE[$this->session_name]))
-        {
+        
+        if ($session_id == '' && !empty($_COOKIE[$this->session_name])) {
             $this->session_id = $_COOKIE[$this->session_name];
-        }
-        else
-        {
+            //$GLOBALS['log']->log('bricker', 'JiaSession use session id from cookie  = '.$this->session_name);
+        } else {
             $this->session_id = $session_id;
+            //$GLOBALS['log']->log('bricker', 'JiaSession use session id from input  = '.$this->session_id);
         }
-
-        if ($this->session_id)
-        {
+        
+        /*if ( $this->session_id ) {
             $tmp_session_id = substr($this->session_id, 0, 32);
-            if ($this->gen_session_key($tmp_session_id) == substr($this->session_id, 32))
-            {
+            if ($this->gen_session_key($tmp_session_id) == substr($this->session_id, 32)) {
+                $GLOBALS['log']->log('bricker', 'JiaSession session id is ok.');
                 $this->session_id = $tmp_session_id;
-            }
-            else
-            {
+            } else {
+                $GLOBALS['log']->log('bricker', 'JiaSession session id is incorrect, RESET.');
                 $this->session_id = '';
             }
-        }
-
+        }*/
+        
         $this->_time = time();
-
-        if ($this->session_id)
-        {
+        
+        if ($this->session_id) {
             $this->load_session();
-        }
-        else
-        {
+        } else {
             $this->gen_session_id();
             $this->load_session();
             setcookie($this->session_name, $this->session_id . $this->gen_session_key($this->session_id), 0, $this->session_cookie_path, $this->session_cookie_domain, $this->session_cookie_secure);
         }
-
+        
         register_shutdown_function(array($this, 'close_session'));
     }
 
@@ -104,7 +90,7 @@ class JiaSession implements \Bricker\ISession
 
     private function gen_session_id() {
         $this->session_id = md5(uniqid(mt_rand(), true));
-
+        
         return $this->insert_session();
     }
 
@@ -176,35 +162,35 @@ class JiaSession implements \Bricker\ISession
     }
 
     private function update_session() {
-        $adminid = !empty($GLOBALS['_SESSION']['admin_id']) ? intval($GLOBALS['_SESSION']['admin_id']) : 0;
-        $userid  = !empty($GLOBALS['_SESSION']['user_id'])  ? intval($GLOBALS['_SESSION']['user_id'])  : 0;
-        $user_name  = !empty($GLOBALS['_SESSION']['user_name'])  ? trim($GLOBALS['_SESSION']['user_name'])  : 0;
-        $user_rank  = !empty($GLOBALS['_SESSION']['user_rank'])  ? intval($GLOBALS['_SESSION']['user_rank'])  : 0;
+        $adminid   = !empty($GLOBALS['_SESSION']['admin_id']) ? intval($GLOBALS['_SESSION']['admin_id']) : 0;
+        $userid    = !empty($GLOBALS['_SESSION']['user_id'])  ? intval($GLOBALS['_SESSION']['user_id'])  : 0;
+        $user_name = !empty($GLOBALS['_SESSION']['user_name'])  ? trim($GLOBALS['_SESSION']['user_name'])  : 0;
+        $user_rank = !empty($GLOBALS['_SESSION']['user_rank'])  ? intval($GLOBALS['_SESSION']['user_rank'])  : 0;
         $discount  = !empty($GLOBALS['_SESSION']['discount'])  ? round($GLOBALS['_SESSION']['discount'], 2)  : 0;
-        $email  = !empty($GLOBALS['_SESSION']['email'])  ? trim($GLOBALS['_SESSION']['email'])  : 0;
-        unset($GLOBALS['_SESSION']['admin_id']);
-        unset($GLOBALS['_SESSION']['user_id']);
-        unset($GLOBALS['_SESSION']['user_name']);
-        unset($GLOBALS['_SESSION']['user_rank']);
-        unset($GLOBALS['_SESSION']['discount']);
-        unset($GLOBALS['_SESSION']['email']);
-
+        $email     = !empty($GLOBALS['_SESSION']['email'])  ? trim($GLOBALS['_SESSION']['email'])  : 0;
+        unset( $GLOBALS['_SESSION']['admin_id'] );
+        unset( $GLOBALS['_SESSION']['user_id'] );
+        unset( $GLOBALS['_SESSION']['user_name'] );
+        unset( $GLOBALS['_SESSION']['user_rank'] );
+        unset( $GLOBALS['_SESSION']['discount'] );
+        unset( $GLOBALS['_SESSION']['email'] );
+        
         $data        = serialize($GLOBALS['_SESSION']);
         $this->_time = time();
-
+        
         if ($this->session_md5 == md5($data) && $this->_time < $this->session_expiry + 10)
         {
             return true;
         }
-
+        
         $data = addslashes($data);
-
+        
         if (isset($data{255}))
         {
             auto_replace($this->db, $this->session_data_table, array('sesskey' => $this->session_id, 'expiry' => $this->_time, 'data' => $data), array('expiry' => $this->_time,'data' => $data));
             $data = '';
         }
-
+        
         $params = [
                 'expiry' => $this->_time,
                 'ip' => $this->_ip,

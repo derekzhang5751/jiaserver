@@ -1,7 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: derek
+ * User: Derek
  * Date: 2018-01-11
  * Time: 9:23 PM
  */
@@ -30,21 +29,30 @@ function db_get_goods_attr($goods_attr_id_array, $sort = 'asc')
 
 function db_get_products_info($goods_id, $goods_attr)
 {
-    //$sql = "SELECT * FROM " .$GLOBALS['ecs']->table('products'). " WHERE goods_id = '$goods_id' AND goods_attr = '$goods_attr' LIMIT 0, 1";
-    $return_array = $GLOBALS['db']->get('products',
-        ['product_id', 'goods_id', 'goods_attr', 'product_sn', 'product_number'],
-        ['goods_id' => $goods_id, 'goods_attr' => $goods_attr]);
-    return $return_array;
+    $product = $GLOBALS['db']->get('products',
+        [
+            'product_id', 'goods_id', 'goods_attr', 'product_sn', 'product_number'
+        ],
+        [
+            'goods_id' => $goods_id,
+            'goods_attr' => $goods_attr
+        ]
+    );
+    return $product;
 }
 
 function db_get_volume_price_list($goods_id, $price_type = '1')
 {
-    $sql = "SELECT `volume_number` , `volume_price`".
-        " FROM ecs_volume_price".
-        " WHERE `goods_id` = '" . $goods_id . "' AND `price_type` = '" . $price_type . "'".
-        " ORDER BY `volume_number`";
-
-    return $GLOBALS['db']->query($sql)->fetchAll();
+    return $GLOBALS['db']->select('volume_price',
+            [
+                'volume_number', 'volume_price'
+            ],
+            [
+                'goods_id' => $goods_id,
+                'price_type' => $price_type,
+                'ORDER' => ['volume_number' => 'ASC']
+            ]
+        );
 }
 
 function db_get_final_price($goods_id)
@@ -238,9 +246,8 @@ function db_get_goods_attr_full($goodsId)
             '[>]attribute' => ['attr_id' => 'attr_id']
         ],
         [
-            'attribute.attr_id', 'attribute.attr_name', 'attribute.attr_group',
-            'attribute.is_linked', 'attribute.attr_type', 'goods_attr.goods_attr_id',
-            'goods_attr.attr_value', 'goods_attr.attr_price'
+            'attribute.attr_id', 'attribute.attr_name', 'attribute.attr_group', 'attribute.is_linked', 'attribute.attr_type',
+            'goods_attr.goods_attr_id', 'goods_attr.attr_value', 'goods_attr.attr_price'
         ],
         [
             'goods_attr.goods_id' => $goodsId,
