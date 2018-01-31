@@ -1372,7 +1372,7 @@ function get_goods_attr_info($arr, $type = 'pice')
 
     if (!empty($arr))
     {
-        $fmt = "%s:%s[%s] \n";
+        $fmt = "%s: %s[%s]\n";
 
         $sql = "SELECT a.attr_name, ga.attr_value, ga.attr_price ".
                 "FROM ".$GLOBALS['ecs']->table('goods_attr')." AS ga, ".

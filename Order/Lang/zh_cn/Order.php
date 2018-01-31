@@ -15,7 +15,10 @@ $GLOBALS['LANG']['cart_empty'] = '购物车为空 !!!';
 $GLOBALS['LANG']['specification_empty'] = '请选择希望需要的商品规格 !!!';
 $GLOBALS['LANG']['goods_id_not_exist'] = '商品ID不存在 !!!';
 $GLOBALS['LANG']['accessories_no_alone_sale'] = '配件不能单独购买 !!!';
-
+$GLOBALS['LANG']['delete_error'] = '删除失败，请稍后再试 !!!';
+$GLOBALS['LANG']['user_not_exist'] = '该用户不存在 !!!';
+$GLOBALS['LANG']['goods_not_exist'] = '该商品不存在 !!!';
+$GLOBALS['LANG']['collect_error'] = '收藏失败，请稍后再试 !!!';
 
 /* 订单状态 */
 $GLOBALS['LANG']['os'][OS_UNCONFIRMED] = '未确认';

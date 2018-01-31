@@ -111,12 +111,28 @@ function db_delete_all_gift_in_cart($userId, $sessionId)
     }
 }
 
-function db_delete_all_goods_in_cart($userId, $sessionId)
+function db_delete_all_goods_in_cart($userId)
 {
     $stat = $GLOBALS['db']->delete('cart',
         [
+            'user_id' => $userId
+        ]
+    );
+    $row = $stat->rowCount();
+    if ($row > 0) {
+        return $row;
+    } else {
+        return false;
+    }
+}
+
+function db_delete_goods_in_cart($userId, $recId, $goodsId)
+{
+    $stat = $GLOBALS['db']->delete('cart',
+        [
+            'rec_id' => $recId,
             'user_id' => $userId,
-            'session_id' => $sessionId
+            'goods_id' => $goodsId
         ]
     );
     $row = $stat->rowCount();

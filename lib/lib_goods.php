@@ -263,7 +263,7 @@ function get_goods_attr_info($attr, $type = 'pice')
 {
     $attrStr = '';
     if ( !empty($attr) ) {
-        $fmt = "%s:%s[%s] \n";
+        $fmt = "%s: %s[%s]\n";
         
         $res = db_get_goods_attr_info($attr);
         

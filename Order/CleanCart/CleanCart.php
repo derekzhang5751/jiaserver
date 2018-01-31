@@ -26,7 +26,7 @@ class CleanCart extends \Bricker\RequestLifeCircle
     }
     
     protected function process() {
-        $count = db_delete_all_goods_in_cart($this->userId, SESSION_ID);
+        $count = db_delete_all_goods_in_cart($this->userId);
         if ($count > 0) {
             $this->return['msg'] = "Delete $count items.";
         } else {
