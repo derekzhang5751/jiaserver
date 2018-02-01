@@ -156,6 +156,20 @@ function db_insert_to_collection($userId, $goodsId)
     }
 }
 
+function db_delete_from_collection($userId, $goodsId)
+{
+    $where = [
+        'user_id' => $userId,
+        'goods_id' => $goodsId
+    ];
+    $stat = $GLOBALS['db']->delete('collect_goods', $where);
+    if ($stat->rowCount() > 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function db_get_my_address($userId, $maxSize)
 {
     $address = $GLOBALS['db']->select('user_address',

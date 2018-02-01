@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: derek
+ * User: Derek
  * Date: 2018-01-13
  * Time: 2:30 PM
  */
@@ -14,7 +14,7 @@ class Detail extends \Bricker\RequestLifeCircle
         'msg' => '',
         'goods' => []
     ];
-
+    
     protected function prepareRequestParams() {
         $goodsId  = isset($_REQUEST['goodsid']) ? trim($_REQUEST['goodsid']) : '0';
         $goodsId = intval($goodsId);
@@ -25,13 +25,13 @@ class Detail extends \Bricker\RequestLifeCircle
         $this->goodId = $goodsId;
         return true;
     }
-
+    
     protected function process() {
         $goods = db_get_goods_detail($this->goodId);
-
+        
         if ($goods) {
             $this->return['result'] = true;
-
+            
             // goods basic information
             $this->return['goods']['goods_id'] = $goods['goods_id'];
             $this->return['goods']['goods_sn'] = $goods['goods_sn'];
@@ -67,6 +67,17 @@ class Detail extends \Bricker\RequestLifeCircle
             $this->return['goods']['spe'] = $properties['spe'];
             $this->return['goods']['lnk'] = $properties['lnk'];
             
+            // if the goods is in collection
+            if (isset($GLOBALS['_SESSION']['user_id']) && !empty($GLOBALS['_SESSION']['user_id'])) {
+                if ( db_if_goods_in_collection($GLOBALS['_SESSION']['user_id'], $this->goodId) ) {
+                    $this->return['goods']['collect'] = 'yes';
+                } else {
+                    $this->return['goods']['collect'] = 'no';
+                }
+            } else {
+                $this->return['goods']['collect'] = 'unknown';
+            }
+            
             return true;
         } else {
             $this->return['result'] = false;
@@ -74,7 +85,7 @@ class Detail extends \Bricker\RequestLifeCircle
             return false;
         }
     }
-
+    
     protected function responseHybrid() {
         if ($this->return['result'] === true) {
             // adpat properties format
@@ -105,11 +116,11 @@ class Detail extends \Bricker\RequestLifeCircle
             $this->jsonResponse('fail', $this->return['msg']);
         }
     }
-
+    
     protected function responseWeb() {
         exit('Not support !!');
     }
-
+    
     protected function responseMobile() {
         exit('Not support !!');
     }
@@ -134,13 +145,13 @@ class Detail extends \Bricker\RequestLifeCircle
         $arr['pro'] = array();     // 属性
         $arr['spe'] = array();     // 规格
         $arr['lnk'] = array();     // 关联的属性
-
+        
         foreach ($res as $row) {
             $row['attr_value'] = str_replace("\n", '<br />', $row['attr_value']);
-
+            
             if ($row['attr_type'] == 0) {
                 $group = (isset($groups[$row['attr_group']])) ? $groups[$row['attr_group']] : $GLOBALS['LANG']['goods_attr'];
-
+                
                 $arr['pro'][$group][$row['attr_id']]['name']  = $row['attr_name'];
                 $arr['pro'][$group][$row['attr_id']]['value'] = $row['attr_value'];
             } else {
@@ -164,5 +175,5 @@ class Detail extends \Bricker\RequestLifeCircle
         
         return $arr;
     }
-
+    
 }

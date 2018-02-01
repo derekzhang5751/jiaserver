@@ -10,23 +10,35 @@ class Collect extends \Bricker\RequestLifeCircle
 {
     private $userId;
     private $goodsId;
-    
+    private $collect;
+
+
     private $return = [
         'result' => false,
-        'msg' => ''
+        'msg'    => '',
+        'data'   => [
+            'collect' => 'no'
+        ]
     ];
     
     protected function prepareRequestParams() {
-        $userId  = isset($_REQUEST['userid']) ? trim($_REQUEST['userid']) : '0';
+        $userId = isset($_REQUEST['userid']) ? trim($_REQUEST['userid']) : '0';
         $userId = intval($userId);
         if ($userId <= 0) {
             return false;
         }
         
-        $goodsId  = isset($_REQUEST['goodsid']) ? trim($_REQUEST['goodsid']) : '0';
+        $goodsId = isset($_REQUEST['goodsid']) ? trim($_REQUEST['goodsid']) : '0';
         $goodsId = intval($goodsId);
         if ($goodsId <= 0) {
             return false;
+        }
+        
+        $collect = isset($_REQUEST['collect']) ? trim($_REQUEST['collect']) : 'add';
+        if ($collect == 'del') {
+            $this->collect = 'del';
+        } else {
+            $this->collect = 'add';
         }
         
         $this->userId = $userId;
@@ -49,14 +61,34 @@ class Collect extends \Bricker\RequestLifeCircle
         
         $exist = db_exist_in_collection($this->userId, $this->goodsId);
         if ($exist) {
-            $this->return['result'] = true;
-        } else {
-            $ret = db_insert_to_collection($this->userId, $this->goodsId);
-            if ($ret === false) {
-                $this->return['result'] = false;
-                $this->return['msg'] = $GLOBALS['LANG']['collect_error'];
+            if ($this->collect == 'del') {
+                // cannel collection
+                $ret = db_delete_from_collection($this->userId, $this->goodsId);
+                if ($ret === false) {
+                    $this->return['result'] = false;
+                    $this->return['msg'] = $GLOBALS['LANG']['uncollect_error'];
+                } else {
+                    $this->return['result'] = true;
+                    $this->return['data']['collect'] = 'no';
+                }
             } else {
                 $this->return['result'] = true;
+                $this->return['data']['collect'] = 'yes';
+            }
+        } else {
+            if ($this->collect == 'add') {
+                // add to collection
+                $ret = db_insert_to_collection($this->userId, $this->goodsId);
+                if ($ret === false) {
+                    $this->return['result'] = false;
+                    $this->return['msg'] = $GLOBALS['LANG']['collect_error'];
+                } else {
+                    $this->return['result'] = true;
+                    $this->return['data']['collect'] = 'yes';
+                }
+            } else {
+                $this->return['result'] = true;
+                $this->return['data']['collect'] = 'no';
             }
         }
         
@@ -65,7 +97,7 @@ class Collect extends \Bricker\RequestLifeCircle
     
     protected function responseHybrid() {
         if ($this->return['result'] === true) {
-            $this->jsonResponse('success', '');
+            $this->jsonResponse('success', '', $this->return['data']);
         } else {
             $this->jsonResponse('fail', $this->return['msg']);
         }

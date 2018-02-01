@@ -10,5 +10,6 @@ $GLOBALS['LANG']['category_empty'] = '没有分类信息 !!!';
 $GLOBALS['LANG']['goods_detail_empty'] = '商品信息为空 !!!';
 $GLOBALS['LANG']['goods_attr'] = '商品属性';
 $GLOBALS['LANG']['collect_error'] = '收藏失败，请稍后再试 !!!';
+$GLOBALS['LANG']['uncollect_error'] = '取消收藏失败，请稍后再试 !!!';
 $GLOBALS['LANG']['user_not_exist'] = '该用户不存在 !!!';
 $GLOBALS['LANG']['goods_not_exist'] = '该商品不存在 !!!';

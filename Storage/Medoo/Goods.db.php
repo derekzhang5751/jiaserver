@@ -235,7 +235,8 @@ function db_get_goods_attr_group($goodsId)
         [
             'goods_type.attr_group'
         ],
-        ['goods.goods_id' => $goodsId]);
+        ['goods.goods_id' => $goodsId]
+    );
     return $attrGroup;
 }
 
@@ -256,7 +257,8 @@ function db_get_goods_attr_full($goodsId)
                 'goods_attr.attr_price' => 'ASC',
                 'goods_attr.goods_attr_id' => 'ASC'
             ]
-        ]);
+        ]
+    );
     return $attrs;
 }
 
@@ -303,4 +305,14 @@ function db_create_in($item_list, $field_name = '')
             return $field_name . ' IN (' . $item_list_tmp . ') ';
         }
     }
+}
+
+function db_if_goods_in_collection($userId, $goodsId)
+{
+    return $GLOBALS['db']->has('collect_goods',
+        [
+            'user_id'  => $userId,
+            'goods_id' => $goodsId
+        ]
+    );
 }
