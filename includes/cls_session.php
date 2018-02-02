@@ -231,7 +231,9 @@ class cls_session
 
         if ((time() % 2) == 0)
         {
-            return $this->db->query('DELETE FROM ' . $this->session_table . ' WHERE expiry < ' . ($this->_time - $this->max_life_time));
+            return $this->db->query('DELETE FROM ' . $this->session_table .
+                    ' WHERE expiry < ' . ($this->_time - $this->max_life_time) .
+                    ' AND userid=0 AND adminid=0');
         }
 
         return true;
