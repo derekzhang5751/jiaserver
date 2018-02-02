@@ -1,28 +1,30 @@
 <?php
 /**
- * Description of Address
+ * Description of Collection
  *
  * @author Derek
  */
-class Address extends \Bricker\RequestLifeCircle {
-    private $userId;
-    private $uuid;
+class Regions extends \Bricker\RequestLifeCircle {
+    private $level;
+    private $parentId;
     
     private $return = [
         'result' => false,
         'msg' => '',
-        'addresslist' => []
+        'regions' => []
     ];
     
     protected function prepareRequestParams() {
-        $this->userId = isset($_POST['userid']) ? trim($_POST['userid']) : '0';
-        $this->uuid     = isset($_POST['uuid']) ? trim($_POST['uuid']) : '';
+        $this->level    = isset($_POST['level']) ? trim($_POST['level']) : '-1';
+        $this->parentId = isset($_POST['parentid']) ? trim($_POST['parentid']) : '-1';
         
-        $this->userId = intval($this->userId);
-        if ($this->userId <= 0) {
+        $this->level = intval($this->level);
+        if ($this->level < 0 || $this->level > 3) {
             return false;
         }
-        if (empty($this->uuid)) {
+        
+        $this->parentId = intval($this->parentId);
+        if ($this->parentId < 0) {
             return false;
         }
         
@@ -30,15 +32,13 @@ class Address extends \Bricker\RequestLifeCircle {
     }
     
     protected function process() {
-        $maxSize = 5;
-        $addressList = db_get_my_address($this->userId, $maxSize);
+        $regions = db_get_regions($this->level, $this->parentId);
         
-        if ($addressList) {
-            $this->return['addresslist'] = $addressList;
+        if ($regions) {
+            $this->return['regions'] = $regions;
             $this->return['result'] = true;
         } else {
-            $this->return['result'] = false;
-            $this->return['msg'] = $GLOBALS['LANG']['address_empty'];
+            $this->return['result'] = true;
             //$this->return['msg'] = $GLOBALS['db']->error();
         }
         return true;
@@ -46,7 +46,7 @@ class Address extends \Bricker\RequestLifeCircle {
     
     protected function responseHybrid() {
         if ($this->return['result'] === true) {
-            $this->jsonResponse('success', '', $this->return['addresslist']);
+            $this->jsonResponse('success', '', $this->return['regions']);
         } else {
             $this->jsonResponse('fail', $this->return['msg']);
         }

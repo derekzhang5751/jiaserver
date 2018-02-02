@@ -208,17 +208,19 @@ class JiaSession implements \Bricker\ISession
 
     function close_session() {
         $this->update_session();
-
+        
         if (mt_rand(0, 2) == 2)
         {
             $this->db->query('DELETE FROM ' . $this->session_data_table . ' WHERE expiry < ' . ($this->_time - $this->max_life_time));
         }
-
+        
         if ((time() % 2) == 0)
         {
-            return $this->db->query('DELETE FROM ' . $this->session_table . ' WHERE expiry < ' . ($this->_time - $this->max_life_time));
+            return $this->db->query('DELETE FROM ' . $this->session_table .
+                    ' WHERE expiry < ' . ($this->_time - $this->max_life_time) .
+                    ' AND userid=0 AND adminid=0');
         }
-
+        
         return true;
     }
 

@@ -174,7 +174,8 @@ function db_get_my_address($userId, $maxSize)
 {
     $address = $GLOBALS['db']->select('user_address',
         [
-            'address_id','consignee','email','address','tel','idcard_a'
+            'address_id','consignee','email','country','province','city','district','address','zipcode',
+            'tel','mobile','idcard_a','idcard_b'
         ],
         [
             'user_id' => $userId,
@@ -183,6 +184,55 @@ function db_get_my_address($userId, $maxSize)
         ]
     );
     return $address;
+}
+
+function db_insert_my_address($address)
+{
+    $data = array(
+        'user_id' => $address['user_id'],
+        'consignee' => $address['consignee'],
+        'email' => $address['email'],
+        'country' => $address['country'],
+        'province' => $address['province'],
+        'city' => $address['city'],
+        'district' => $address['district'],
+        'address' => $address['address'],
+        'zipcode' => $address['zipcode'],
+        'tel' => $address['tel'],
+    );
+    $stat = $GLOBALS['db']->insert('user_address', $data);
+    if ($stat->rowCount() == 1) {
+        return $GLOBALS['db']->id();
+    } else {
+        return false;
+    }
+}
+
+function db_update_my_address($address)
+{
+    $data = array(
+        'consignee' => $address['consignee'],
+        'email' => $address['email'],
+        'country' => $address['country'],
+        'province' => $address['province'],
+        'city' => $address['city'],
+        'district' => $address['district'],
+        'address' => $address['address'],
+        'zipcode' => $address['zipcode'],
+        'tel' => $address['tel'],
+    );
+    $stat = $GLOBALS['db']->update('user_address', $data,
+        [
+            'address_id' => $address['address_id'],
+            'user_id' => $address['user_id']
+        ]
+    );
+    
+    if ($stat->rowCount() > 0) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function db_get_my_cart_list($userId, $maxSize)
@@ -286,4 +336,18 @@ function db_get_mail_config($code)
     } else {
         return '';
     }
+}
+
+function db_get_regions($level, $parentId)
+{
+    $regions = $GLOBALS['db']->select('region',
+        [
+            'region_id','region_name'
+        ],
+        [
+            'region_type' => $level,
+            'parent_id'   => $parentId
+        ]
+    );
+    return $regions;
 }
