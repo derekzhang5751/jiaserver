@@ -102,6 +102,11 @@ if ( isset($GLOBALS['LifeCfg']['SESSION_CLASS']) ) {
 }
 
 /*
+ * CORS
+ */
+header("Access-Control-Allow-Origin: *");
+
+/*
  * run
  */
 $className = $GLOBALS['LifeCfg']['REQUEST_NAME'];
