@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: derek
+ * User: Derek
  * Date: 2018-01-13
  * Time: 8:40 PM
  */
@@ -10,29 +10,29 @@ class Search extends \Bricker\RequestLifeCircle
 {
     private $searchType;
     private $searchValue;
-
+    
     private $return = [
         'result' => false,
         'msg' => '',
         'goodslist' => []
     ];
-
+    
     protected function prepareRequestParams() {
         $searchType = isset($_POST['search_type']) ? trim($_POST['search_type']) : '0';
         $this->searchType = intval($searchType);
         if ($this->searchType < SEARCH_TEXT) {
             $this->searchType = SEARCH_TEXT;
         }
-
+        
         $this->searchValue = isset($_POST['search_value']) ? trim($_POST['search_value']) : '';
-
+        
         return true;
     }
-
+    
     protected function process() {
-        $maxSize = 100;
+        $maxSize = 200;
         $goodsList = array();
-
+        
         if ( empty($this->searchValue) ) {
             // default goods list that recommended
             $goodsList = db_get_goodslist_new($maxSize);
@@ -43,9 +43,10 @@ class Search extends \Bricker\RequestLifeCircle
                 $goodsList = db_get_goodslist_by_category($categoryId, $maxSize);
             } else {
                 // search goods by content
+                $goodsList = db_search_goods_list($this->searchValue, $maxSize);
             }
         }
-
+        
         if ($goodsList) {
             $this->return['result'] = true;
             $index = 0;
@@ -65,11 +66,12 @@ class Search extends \Bricker\RequestLifeCircle
         } else {
             $this->return['result'] = false;
             $this->return['msg'] = $GLOBALS['LANG']['goods_empty'];
+            //$this->return['msg'] = $GLOBALS['db']->last();
         }
-
+        
         return true;
     }
-
+    
     protected function responseHybrid() {
         if ($this->return['result'] === true) {
             $this->jsonResponse('success', '', $this->return['goodslist']);
@@ -77,11 +79,11 @@ class Search extends \Bricker\RequestLifeCircle
             $this->jsonResponse('fail', $this->return['msg']);
         }
     }
-
+    
     protected function responseWeb() {
         exit('Not support !!');
     }
-
+    
     protected function responseMobile() {
         exit('Not support !!');
     }

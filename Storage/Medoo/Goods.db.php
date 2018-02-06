@@ -316,3 +316,35 @@ function db_if_goods_in_collection($userId, $goodsId)
         ]
     );
 }
+
+function db_search_goods_list($searchValue, $maxSize)
+{
+    $goodsList = $GLOBALS['db']->select('goods',
+        [
+            '[>]category' => ['cat_id' => 'cat_id'],
+            '[>]brand'    => ['brand_id' => 'brand_id']
+        ],
+        [
+            'goods.goods_id','goods.goods_sn','goods.goods_name','goods.shop_price','goods.promote_price','goods.promote_start_date',
+            'goods.promote_end_date','goods.goods_thumb','goods.goods_img',
+            'category.cat_name',
+            'brand.brand_name'
+        ],
+        [
+            'AND' => [
+                'goods.is_on_sale' => 1,
+                'goods.is_alone_sale' => 1,
+                'goods.is_delete' => 0,
+                'OR' => [
+                    'goods.goods_name[~]' => $searchValue,
+                    'goods.keywords[~]' => $searchValue,
+                    'goods.goods_sn[~]' => $searchValue,
+                    'goods.goods_brief[~]' => $searchValue
+                ]
+            ],
+            'ORDER' => ['goods.sort_order'=>'DESC', 'goods.last_update'=>'DESC'],
+            'LIMIT' => $maxSize                
+        ]
+    );
+    return $goodsList;
+}

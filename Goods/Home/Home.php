@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: derek
+ * User: Derek
  * Date: 2018-01-12
  * Time: 10:07 PM
  */
@@ -13,15 +13,15 @@ class Home extends \Bricker\RequestLifeCircle
         'msg' => '',
         'goodslist' => []
     ];
-
+    
     protected function prepareRequestParams() {
         return true;
     }
-
+    
     protected function process() {
-        $maxSize = 100;
+        $maxSize = 200;
         $goodsList = db_get_goodslist_best($maxSize);
-
+        
         if ($goodsList) {
             $this->return['result'] = true;
             $index = 0;
@@ -42,10 +42,10 @@ class Home extends \Bricker\RequestLifeCircle
             $this->return['result'] = false;
             $this->return['msg'] = $GLOBALS['LANG']['goods_empty'];
         }
-
+        
         return true;
     }
-
+    
     protected function responseHybrid() {
         if ($this->return['result'] === true) {
             $this->jsonResponse('success', '', $this->return['goodslist']);
@@ -53,11 +53,11 @@ class Home extends \Bricker\RequestLifeCircle
             $this->jsonResponse('fail', $this->return['msg']);
         }
     }
-
+    
     protected function responseWeb() {
         exit('Not support !!');
     }
-
+    
     protected function responseMobile() {
         exit('Not support !!');
     }
