@@ -21,7 +21,7 @@ class Detail extends \Bricker\RequestLifeCircle
         if ($goodsId <= 0) {
             return false;
         }
-
+        
         $this->goodId = $goodsId;
         return true;
     }
@@ -78,6 +78,24 @@ class Detail extends \Bricker\RequestLifeCircle
                 $this->return['goods']['collect'] = 'unknown';
             }
             
+            // user comments
+            $this->return['goods']['comment'] = array();
+            $rankList = db_comment_rank_list($this->goodId);
+            $tmpArray = array();
+            if ($rankList) {
+                foreach ($rankList as $rank) {
+                    $rank = $rank['comment_rank'];
+                    $count = db_count_comment_rank($this->goodId, $rank);
+                    $tmpArray[$rank] = $count;
+                }
+                arsort($tmpArray);
+            }
+            foreach ($tmpArray as $key => $value) {
+                $this->return['goods']['comment']['rank'] = $key;
+                $this->return['goods']['comment']['number'] = $value;
+                break;
+            }
+            
             return true;
         } else {
             $this->return['result'] = false;
@@ -111,7 +129,7 @@ class Detail extends \Bricker\RequestLifeCircle
             }
             $this->return['goods']['spe'] = $specification;
             
-            $this->jsonResponse('success', '', $this->return['goods']);
+            $this->jsonResponse('success', $this->return['msg'], $this->return['goods']);
         } else {
             $this->jsonResponse('fail', $this->return['msg']);
         }
