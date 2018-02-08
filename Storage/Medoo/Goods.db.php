@@ -348,3 +348,24 @@ function db_search_goods_list($searchValue, $maxSize)
     );
     return $goodsList;
 }
+
+function db_get_linked_goods($goodsId, $maxSize)
+{
+    $goodsList = $GLOBALS['db']->select('link_goods',
+        [
+            '[>]goods'    => ['link_goods_id' => 'goods_id']
+        ],
+        [
+            'goods.goods_id','goods.goods_name','goods.shop_price','goods.promote_price','goods.promote_start_date',
+            'goods.promote_end_date','goods.goods_thumb','goods.goods_img'
+        ],
+        [
+            'link_goods.goods_id' => $goodsId,
+            'goods.is_on_sale' => 1,
+            'goods.is_alone_sale' => 1,
+            'goods.is_delete' => 0,
+            'LIMIT' => $maxSize
+        ]
+    );
+    return $goodsList;
+}

@@ -23,6 +23,17 @@ function db_count_comment_rank($goodsId, $rank)
     return $count;
 }
 
+function db_count_comment_total($goodsId)
+{
+    $count = $GLOBALS['db']->count('comment',
+        [
+            'id_value' => $goodsId,
+            'status' => 1
+        ]
+    );
+    return $count;
+}
+
 function db_get_comment_list($goodsId)
 {
     return $GLOBALS['db']->select('comment',

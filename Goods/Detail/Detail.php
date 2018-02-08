@@ -90,10 +90,26 @@ class Detail extends \Bricker\RequestLifeCircle
                 }
                 arsort($tmpArray);
             }
+            $total = db_count_comment_total($this->goodId);
             foreach ($tmpArray as $key => $value) {
                 $this->return['goods']['comment']['rank'] = $key;
-                $this->return['goods']['comment']['number'] = $value;
+                $this->return['goods']['comment']['number'] = $total;
                 break;
+            }
+            
+            // linked goods
+            $linkedGoods = db_get_linked_goods($this->goodId, 10);
+            if ($linkedGoods) {
+                $index = 0;
+                foreach ($linkedGoods as $goods) {
+                    $this->return['goods']['linked'][$index]['goods_id'] = $goods['goods_id'];
+                    $this->return['goods']['linked'][$index]['goods_name'] = $goods['goods_name'];
+                    $this->return['goods']['linked'][$index]['shop_price'] = $goods['shop_price'];
+                    $this->return['goods']['linked'][$index]['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+                    $this->return['goods']['linked'][$index]['goods_thumb'] = $goods['goods_thumb'];
+                    $this->return['goods']['linked'][$index]['goods_img'] = $goods['goods_img'];
+                    $index++;
+                }
             }
             
             return true;
