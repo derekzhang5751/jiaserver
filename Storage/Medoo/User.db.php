@@ -199,6 +199,8 @@ function db_insert_my_address($address)
         'address' => $address['address'],
         'zipcode' => $address['zipcode'],
         'tel' => $address['tel'],
+        'idcard_a' => $address['idcard_a'],
+        'idcard_b' => $address['idcard_b'],
     );
     $stat = $GLOBALS['db']->insert('user_address', $data);
     if ($stat->rowCount() == 1) {
@@ -219,8 +221,16 @@ function db_update_my_address($address)
         'district' => $address['district'],
         'address' => $address['address'],
         'zipcode' => $address['zipcode'],
-        'tel' => $address['tel'],
+        'tel' => $address['tel']
     );
+
+    if (!empty($address['idcard_a'])) {
+        $data['idcard_a'] = $address['idcard_a'];
+    }
+    if (!empty($address['idcard_b'])) {
+        $data['idcard_b'] = $address['idcard_b'];
+    }
+
     $stat = $GLOBALS['db']->update('user_address', $data,
         [
             'address_id' => $address['address_id'],
@@ -228,7 +238,7 @@ function db_update_my_address($address)
         ]
     );
     
-    if ($stat->rowCount() > 0) {
+    if ($stat->rowCount() >= 0) {
         return true;
     } else {
         return false;
