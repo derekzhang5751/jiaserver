@@ -11,7 +11,7 @@ namespace Bricker;
 
 interface ISession
 {
-    public function init($db, $session_id = '');
+    public function init($db, $session_id = '', $deviceType = DEVICE_WEB);
     public function getSessionId();
     public function response();
     public function deleteSession();

@@ -95,7 +95,7 @@ if ( isset($GLOBALS['LifeCfg']['SESSION_CLASS']) ) {
     }
     //$GLOBALS['log']->log('bricker', 'Input session id = '.$sessionId);
     $MySession = new $GLOBALS['LifeCfg']['SESSION_CLASS']();
-    $MySession->init($db, $sessionId);
+    $MySession->init($db, $sessionId, $DeviceType);
     
     define('SESSION_ID',    $MySession->getSessionId());
     //$GLOBALS['log']->log('bricker', 'Current session id = '.SESSION_ID);

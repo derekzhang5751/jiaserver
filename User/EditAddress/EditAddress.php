@@ -166,51 +166,55 @@ class EditAddress extends \Bricker\RequestLifeCircle {
 
     private function saveImageAToFile() {
         if (empty($this->address['idcard_a'])) {
+            //$GLOBALS['log']->log('user', 'SaveImageA: data is empty');
             return false;
         }
         if (empty($GLOBALS['_SESSION']['user_name'])) {
+            $GLOBALS['log']->log('user', 'SaveImageA: user name is empty');
             return false;
         }
-
+        
         // decode image data
         $flag = 'data:image/jpeg;base64,';
         $len = strlen($flag);
         $title = substr($this->address['idcard_a'], 0, $len);
-        //$GLOBALS['log']->log('user', 'Title: ' . $title);
         if (strcmp($title, $flag) != 0) {
+            $GLOBALS['log']->log('user', 'SaveImageA: file header is incorrect -> ' . $title);
             return false;
         }
         $imageBase64 = substr($this->address['idcard_a'], $len);
         //$GLOBALS['log']->log('user', 'Base64Image Size: ' . strlen($imageBase64));
         $image = base64_decode($imageBase64);
-
+        
         // create directory
         $pathName = 'images/upload/idcard/' . date("Ym");
         $realPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $pathName;
         if (!is_dir($realPath)) {
             if (@!mkdir($realPath, 0777)) {
-                exit("上传图像失败，目录不可写！");
+                $GLOBALS['log']->log('user', 'SaveImageA: can not create directionary');
                 return false;
             }
         }
-
+        
         $fileName = $pathName . '/' . $GLOBALS['_SESSION']['user_name'] . '_a.jpg';
         $destFileName = $realPath . '/' . $GLOBALS['_SESSION']['user_name'] . '_a.jpg';
         $size = file_put_contents($destFileName, $image, LOCK_EX);
         //$GLOBALS['log']->log('user', 'SaveFile: ' . $destFileName);
         if ($size) {
-            //$GLOBALS['log']->log('user', 'FileSize: ' . $size);
+            //$GLOBALS['log']->log('user', 'SaveImageA: write file size ' . $size);
             return $fileName;
         } else {
-            //$GLOBALS['log']->log('user', 'FileSize: ERROR');
+            $GLOBALS['log']->log('user', 'SaveImageA: write file error !!!');
             return false;
         }
     }
     private function saveImageBToFile() {
         if (empty($this->address['idcard_b'])) {
+            //$GLOBALS['log']->log('user', 'SaveImageB: data is empty');
             return false;
         }
         if (empty($GLOBALS['_SESSION']['user_name'])) {
+            $GLOBALS['log']->log('user', 'SaveImageB: user name is empty');
             return false;
         }
 
@@ -219,6 +223,7 @@ class EditAddress extends \Bricker\RequestLifeCircle {
         $len = strlen($flag);
         $title = substr($this->address['idcard_b'], 0, $len);
         if (strcmp($title, $flag) != 0) {
+            $GLOBALS['log']->log('user', 'SaveImageB: file header is incorrect -> ' . $title);
             return false;
         }
         $imageBase64 = substr($this->address['idcard_b'], $len);
@@ -229,7 +234,7 @@ class EditAddress extends \Bricker\RequestLifeCircle {
         $realPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $pathName;
         if (!is_dir($realPath)) {
             if (@!mkdir($realPath, 0777)) {
-                exit("上传图像失败，目录不可写！");
+                $GLOBALS['log']->log('user', 'SaveImageB: can not create directionary');
                 return false;
             }
         }
@@ -239,8 +244,10 @@ class EditAddress extends \Bricker\RequestLifeCircle {
         $size = file_put_contents($destFileName, $image, LOCK_EX);
         //$GLOBALS['log']->log('user', 'SaveData: ' . $image);
         if ($size) {
+            //$GLOBALS['log']->log('user', 'SaveImageB: write file size ' . $size);
             return $fileName;
         } else {
+            $GLOBALS['log']->log('user', 'SaveImageB: write file error !!!');
             return false;
         }
     }

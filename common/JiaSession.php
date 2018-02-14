@@ -27,7 +27,10 @@ class JiaSession implements \Bricker\ISession
     var $_ip   = '';
     var $_time = 0;
     
-    public function init($db, $session_id = '') {
+    var $deviceType = DEVICE_WEB;
+    
+    public function init($db, $session_id = '', $deviceType = DEVICE_WEB) {
+        $this->deviceType = $deviceType;
         //$GLOBALS['log']->log('bricker', 'JiaSession init with session id = '.$session_id);
         $GLOBALS['_SESSION'] = array();
         
@@ -52,7 +55,7 @@ class JiaSession implements \Bricker\ISession
         $this->db  = $db;
         $this->_ip = \Bricker\client_real_ip();
         
-        if ($session_id == '' && !empty($_COOKIE[$this->session_name])) {
+        if ($session_id == '' && DEVICE_WEB == $this->deviceType && !empty($_COOKIE[$this->session_name])) {
             $this->session_id = $_COOKIE[$this->session_name];
             //$GLOBALS['log']->log('bricker', 'JiaSession use session id from cookie  = '.$this->session_name);
         } else {
@@ -78,7 +81,7 @@ class JiaSession implements \Bricker\ISession
         } else {
             $this->gen_session_id();
             $this->load_session();
-            setcookie($this->session_name, $this->session_id . $this->gen_session_key($this->session_id), 0, $this->session_cookie_path, $this->session_cookie_domain, $this->session_cookie_secure);
+            setcookie($this->session_name, $this->session_id, 0, $this->session_cookie_path, $this->session_cookie_domain, $this->session_cookie_secure);
         }
         
         register_shutdown_function(array($this, 'close_session'));
@@ -89,8 +92,8 @@ class JiaSession implements \Bricker\ISession
     }
     
     private function gen_session_id() {
-        $this->session_id = md5(uniqid(mt_rand(), true));
-        
+        $sessionId = md5(uniqid(mt_rand(), true));
+        $this->session_id = substr($sessionId, 0, 32);
         return $this->insert_session();
     }
     
