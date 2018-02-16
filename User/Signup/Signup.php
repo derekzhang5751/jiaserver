@@ -6,7 +6,7 @@
  * Time: 2:58 PM
  */
 
-class Signup extends \Bricker\RequestLifeCircle
+class Signup extends JiaBase
 {
     private $userName;
     private $email;

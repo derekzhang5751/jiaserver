@@ -4,7 +4,7 @@
  *
  * @author Derek
  */
-class Address extends \Bricker\RequestLifeCircle {
+class Address extends JiaBase {
     private $userId;
     private $uuid;
     

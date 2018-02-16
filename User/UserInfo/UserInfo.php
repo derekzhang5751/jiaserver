@@ -1,12 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: derek
+ * User: Derek
  * Date: 2018-01-13
  * Time: 2:58 PM
  */
 
-class UserInfo extends \Bricker\RequestLifeCircle
+class UserInfo extends JiaBase
 {
     private $userName;
     private $uuid;

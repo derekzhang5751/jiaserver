@@ -5,7 +5,7 @@
  * Time: 11:30 AM
  */
 
-class MyList extends \Bricker\RequestLifeCircle
+class MyList extends JiaBase
 {
     private $userId;
     private $uuid;

@@ -6,7 +6,7 @@
  * Time: 2:30 PM
  */
 
-class Detail extends \Bricker\RequestLifeCircle
+class Detail extends JiaBase
 {
     private $goodId;
     private $return = [
@@ -36,8 +36,9 @@ class Detail extends \Bricker\RequestLifeCircle
             $this->return['goods']['goods_id'] = $goods['goods_id'];
             $this->return['goods']['goods_sn'] = $goods['goods_sn'];
             $this->return['goods']['goods_name'] = $goods['goods_name'];
-            $this->return['goods']['shop_price'] = $goods['shop_price'];
-            $this->return['goods']['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+            $this->return['goods']['shop_price'] = $this->adapterPrice( $goods['shop_price'] );
+            $promotePrice = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+            $this->return['goods']['promote_price'] = $this->adapterPrice( $promotePrice );
             $this->return['goods']['cat_name'] = $goods['cat_name'];
             $this->return['goods']['brand_name'] = $goods['brand_name'];
             
@@ -104,8 +105,9 @@ class Detail extends \Bricker\RequestLifeCircle
                 foreach ($linkedGoods as $goods) {
                     $this->return['goods']['linked'][$index]['goods_id'] = $goods['goods_id'];
                     $this->return['goods']['linked'][$index]['goods_name'] = $goods['goods_name'];
-                    $this->return['goods']['linked'][$index]['shop_price'] = $goods['shop_price'];
-                    $this->return['goods']['linked'][$index]['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+                    $this->return['goods']['linked'][$index]['shop_price'] = $this->adapterPrice( $goods['shop_price'] );
+                    $promotePrice = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+                    $this->return['goods']['linked'][$index]['promote_price'] = $this->adapterPrice( $promotePrice );
                     $this->return['goods']['linked'][$index]['goods_thumb'] = $goods['goods_thumb'];
                     $this->return['goods']['linked'][$index]['goods_img'] = $goods['goods_img'];
                     $index++;
@@ -166,7 +168,7 @@ class Detail extends \Bricker\RequestLifeCircle
      * @param   integer $goods_id
      * @return  array
      */
-    static function getGoodsProperties($goodsId) {
+    public function getGoodsProperties($goodsId) {
         /* 对属性进行重新排序和分组 */
         $grp = db_get_goods_attr_group($goodsId);
         if (!empty($grp)) {
@@ -190,7 +192,7 @@ class Detail extends \Bricker\RequestLifeCircle
                 $arr['pro'][$group][$row['attr_id']]['value'] = $row['attr_value'];
             } else {
                 $f = floatval($row['attr_price']);
-                $formatPrice = number_format($f, 2, '.', '');
+                $formatPrice = $this->adapterPrice($f);
                 $arr['spe'][$row['attr_id']]['attr_type'] = $row['attr_type'];
                 $arr['spe'][$row['attr_id']]['name']      = $row['attr_name'];
                 $arr['spe'][$row['attr_id']]['values'][]  = array(

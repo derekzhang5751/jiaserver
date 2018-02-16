@@ -6,7 +6,7 @@
  * Time: 2:58 PM
  */
 
-class Signout extends \Bricker\RequestLifeCircle
+class Signout extends JiaBase
 {
     private $userId;
     private $uuid;

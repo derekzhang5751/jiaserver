@@ -6,7 +6,7 @@
  * Time: 11:30 AM
  */
 
-class CartList extends \Bricker\RequestLifeCircle
+class CartList extends JiaBase
 {
     private $return = [
         'result' => false,
@@ -42,8 +42,8 @@ class CartList extends \Bricker\RequestLifeCircle
                 $this->return['cartlist'][$i]['goods_name'] = $goods['goods_name'];
                 $this->return['cartlist'][$i]['goods_number'] = $goods['goods_number'];
                 $this->return['cartlist'][$i]['goods_attr'] = explode("\n", $goods['goods_attr']);
-                $this->return['cartlist'][$i]['shop_price'] = number_format($goods['shop_price'], 2, '.', '');
-                $this->return['cartlist'][$i]['goods_price'] = number_format($goods['goods_price'], 2, '.', '');
+                $this->return['cartlist'][$i]['shop_price'] = $this->adapterPrice( $goods['shop_price'] );
+                $this->return['cartlist'][$i]['goods_price'] = $this->adapterPrice( $goods['goods_price'] );
                 $this->return['cartlist'][$i]['goods_thumb'] = $goods['goods_thumb'];
                 
                 $i++;

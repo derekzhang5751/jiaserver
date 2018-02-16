@@ -6,7 +6,7 @@
  * Time: 10:50 PM
  */
 
-class Category extends \Bricker\RequestLifeCircle
+class Category extends JiaBase
 {
     private $parentId;
 

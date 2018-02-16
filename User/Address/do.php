@@ -12,11 +12,11 @@ $LifeCfg = array(
     ),
     'LOAD_LIB'       => array(
         'Bricklayer/Lib/network.php',
-        //'Bricklayer/Lib/email.php',
         'common/constants.php',
         'common/JiaSession.php',
-        //'lib/lib_goods.php'
-    )
+        'common/JiaBase.php',
+    ),
+    'NEED_EXCHANGE_RATE' => false
 );
 
 require '../../Bricklayer/Bricker.php';

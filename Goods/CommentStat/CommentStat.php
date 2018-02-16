@@ -6,7 +6,7 @@
  * Time: 09:02 PM
  */
 
-class CommentStat extends \Bricker\RequestLifeCircle
+class CommentStat extends JiaBase
 {
     private $goodsId;
     

@@ -20,8 +20,9 @@ $LifeCfg = array(
         'Bricklayer/Lib/network.php',
         'common/constants.php',
         'common/JiaSession.php',
-        //'lib/lib_goods.php'
-    )
+        'common/JiaBase.php',
+    ),
+    'NEED_EXCHANGE_RATE' => false
 );
 
 require '../../Bricklayer/Bricker.php';

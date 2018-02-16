@@ -5,7 +5,7 @@
  * Date: 2018-01-30
  * Time: 1:02 PM
  */
-class CleanCart extends \Bricker\RequestLifeCircle
+class CleanCart extends JiaBase
 {
     private $userId = 0;
     private $uuid;

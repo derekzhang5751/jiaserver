@@ -6,13 +6,12 @@
  * Time: 7:47 PM
  */
 
-class Collect extends \Bricker\RequestLifeCircle
+class Collect extends JiaBase
 {
     private $userId;
     private $goodsId;
     private $collect;
-
-
+    
     private $return = [
         'result' => false,
         'msg'    => '',

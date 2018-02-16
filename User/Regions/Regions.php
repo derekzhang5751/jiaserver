@@ -4,7 +4,7 @@
  *
  * @author Derek
  */
-class Regions extends \Bricker\RequestLifeCircle {
+class Regions extends JiaBase {
     private $level;
     private $parentId;
     

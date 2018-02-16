@@ -6,7 +6,7 @@
  * Time: 2:58 PM
  */
 
-class ForgetPassword extends \Bricker\RequestLifeCircle
+class ForgetPassword extends JiaBase
 {
     private $userName;
     private $email;

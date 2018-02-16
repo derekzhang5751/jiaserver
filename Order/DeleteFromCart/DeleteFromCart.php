@@ -5,7 +5,7 @@
  * Date: 2018-01-31
  * Time: 3:32 PM
  */
-class DeleteFromCart extends \Bricker\RequestLifeCircle
+class DeleteFromCart extends JiaBase
 {
     private $userId;
     private $uuid;

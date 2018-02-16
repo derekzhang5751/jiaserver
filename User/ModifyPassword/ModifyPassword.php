@@ -6,7 +6,7 @@
  * Time: 2:58 PM
  */
 
-class ModifyPassword extends \Bricker\RequestLifeCircle
+class ModifyPassword extends JiaBase
 {
     private $userId;
     private $oldPasswd;

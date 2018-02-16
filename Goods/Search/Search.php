@@ -6,7 +6,7 @@
  * Time: 8:40 PM
  */
 
-class Search extends \Bricker\RequestLifeCircle
+class Search extends JiaBase
 {
     private $searchType;
     private $searchValue;
@@ -54,8 +54,9 @@ class Search extends \Bricker\RequestLifeCircle
                 $this->return['goodslist'][$index]['goods_id'] = $goods['goods_id'];
                 $this->return['goodslist'][$index]['goods_sn'] = $goods['goods_sn'];
                 $this->return['goodslist'][$index]['goods_name'] = $goods['goods_name'];
-                $this->return['goodslist'][$index]['shop_price'] = $goods['shop_price'];
-                $this->return['goodslist'][$index]['promote_price'] = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+                $this->return['goodslist'][$index]['shop_price'] = $this->adapterPrice( $goods['shop_price'] );
+                $promotePrice = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+                $this->return['goodslist'][$index]['promote_price'] = $this->adapterPrice( $promotePrice );
                 $this->return['goodslist'][$index]['goods_thumb'] = $goods['goods_thumb'];
                 $this->return['goodslist'][$index]['goods_img'] = $goods['goods_img'];
                 $this->return['goodslist'][$index]['cat_name'] = $goods['cat_name'];

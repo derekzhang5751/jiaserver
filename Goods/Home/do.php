@@ -14,14 +14,16 @@ $LifeCfg = array(
     'SESSION_CLASS'  => 'JiaSession',
     'DB_TYPE'        => 'Medoo',
     'LOAD_DB'        => array(
-        'Session', 'Goods'
+        'Session', 'Common', 'Goods'
     ),
     'LOAD_LIB'       => array(
         'Bricklayer/Lib/network.php',
         'common/constants.php',
         'common/JiaSession.php',
+        'common/JiaBase.php',
         'lib/lib_goods.php'
-    )
+    ),
+    'NEED_EXCHANGE_RATE' => true
 );
 
 require '../../Bricklayer/Bricker.php';

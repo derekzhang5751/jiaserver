@@ -21,8 +21,10 @@ $LifeCfg = array(
         'Bricklayer/Lib/email.php',
         'common/constants.php',
         'common/JiaSession.php',
+        'common/JiaBase.php',
         'lib/lib_common.php'
-    )
+    ),
+    'NEED_EXCHANGE_RATE' => false
 );
 
 require '../../Bricklayer/Bricker.php';

@@ -6,7 +6,7 @@
  * Time: 2:58 PM
  */
 
-class Signin extends \Bricker\RequestLifeCircle
+class Signin extends JiaBase
 {
     private $userName;
     private $password;

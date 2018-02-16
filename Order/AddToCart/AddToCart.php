@@ -6,7 +6,7 @@
  * Time: 1:03 PM
  */
 
-class AddToCart extends \Bricker\RequestLifeCircle
+class AddToCart extends JiaBase
 {
     private $userId = 0;
     private $uuid;
