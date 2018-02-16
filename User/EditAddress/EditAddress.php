@@ -109,31 +109,58 @@ class EditAddress extends \Bricker\RequestLifeCircle {
     }
     
     protected function process() {
-        // save image if exist
-        $cardA = $this->saveImageAToFile();
-        if ($cardA) {
-            $this->address['idcard_a'] = $cardA;
-        } else {
-            $this->address['idcard_a'] = '';
-        }
-        $cardB = $this->saveImageBToFile();
-        if ($cardB) {
-            $this->address['idcard_b'] = $cardB;
-        } else {
-            $this->address['idcard_b'] = '';
-        }
-
         if ($this->address['address_id'] === 0) {
+            $addressId = 0;
             // add a new address
             $addressId = db_insert_my_address($this->address);
             if ($addressId) {
-                $this->return['result'] = true;
-                $this->return['data']['addressid'] = $addressId;
+                $this->address['address_id'] = $addressId;
+                // save image if exist
+                $cardA = $this->saveImageAToFile();
+                if ($cardA) {
+                    $this->address['idcard_a'] = $cardA;
+                } else {
+                    $this->address['idcard_a'] = '';
+                }
+                $cardB = $this->saveImageBToFile();
+                if ($cardB) {
+                    $this->address['idcard_b'] = $cardB;
+                } else {
+                    $this->address['idcard_b'] = '';
+                }
+                // update id card path in the address
+                if ( !empty($this->address['idcard_a']) || !empty($this->address['idcard_a'])) {
+                    $ret = db_update_address_idcard($this->address);
+                    if ($ret) {
+                        $this->return['result'] = true;
+                        $this->return['data']['addressid'] = $addressId;
+                    } else {
+                        $this->return['result'] = false;
+                        $this->return['msg'] = $GLOBALS['LANG']['update_idcard_error'];
+                    }
+                } else {
+                    $this->return['result'] = true;
+                    $this->return['data']['addressid'] = $addressId;
+                }
             } else {
                 $this->return['result'] = false;
                 $this->return['msg'] = $GLOBALS['LANG']['insert_address_error'];
             }
         } else {
+            // save image if exist
+            $cardA = $this->saveImageAToFile();
+            if ($cardA) {
+                $this->address['idcard_a'] = $cardA;
+            } else {
+                $this->address['idcard_a'] = '';
+            }
+            $cardB = $this->saveImageBToFile();
+            if ($cardB) {
+                $this->address['idcard_b'] = $cardB;
+            } else {
+                $this->address['idcard_b'] = '';
+            }
+            
             // update the address
             $ret = db_update_my_address($this->address);
             if ($ret) {
@@ -169,6 +196,10 @@ class EditAddress extends \Bricker\RequestLifeCircle {
             //$GLOBALS['log']->log('user', 'SaveImageA: data is empty');
             return false;
         }
+        if (empty($this->address['address_id'])) {
+            $GLOBALS['log']->log('user', 'SaveImageA: address id is empty');
+            return false;
+        }
         if (empty($GLOBALS['_SESSION']['user_name'])) {
             $GLOBALS['log']->log('user', 'SaveImageA: user name is empty');
             return false;
@@ -196,8 +227,8 @@ class EditAddress extends \Bricker\RequestLifeCircle {
             }
         }
         
-        $fileName = $pathName . '/' . $GLOBALS['_SESSION']['user_name'] . '_a.jpg';
-        $destFileName = $realPath . '/' . $GLOBALS['_SESSION']['user_name'] . '_a.jpg';
+        $fileName = $pathName . '/' . $GLOBALS['_SESSION']['user_name'] . '_' . $this->address['address_id'] . '_a.jpg';
+        $destFileName = $realPath . '/' . $GLOBALS['_SESSION']['user_name'] . '_' . $this->address['address_id'] . '_a.jpg';
         $size = file_put_contents($destFileName, $image, LOCK_EX);
         //$GLOBALS['log']->log('user', 'SaveFile: ' . $destFileName);
         if ($size) {
@@ -211,6 +242,10 @@ class EditAddress extends \Bricker\RequestLifeCircle {
     private function saveImageBToFile() {
         if (empty($this->address['idcard_b'])) {
             //$GLOBALS['log']->log('user', 'SaveImageB: data is empty');
+            return false;
+        }
+        if (empty($this->address['address_id'])) {
+            $GLOBALS['log']->log('user', 'SaveImageB: address id is empty');
             return false;
         }
         if (empty($GLOBALS['_SESSION']['user_name'])) {
@@ -239,8 +274,8 @@ class EditAddress extends \Bricker\RequestLifeCircle {
             }
         }
 
-        $fileName = $pathName . '/' . $GLOBALS['_SESSION']['user_name'] . '_b.jpg';
-        $destFileName = $realPath . '/' . $GLOBALS['_SESSION']['user_name'] . '_b.jpg';
+        $fileName = $pathName . '/' . $GLOBALS['_SESSION']['user_name'] . '_' . $this->address['address_id'] . '_b.jpg';
+        $destFileName = $realPath . '/' . $GLOBALS['_SESSION']['user_name'] . '_' . $this->address['address_id'] . '_b.jpg';
         $size = file_put_contents($destFileName, $image, LOCK_EX);
         //$GLOBALS['log']->log('user', 'SaveData: ' . $image);
         if ($size) {

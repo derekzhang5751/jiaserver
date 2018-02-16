@@ -223,14 +223,39 @@ function db_update_my_address($address)
         'zipcode' => $address['zipcode'],
         'tel' => $address['tel']
     );
-
+    
     if (!empty($address['idcard_a'])) {
         $data['idcard_a'] = $address['idcard_a'];
     }
     if (!empty($address['idcard_b'])) {
         $data['idcard_b'] = $address['idcard_b'];
     }
+    
+    $stat = $GLOBALS['db']->update('user_address', $data,
+        [
+            'address_id' => $address['address_id'],
+            'user_id' => $address['user_id']
+        ]
+    );
+    
+    if ($stat->rowCount() >= 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
+function db_update_address_idcard($address)
+{
+    $data = array();
+    
+    if (!empty($address['idcard_a'])) {
+        $data['idcard_a'] = $address['idcard_a'];
+    }
+    if (!empty($address['idcard_b'])) {
+        $data['idcard_b'] = $address['idcard_b'];
+    }
+    
     $stat = $GLOBALS['db']->update('user_address', $data,
         [
             'address_id' => $address['address_id'],
