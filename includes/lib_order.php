@@ -580,18 +580,22 @@ function order_fee($order, $goods, $consignee)
         {
             $total['real_goods_count']++;
         }
-
+        
+        $shippingFee = $val['shipping_price'] + $val['duty'];
+        
         $total['goods_price']  += $val['goods_price'] * $val['goods_number'];
+        $total['goods_price']  += $shippingFee;
         $total['market_price'] += $val['market_price'] * $val['goods_number'];
+        $total['market_price'] += $shippingFee;
     }
-
+    
     $total['saving']    = $total['market_price'] - $total['goods_price'];
     $total['save_rate'] = $total['market_price'] ? round($total['saving'] * 100 / $total['market_price']) . '%' : 0;
-
+    
     $total['goods_price_formated']  = price_format($total['goods_price'], false);
     $total['market_price_formated'] = price_format($total['market_price'], false);
     $total['saving_formated']       = price_format($total['saving'], false);
-
+    
     /* 折扣 */
     if ($order['extension_code'] != 'group_buy')
     {
@@ -623,21 +627,21 @@ function order_fee($order, $goods, $consignee)
         }
     }
     $total['tax_formated'] = price_format($total['tax'], false);
-
+    
     /* 包装费用 */
     if (!empty($order['pack_id']))
     {
         $total['pack_fee']      = pack_fee($order['pack_id'], $total['goods_price']);
     }
     $total['pack_fee_formated'] = price_format($total['pack_fee'], false);
-
+    
     /* 贺卡费用 */
     if (!empty($order['card_id']))
     {
         $total['card_fee']      = card_fee($order['card_id'], $total['goods_price']);
     }
     $total['card_fee_formated'] = price_format($total['card_fee'], false);
-
+    
     /* 红包 */
     if (!empty($order['bonus_id']))
     {
@@ -645,7 +649,7 @@ function order_fee($order, $goods, $consignee)
         $total['bonus'] = $bonus['type_money'];
     }
     $total['bonus_formated'] = price_format($total['bonus'], false);
-
+    
     /* 线下红包 */
     if (!empty($order['bonus_kill']))
     {
@@ -653,12 +657,10 @@ function order_fee($order, $goods, $consignee)
         $total['bonus_kill'] = $order['bonus_kill'];
         $total['bonus_kill_formated'] = price_format($total['bonus_kill'], false);
     }
-
-
-
+    
     /* 配送费用 */
     $shipping_cod_fee = NULL;
-
+    
     if ($order['shipping_id'] > 0 && $total['real_goods_count'] > 0)
     {
         $region['country']  = $consignee['country'];
@@ -718,23 +720,21 @@ function order_fee($order, $goods, $consignee)
     {
         $total['amount'] = $total['goods_price'] - $total['discount'] + $total['tax'] + $total['pack_fee'] + $total['card_fee'] +
             $total['shipping_fee'] + $total['shipping_insure'] + $total['cod_fee'];
-
         // 减去红包金额
         $use_bonus        = min($total['bonus'], $max_amount); // 实际减去的红包金额
-        if(isset($total['bonus_kill']))
+        if (isset($total['bonus_kill']))
         {
             $use_bonus_kill   = min($total['bonus_kill'], $max_amount);
             $total['amount'] -=  $price = number_format($total['bonus_kill'], 2, '.', ''); // 还需要支付的订单金额
         }
-
+        
         $total['bonus']   = $use_bonus;
         $total['bonus_formated'] = price_format($total['bonus'], false);
-
+        
         $total['amount'] -= $use_bonus; // 还需要支付的订单金额
         $max_amount      -= $use_bonus; // 积分最多还能支付的金额
-
     }
-
+    
     /* 余额 */
     $order['surplus'] = $order['surplus'] > 0 ? $order['surplus'] : 0;
     if ($total['amount'] > 0)
