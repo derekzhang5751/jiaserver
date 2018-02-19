@@ -930,7 +930,7 @@ function price_format($price, $change_price = true)
         $price=0;
     }
     $price = floatval($price);
-    if ($change_price && defined('ECS_ADMIN') === false)
+    if ( /*$change_price &&*/ defined('ECS_ADMIN') === false)
     {
         // 转换汇率，加元 => 人民币
         $rate = get_exchange_rate('CAD', 'RMB', 0);
@@ -966,13 +966,15 @@ function price_format($price, $change_price = true)
                 $price = round($price);
                 break;
         }
+        return sprintf($GLOBALS['_CFG']['currency_format'], $price);
     }
     else
     {
         $price = number_format($price, 2, '.', '');
+        return sprintf("$ %s 加元", $price);
     }
     
-    return sprintf($GLOBALS['_CFG']['currency_format'], $price);
+    //return sprintf($GLOBALS['_CFG']['currency_format'], $price);
 }
 
 function get_exchange_rate($from, $to, $type=0) {

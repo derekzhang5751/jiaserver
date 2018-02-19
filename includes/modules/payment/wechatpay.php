@@ -82,8 +82,8 @@ class wechatpay extends ottpay
      */
     public function get_code($order, $payment)
     {
-        $amount = $this->RMB2CAD( $order['order_amount'] );
-        $amount = $this->formatAmount( $amount );
+        //$amount = $this->RMB2CAD( $order['order_amount'] );
+        $amount = $this->formatAmount( $order['order_amount'] );
         $data = array(
             'order_id'      => $order['order_sn'],
             'amount'        => $amount,

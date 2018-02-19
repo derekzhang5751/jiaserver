@@ -96,6 +96,7 @@ function get_goods_name_by_id($order_id)
     return implode(',', $goods_name);
 }
 
+/*
 function get_exchange_rate($from, $to, $type=0) {
     $rate = $GLOBALS['db']->getOne("SELECT rate FROM " . $GLOBALS['ecs']->table('exchange_rate').
         " WHERE cry_from='$from' AND cry_to='$to' AND type=$type");
@@ -106,6 +107,7 @@ function get_exchange_rate($from, $to, $type=0) {
         return false;
     }
 }
+*/
 
 /**
  * 检查支付的金额是否与订单相符
