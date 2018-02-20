@@ -165,6 +165,29 @@ class ottpay
         curl_close($ch);
         return $output;
     }
+    
+    protected function saveQrUrl($orderId, $qrUrl) {
+        $sql = 'UPDATE ' . $GLOBALS['ecs']->table('pay_log') .
+                " SET qrurl = '" . $qrUrl . "' " .
+                "WHERE order_id = " . $orderId;
+        $GLOBALS['db']->query($sql);
+    }
+    
+    public function loadPayCodeSaved($orderId) {
+        global $smarty;
+        $payCode = '';
+        $qrUrl = $GLOBALS['db']->getOne("SELECT qrurl FROM " . $GLOBALS['ecs']->table('pay_log') . " WHERE order_id=" . $orderId);
+        if ($qrUrl) {
+            $smarty->assign('qrUrl', $qrUrl);
+            $payCode = '<div style="text-align:center">' .
+                    '<div id="output"></div>' .
+                    '<br><h2>请扫描二维码进行支付</h2>' .
+                    '</div>';
+        } else {
+            $payCode = '';
+        }
+        return $payCode;
+    }
 }
 
 ?>

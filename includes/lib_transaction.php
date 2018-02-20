@@ -718,7 +718,7 @@ function update_address($address)
  *
  * @return   arr        $order          订单所有信息的数组
  */
-function get_order_detail($order_id, $user_id = 0)
+function get_order_detail($order_id, $user_id = 0, $payOnline = true)
 {
     include_once(ROOT_PATH . 'includes/lib_order.php');
 
@@ -766,9 +766,8 @@ function get_order_detail($order_id, $user_id = 0)
     $order['exist_real_goods'] = exist_real_goods($order_id);
 
     /* 如果是未付款状态，生成支付按钮 */
-    if ($order['pay_status'] == PS_UNPAYED &&
-        ($order['order_status'] == OS_UNCONFIRMED ||
-        $order['order_status'] == OS_CONFIRMED))
+    if ($order['pay_status'] == PS_UNPAYED && $payOnline &&
+        ($order['order_status'] == OS_UNCONFIRMED || $order['order_status'] == OS_CONFIRMED))
     {
         /*
          * 在线支付按钮
@@ -797,7 +796,8 @@ function get_order_detail($order_id, $user_id = 0)
 
             /* 取得在线支付方式的支付按钮 */
             $pay_obj    = new $payment_info['pay_code'];
-            $order['pay_online'] = $pay_obj->get_code($order, $payment);
+            //$order['pay_online'] = $pay_obj->get_code($order, $payment);
+            $order['pay_online'] = $pay_obj->loadPayCodeSaved($order['order_id']);
         }
     }
     else

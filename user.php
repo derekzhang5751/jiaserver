@@ -832,21 +832,20 @@ elseif ($action == 'order_detail')
     $order_id = isset($_GET['order_id']) ? intval($_GET['order_id']) : 0;
 
     /* 订单详情 */
-    $order = get_order_detail($order_id, $user_id);
-
+    $order = get_order_detail($order_id, $user_id, true);
+    
     if ($order === false)
     {
         $err->show($_LANG['back_home_lnk'], './');
-
         exit;
     }
-
+    
     /* 是否显示添加到购物车 */
     if ($order['extension_code'] != 'group_buy' && $order['extension_code'] != 'exchange_goods')
     {
         $smarty->assign('allow_to_cart', 1);
     }
-
+    
     /* 订单商品 */
     $goods_list = order_goods($order_id);
     foreach ($goods_list AS $key => $value)
@@ -855,8 +854,8 @@ elseif ($action == 'order_detail')
         $goods_list[$key]['goods_price']  = price_format($value['goods_price'], false);
         $goods_list[$key]['subtotal']     = price_format($value['subtotal'], false);
     }
-
-     /* 设置能否修改使用余额数 */
+    
+    /* 设置能否修改使用余额数 */
     if ($order['order_amount'] > 0)
     {
         if ($order['order_status'] == OS_UNCONFIRMED || $order['order_status'] == OS_CONFIRMED)
@@ -870,12 +869,12 @@ elseif ($action == 'order_detail')
         }
     }
 
-    /* 未发货，未付款时允许更换支付方式 */
+    /* 未发货，未付款时允许更换支付方式 
     if ($order['order_amount'] > 0 && $order['pay_status'] == PS_UNPAYED && $order['shipping_status'] == SS_UNSHIPPED)
     {
         $payment_list = available_payment_list(false, 0, true);
 
-        /* 过滤掉当前支付方式和余额支付方式 */
+        // 过滤掉当前支付方式和余额支付方式
         if(is_array($payment_list))
         {
             foreach ($payment_list as $key => $payment)
@@ -887,8 +886,8 @@ elseif ($action == 'order_detail')
             }
         }
         $smarty->assign('payment_list', $payment_list);
-    }
-
+    }*/
+    
     /* 订单 支付 配送 状态语言项 */
     $order['order_status'] = $_LANG['os'][$order['order_status']];
     $order['pay_status'] = $_LANG['ps'][$order['pay_status']];

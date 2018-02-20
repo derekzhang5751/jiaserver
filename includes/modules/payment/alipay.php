@@ -142,6 +142,7 @@ class alipay extends ottpay
                     '<div id="output"></div>' .
                     '<br><h2>请扫描二维码进行支付</h2>' .
                     '</div>';
+                $this->saveQrUrl($order['order_id'], $qrUrl);
             } else {
                 $smarty->assign('qrUrl', '');
                 $button = '<div style="text-align:center">' .
