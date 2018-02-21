@@ -19,6 +19,7 @@ $GLOBALS['LANG']['delete_error'] = '删除失败，请稍后再试 !!!';
 $GLOBALS['LANG']['user_not_exist'] = '该用户不存在 !!!';
 $GLOBALS['LANG']['goods_not_exist'] = '该商品不存在 !!!';
 $GLOBALS['LANG']['collect_error'] = '收藏失败，请稍后再试 !!!';
+$GLOBALS['LANG']['address_empty'] = '收货人地址为空，请在我的地址中添加一个收货地址 !!!';
 
 /* 订单状态 */
 $GLOBALS['LANG']['os'][OS_UNCONFIRMED] = '未确认';

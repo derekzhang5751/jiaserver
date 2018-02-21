@@ -445,9 +445,10 @@ elseif ($_REQUEST['step'] == 'checkout')
 
     /* 检查购物车中是否有商品 */
     $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
-        " WHERE session_id = '" . SESS_ID . "' " .
+        //" WHERE session_id = '" . SESS_ID . "' " .
+        " WHERE user_id = '" . $_SESSION['user_id'] . "' " .
         "AND parent_id = 0 AND is_gift = 0 AND rec_type = '$flow_type'";
-
+    
     if ($db->getOne($sql) == 0)
     {
         show_message($_LANG['no_goods_in_cart'], '', '', 'warning');
@@ -464,9 +465,9 @@ elseif ($_REQUEST['step'] == 'checkout')
         ecs_header("Location: flow.php?step=login\n");
         exit;
     }
-
+    
     $consignee = get_consignee($_SESSION['user_id']);
-
+    
     /* 检查收货人信息是否完整 */
     if (!check_consignee_info($consignee, $flow_type))
     {
@@ -474,14 +475,14 @@ elseif ($_REQUEST['step'] == 'checkout')
         ecs_header("Location: flow.php?step=consignee\n");
         exit;
     }
-
+    
     $_SESSION['flow_consignee'] = $consignee;
     $smarty->assign('consignee', $consignee);
-
+    
     /* 对商品信息赋值 */
     $cart_goods = cart_goods($flow_type); // 取得商品列表，计算合计
     $smarty->assign('goods_list', $cart_goods);
-
+    
     /* 对是否允许修改购物车赋值 */
     if ($flow_type != CART_GENERAL_GOODS || $_CFG['one_step_buy'] == '1')
     {
@@ -491,7 +492,7 @@ elseif ($_REQUEST['step'] == 'checkout')
     {
         $smarty->assign('allow_edit_cart', 1);
     }
-
+    
     /*
      * 取得购物流程设置
      */
@@ -501,7 +502,7 @@ elseif ($_REQUEST['step'] == 'checkout')
      */
     $order = flow_order_info();
     $smarty->assign('order', $order);
-
+    
     /* 计算折扣 */
     if ($flow_type != CART_EXCHANGE_GOODS && $flow_type != CART_GROUP_BUY_GOODS)
     {
@@ -510,16 +511,16 @@ elseif ($_REQUEST['step'] == 'checkout')
         $favour_name = empty($discount['name']) ? '' : join(',', $discount['name']);
         $smarty->assign('your_discount', sprintf($_LANG['your_discount'], $favour_name, price_format($discount['discount'])));
     }
-
+    
     /*
      * 计算订单的费用
      */
     $total = order_fee($order, $cart_goods, $consignee);
-
+    
     $smarty->assign('total', $total);
     $smarty->assign('shopping_money', sprintf($_LANG['shopping_money'], $total['formated_goods_price']));
     $smarty->assign('market_price_desc', sprintf($_LANG['than_market_price'], $total['formated_market_price'], $total['formated_saving'], $total['save_rate']));
-
+    
     /* 取得配送列表 */
     $region            = array($consignee['country'], $consignee['province'], $consignee['city'], $consignee['district']);
     $shipping_list     = available_shipping_list($region);

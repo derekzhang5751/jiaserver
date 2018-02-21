@@ -30,7 +30,7 @@ class CartList extends JiaBase
     }
     
     protected function process() {
-        $maxSize = 200;
+        $maxSize = 100;
         $cartList = db_get_my_cart_list($this->userId, $maxSize);
         
         if ($cartList) {
@@ -44,6 +44,8 @@ class CartList extends JiaBase
                 $this->return['cartlist'][$i]['goods_attr'] = explode("\n", $goods['goods_attr']);
                 $this->return['cartlist'][$i]['shop_price'] = $this->adapterPrice( $goods['shop_price'] );
                 $this->return['cartlist'][$i]['goods_price'] = $this->adapterPrice( $goods['goods_price'] );
+                $promotePrice = promote_price($goods['promote_price'], $goods['promote_start_date'], $goods['promote_end_date']);
+                $this->return['cartlist'][$i]['promote_price'] = $this->adapterPrice($promotePrice);
                 $this->return['cartlist'][$i]['goods_thumb'] = $goods['goods_thumb'];
                 
                 $i++;

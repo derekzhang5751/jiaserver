@@ -873,9 +873,10 @@ function cart_goods($type = CART_GENERAL_GOODS)
             "market_price, goods_price, goods_attr, is_real, extension_code, parent_id, is_gift, is_shipping, " .
             "goods_price * goods_number AS subtotal " .
             "FROM " . $GLOBALS['ecs']->table('cart') .
-            " WHERE session_id = '" . SESS_ID . "' " .
+            //" WHERE session_id = '" . SESS_ID . "' " .
+            " WHERE user_id = '" . $_SESSION['user_id'] . "' " .
             "AND rec_type = '$type'";
-
+    
     $arr = $GLOBALS['db']->getAll($sql);
 
     /* 格式化价格及礼包商品 */
@@ -1671,7 +1672,8 @@ function get_cart_goods()
     /* 循环、统计 */
     $sql = "SELECT *, IF(parent_id, parent_id, goods_id) AS pid " .
             " FROM " . $GLOBALS['ecs']->table('cart') . " " .
-            " WHERE session_id = '" . SESS_ID . "' AND rec_type = '" . CART_GENERAL_GOODS . "'" .
+            //" WHERE session_id = '" . SESS_ID . "' AND rec_type = '" . CART_GENERAL_GOODS . "'" .
+            " WHERE user_id = '" . $_SESSION['user_id'] . "' AND rec_type = '" . CART_GENERAL_GOODS . "'" .
             " ORDER BY pid, parent_id";
     $res = $GLOBALS['db']->query($sql);
 

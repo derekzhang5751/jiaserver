@@ -186,6 +186,21 @@ function db_get_my_address($userId, $maxSize)
     return $address;
 }
 
+function db_get_default_address($userId)
+{
+    $address = $GLOBALS['db']->get('user_address',
+        [
+            'address_id','consignee','email','country','province','city','district','address','zipcode',
+            'tel','mobile','idcard_a','idcard_b'
+        ],
+        [
+            'user_id' => $userId,
+            'ORDER' => ['address_id' => 'DESC']
+        ]
+    );
+    return $address;
+}
+
 function db_insert_my_address($address)
 {
     $data = array(
@@ -278,7 +293,8 @@ function db_get_my_cart_list($userId, $maxSize)
         ],
         [
             'cart.rec_id','cart.goods_id','cart.goods_sn','cart.goods_name','cart.goods_price',
-            'cart.goods_number','cart.goods_attr','goods.shop_price','goods.goods_thumb'
+            'cart.goods_number','cart.goods_attr','goods.shop_price','goods.promote_price',
+            'goods.promote_start_date','goods.promote_end_date','goods.goods_thumb'
         ],
         [
             'user_id' => $userId,
