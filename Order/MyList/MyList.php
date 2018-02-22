@@ -45,7 +45,7 @@ class MyList extends JiaBase
                 $this->return['orderlist'][$i]['order_id'] = $order['order_id'];
                 $this->return['orderlist'][$i]['order_sn'] = $order['order_sn'];
                 $this->return['orderlist'][$i]['order_status'] = $status;
-                $this->return['orderlist'][$i]['order_amount'] = $order['order_amount'];
+                $this->return['orderlist'][$i]['order_amount'] = $this->adapterPrice( $order['order_amount'] );
                 $this->return['orderlist'][$i]['add_time'] = date('Y-m-d H:i:s', $order['add_time']);
 
                 $thumb = db_get_order_thumb($order['order_id']);
