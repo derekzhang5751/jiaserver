@@ -20,6 +20,9 @@ $GLOBALS['LANG']['user_not_exist'] = '该用户不存在 !!!';
 $GLOBALS['LANG']['goods_not_exist'] = '该商品不存在 !!!';
 $GLOBALS['LANG']['collect_error'] = '收藏失败，请稍后再试 !!!';
 $GLOBALS['LANG']['address_empty'] = '收货人地址为空，请在我的地址中添加一个收货地址 !!!';
+$GLOBALS['LANG']['order_save_error'] = '写入订单失败，请稍后再试 !!!';
+$GLOBALS['LANG']['consignee_not_exist'] = '收件人不存在 !!!';
+$GLOBALS['LANG']['payment_not_exist'] = '支付方式不存在 !!!';
 
 /* 订单状态 */
 $GLOBALS['LANG']['os'][OS_UNCONFIRMED] = '未确认';
@@ -40,3 +43,8 @@ $GLOBALS['LANG']['ss'][SS_SHIPPED_ING] = '配货中'; // 已分单
 $GLOBALS['LANG']['ps'][PS_UNPAYED] = '未付款';
 $GLOBALS['LANG']['ps'][PS_PAYING] = '付款中';
 $GLOBALS['LANG']['ps'][PS_PAYED] = '已付款';
+
+/* 缺货处理 */
+$GLOBALS['oos'][OOS_WAIT] = '等待所有商品备齐后再发';
+$GLOBALS['oos'][OOS_CANCEL] = '取消订单';
+$GLOBALS['oos'][OOS_CONSULT] = '与店主协商';

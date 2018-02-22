@@ -86,6 +86,27 @@ class Checkout extends JiaBase
             return true;
         }
         
+        // get all payments enabled
+        $payments = db_get_payment_list_enabled();
+        if ($payments) {
+            $i = 0;
+            $paymentList = array();
+            foreach ($payments as $pay) {
+                $paymentList[$i]['pay_id'] = $pay['pay_id'];
+                $paymentList[$i]['pay_code'] = $pay['pay_code'];
+                $paymentList[$i]['pay_name'] = $pay['pay_name'];
+                $paymentList[$i]['pay_fee'] = $pay['pay_fee'];
+                $paymentList[$i]['pay_desc'] = $pay['pay_desc'];
+                $paymentList[$i]['is_online'] = $pay['is_online'];
+                $i++;
+            }
+            $this->return['checkout']['paymentlist'] = $paymentList;
+        } else {
+            $this->return['result'] = false;
+            $this->return['msg'] = $GLOBALS['LANG']['payment_not_exist'];
+            return true;
+        }
+        
         $this->return['result'] = true;
         return true;
     }

@@ -289,3 +289,15 @@ function add_to_cart($goods_id, $num = 1, $spec = array(), $parent = 0) {
 
     return true;
 }
+
+function generate_order_sn() {
+    $KEY = "abcdefghijklmnopqrstuvwxyz0123456789";
+    $max = strlen($KEY)-1;
+    $randLen = 4;
+    $orderId = date("ymdHis");
+    for ($i=0; $i<$randLen; $i++) {
+        $p = rand(0, $max);
+        $orderId = $orderId . $KEY[$p];
+    }
+    return $orderId;
+}

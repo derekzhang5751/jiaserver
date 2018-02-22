@@ -242,23 +242,23 @@ class AddToCart extends JiaBase
         /* 如果数量不为0，作为基本件插入 */
         if ($num > 0)
         {
-            $GLOBALS['log']->log('order', 'Goods NUM = '.$num);
+            //$GLOBALS['log']->log('order', 'Goods NUM = '.$num);
             /* 检查该商品是否已经存在在购物车中 */
             $sql = "SELECT goods_number FROM cart" .
                 " WHERE session_id = '" .SESSION_ID. "' AND goods_id = '$goodsId' ".
                 " AND parent_id = 0 AND goods_attr = '" .get_goods_attr_info($specIdArray). "' " .
                 " AND extension_code <> 'package_buy' " .
                 " AND rec_type = " . CART_GENERAL_GOODS;
-            $GLOBALS['log']->log('order', 'SQL: '.$sql);
+            //$GLOBALS['log']->log('order', 'SQL: '.$sql);
             $row = false;
             $res = $this->db->query($sql)->fetchAll();
             if ($res) {
                 $row = $res[0];
             }
-            $GLOBALS['log']->log('order', 'row = '. print_r($res,true));
+            //$GLOBALS['log']->log('order', 'row = '. print_r($res,true));
             if ($row) //如果购物车已经有此物品，则更新
             {
-                $GLOBALS['log']->log('order', 'Goods exist, UPDATE cart.');
+                //$GLOBALS['log']->log('order', 'Goods exist, UPDATE cart.');
                 $num += $row['goods_number'];
                 if (!empty($prod) )
                 {
@@ -290,7 +290,7 @@ class AddToCart extends JiaBase
             }
             else //购物车没有此物品，则插入
             {
-                $GLOBALS['log']->log('order', 'Goods not exist, INSERT cart.');
+                //$GLOBALS['log']->log('order', 'Goods not exist, INSERT cart.');
                 $goods_price = get_final_price($goodsId, $num, true, $spec_price);
                 $parent['goods_price']  = max($goods_price, 0);
                 $parent['goods_number'] = $num;
@@ -304,7 +304,7 @@ class AddToCart extends JiaBase
         db_delete_all_gift_in_cart($this->userId, SESSION_ID);
         
         $this->return['result'] = true;
-        $GLOBALS['log']->log('order', 'Add to cart completed.');
+        //$GLOBALS['log']->log('order', 'Add to cart completed.');
         return true;
     }
     

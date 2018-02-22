@@ -142,3 +142,69 @@ function db_delete_goods_in_cart($userId, $recId, $goodsId)
         return false;
     }
 }
+
+function db_insert_order($order)
+{
+    $stat = $GLOBALS['db']->insert('order_info', $order);
+    if ($stat->rowCount() == 1) {
+        return $GLOBALS['db']->id();
+    } else {
+        return false;
+    }
+}
+
+function db_insert_order_goods_from_cart($orderId, $userId)
+{
+    $sql = "INSERT INTO ecs_order_goods( " .
+            "order_id, goods_id, goods_name, goods_sn, product_id, goods_number, market_price, ".
+            "goods_price, goods_attr, is_real, extension_code, parent_id, is_gift, goods_attr_id) ".
+            " SELECT '$orderId', goods_id, goods_name, goods_sn, product_id, goods_number, market_price, ".
+            "goods_price, goods_attr, is_real, extension_code, parent_id, is_gift, goods_attr_id".
+            " FROM ecs_cart WHERE user_id = '".$userId."'";
+    return $GLOBALS['db']->query($sql);
+}
+
+function db_get_payment_by_id($paymentId)
+{
+    $address = $GLOBALS['db']->get('payment',
+        [
+            'pay_id','pay_code','pay_name','pay_fee','pay_desc','pay_config','is_cod','is_online'
+        ],
+        [
+            'pay_id' => $paymentId,
+            'enabled' => 1
+        ]
+    );
+    return $address;
+}
+
+function db_get_payment_list_enabled()
+{
+    $group = $GLOBALS['db']->select('payment',
+        [
+            'pay_id','pay_code','pay_name','pay_fee','pay_desc','pay_config','is_cod','is_online'
+        ],
+        [
+            'enabled' => 1,
+            'ORDER' => ['pay_order' => 'ASC']
+        ]
+    );
+    return $group;
+}
+
+function db_insert_pay_log($orderId, $amount, $type=PAY_ORDER, $isPaid=0, $qrUrl='')
+{
+    $data = array(
+        'order_id' => $orderId,
+        'order_amount' => $amount,
+        'order_type' => $type,
+        'is_paid' => $isPaid,
+        'qrurl' => $qrUrl
+    );
+    $stat = $GLOBALS['db']->insert('pay_log', $data);
+    if ($stat->rowCount() == 1) {
+        return $GLOBALS['db']->id();
+    } else {
+        return false;
+    }
+}

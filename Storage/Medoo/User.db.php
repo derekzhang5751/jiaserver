@@ -186,6 +186,20 @@ function db_get_my_address($userId, $maxSize)
     return $address;
 }
 
+function db_get_address_by_id($addressId)
+{
+    $address = $GLOBALS['db']->get('user_address',
+        [
+            'address_id','consignee','email','country','province','city','district','address','zipcode',
+            'tel','mobile','idcard_a','idcard_b'
+        ],
+        [
+            'address_id' => $addressId
+        ]
+    );
+    return $address;
+}
+
 function db_get_default_address($userId)
 {
     $address = $GLOBALS['db']->get('user_address',
